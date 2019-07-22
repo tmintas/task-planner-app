@@ -1,0 +1,47 @@
+.month {
+    border: rgb(137, 216, 163) 8px solid;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: row;
+
+    .notes-area {
+        border: 2px solid violet;
+        flex-basis: 20%;
+    }
+
+    .calendar {
+        border: 2px solid green;
+        flex-grow: 1;
+
+        > .week-days-bar {
+            padding-top: 0.5em;
+            font-size: 22px;
+            width: 95%;
+            margin: 0 auto;
+            margin-bottom: 10px;
+            border: 1px solid black;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-evenly;
+
+            > .week-day {
+                flex-basis: 15%;
+                text-align: center;
+            }
+        }
+
+        > .days-area {
+            width: 100%;
+            border: 2px solid black;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: space-evenly;
+
+            > .day-flex-item {
+                flex-basis: 15%;
+                margin-bottom: 1em ;
+            }
+        }
+    }
+}

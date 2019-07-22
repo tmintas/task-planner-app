@@ -1,0 +1,26 @@
+<div class="month">
+	<div class="notes-area">
+		<div class="month-title">
+			month title
+		</div>
+		<div class="notes">
+			notes
+		</div>
+	</div>
+	<div class="calendar">
+		<div class="week-days-bar">
+			<div class="week-day">Monday</div>
+			<div class="week-day">Tuesday</div>
+			<div class="week-day">Wednessday</div>
+			<div class="week-day">Thursday</div>
+			<div class="week-day">Friday</div>
+			<div class="week-day">Saturday</div>
+			<div class="week-day">Sunday</div>
+		</div>
+		<div class="days-area">
+			<div class="day-flex-item" *ngFor="let day of MonthDays">
+				<app-day [DayNumber]="day"></app-day>
+			</div>
+		</div>
+	</div>
+</div>
