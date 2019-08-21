@@ -5,6 +5,11 @@ import { MonthComponent } from './month.component';
 const routes: Routes = [
 	{
 		path: '',
+		pathMatch: 'full',
+		redirectTo: '/1'
+	},
+	{
+		path: ':monthNumber',
 		component: MonthComponent
 	}
 ];

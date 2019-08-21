@@ -10,7 +10,7 @@ import { MonthModule } from './month/month.module';
 		AppComponent,
 	],
 	imports: [
-		BrowserModule,
+		// BrowserModule,
 		AppRoutingModule,
 		MonthModule
 	],

@@ -1,4 +1,10 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
+import { ActivatedRoute, Params } from '@angular/router';
+import { map } from 'rxjs/operators';
+
+const monthNames = [
+	'January', 'February', 'March', 'April', 'May', 'June',
+	'July', 'August', 'September', 'October', 'November', 'December'];
 
 @Component({
 	selector: 'app-month',
@@ -8,33 +14,61 @@ import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 })
 export class MonthComponent implements OnInit {
 
-	private monthNumber = 5;
+	constructor(private route: ActivatedRoute) {}
+
+	private monthNumber: number;
 	private year = 2019;
-	private firstDayPosition: number = new Date(this.year, this.monthNumber, 1).getDay();
-	private numberOfDaysThisMonth = new Date(this.year, this.monthNumber, 0).getDate();
-	private numberOfDaysPrevMonth = new Date(this.year, this.monthNumber - 1, 0).getDate();
+	public DisplayDays: number[];
 
-	public DisplayDays: number[] = [ ...this.previousMonthLastDays, ...this.currentMonthDays ];
+	public MonthName(index: number): string {
+		if (index < 1 || index > 12) {
+			return null;
+		}
 
-	private get currentMonthDays(): number[] {
+		return monthNames[index - 1];
+	}
+
+	private getFirstDayPosition(year: number, month: number) {
+		return new Date(year, month - 1, 1).getDay();
+	}
+
+	private getNumberOfDaysThisMonth(year: number, month: number) {
+		return new Date(year, month, 0).getDate();
+	}
+
+	private getNumberOfDaysPrevMonth(year: number, month: number) {
+		return new Date(year, month - 2, 0).getDate();
+	}
+
+	private getCurrentMonthDays(year: number, month: number): number[] {
 		const arr = [];
 
-		for (let i = 1; i <= this.numberOfDaysThisMonth; i++) {
+		for (let i = 1; i <= this.getNumberOfDaysThisMonth(year, month); i++) {
 			arr.push(i);
 		}
 
 		return arr;
 	}
 
-	private get previousMonthLastDays(): number[] {
+	private getPreviousMonthLastDays(year: number, month: number): number[] {
 		const arr = [];
+		let maxDay = this.getNumberOfDaysPrevMonth(year, month);
 
-		for (let i = 1; i < this.firstDayPosition; i++) {
-			arr.push(this.numberOfDaysPrevMonth--);
+		for (let i = 1; i < this.getFirstDayPosition(year, month); i++) {
+			arr.push(maxDay--);
 		}
 
 		return arr.reverse();
 	}
 
-	public ngOnInit() { }
+	public ngOnInit() {
+		this.route.params.pipe(
+			map((prms: Params) => {
+				this.monthNumber = prms.monthNumber;
+				this.DisplayDays = [
+					...this.getPreviousMonthLastDays(2019, this.monthNumber),
+					...this.getCurrentMonthDays(this.year, this.monthNumber) ];
+			})
+		).subscribe();
+	}
 }
