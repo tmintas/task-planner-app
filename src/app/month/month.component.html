@@ -7,7 +7,7 @@
 			notes
 		</div>
 	</div>
-	<div class="calendar">
+	<div class="calendar-area">
 		<div class="week-days-bar">
 			<div class="week-day">Monday</div>
 			<div class="week-day">Tuesday</div>
@@ -17,10 +17,6 @@
 			<div class="week-day">Saturday</div>
 			<div class="week-day">Sunday</div>
 		</div>
-		<div class="days-area">
-			<div class="day-flex-item" *ngFor="let day of MonthDays">
-				<app-day [DayNumber]="day"></app-day>
-			</div>
-		</div>
+		<app-calendar [Days]="DisplayDays"></app-calendar>
 	</div>
 </div>
