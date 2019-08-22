@@ -64,7 +64,7 @@ export class MonthComponent implements OnInit {
 	public ngOnInit() {
 		this.route.params.pipe(
 			map((prms: Params) => {
-				this.monthNumber = prms.monthNumber;
+				this.monthNumber = +prms.monthNumber;
 				this.DisplayDays = [
 					...this.getPreviousMonthLastDays(2019, this.monthNumber),
 					...this.getCurrentMonthDays(this.year, this.monthNumber) ];

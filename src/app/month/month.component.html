@@ -1,9 +1,13 @@
 <div class="month">
 	<div class="notes-area">
 		<div class="month-title">
-			<h2>
-				{{MonthName(monthNumber)}}
-			</h2>
+			<a [routerLink]="['../', monthNumber - 1]">
+				<fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
+			</a>
+			<span>{{MonthName(monthNumber)}}</span>
+			<a [routerLink]="['../', monthNumber + 1]">
+				<fa-icon [icon]="['fas', 'chevron-right']"></fa-icon>
+			</a>
 		</div>
 		<div class="notes">
 			notes
