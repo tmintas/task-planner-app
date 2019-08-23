@@ -8,6 +8,7 @@
     .notes-area {
         background-color: #fcfafada;
         flex-basis: 20%;
+        min-width: 200px;
 
         > .month-title {
             font-size: 30px;
@@ -42,7 +43,7 @@
             font-size: 22px;
             height: 50px;
             
-            display: flex;
+            // display: flex;
             flex-direction: row;
             justify-content: flex-start;
     
@@ -52,5 +53,17 @@
                 margin: 1% 0.7%;
             }
         }
+    }
+}
+
+@media(min-width: 0px) and (max-width: 1200px) {
+    .week-days-bar {
+        display: none;
+    }
+}
+
+@media(min-width: 1200px) {
+    .week-days-bar {
+        display: flex;
     }
 }
