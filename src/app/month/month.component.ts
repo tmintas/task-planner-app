@@ -1,10 +1,7 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { map } from 'rxjs/operators';
-
-const monthNames = [
-	'January', 'February', 'March', 'April', 'May', 'June',
-	'July', 'August', 'September', 'October', 'November', 'December'];
+import * as fromDateExtns from '@extensions/date';
 
 @Component({
 	selector: 'app-month',
@@ -14,60 +11,73 @@ const monthNames = [
 })
 export class MonthComponent implements OnInit {
 
-	constructor(private route: ActivatedRoute) {}
+	constructor(private route : ActivatedRoute) {}
 
-	private monthNumber: number;
+	public DisplayDays : number[];
+
+	private monthNumber : number;
 	private year = 2019;
-	public DisplayDays: number[];
 
-	public MonthName(index: number): string {
-		if (index < 1 || index > 12) {
-			return null;
-		}
-
-		return monthNames[index - 1];
+	public get MonthName() : string {
+		return fromDateExtns.GetMonthName(this.monthNumber);
 	}
 
-	private getFirstDayPosition(year: number, month: number) {
-		return new Date(year, month - 1, 1).getDay();
-	}
-
-	private getNumberOfDaysThisMonth(year: number, month: number) {
-		return new Date(year, month, 0).getDate();
-	}
-
-	private getNumberOfDaysPrevMonth(year: number, month: number) {
-		return new Date(year, month - 2, 0).getDate();
-	}
-
-	private getCurrentMonthDays(year: number, month: number): number[] {
+	private getNextMonthFirstDays() : number[] {
 		const arr = [];
+		const nextMonthFirstDayPosition = fromDateExtns.GetDayOfWeek( new Date(this.year, this.monthNumber + 1, 1) );
 
-		for (let i = 1; i <= this.getNumberOfDaysThisMonth(year, month); i++) {
+		// we don't want to get the whole week of next month if it starts from Monday
+		if (nextMonthFirstDayPosition === 1) { return arr; }
+
+		for (let i = 1; i <= 8 - nextMonthFirstDayPosition; i++) {
 			arr.push(i);
 		}
 
 		return arr;
 	}
 
-	private getPreviousMonthLastDays(year: number, month: number): number[] {
+	private getCurrentMonthDays() : number[] {
 		const arr = [];
-		let maxDay = this.getNumberOfDaysPrevMonth(year, month);
+		const maxDayNumber = fromDateExtns.GetNumberOfDaysInMonth(this.year, this.monthNumber);
 
-		for (let i = 1; i < this.getFirstDayPosition(year, month); i++) {
-			arr.push(maxDay--);
+		for (let i = 1; i <= maxDayNumber; i++) {
+			arr.push(i);
+		}
+
+		return arr;
+	}
+
+	private getPreviousMonthLastDays() : number[] {
+		const arr = [];
+		const firstDayPosition = fromDateExtns.GetDayOfWeek( new Date(this.year, this.monthNumber, 1) );
+
+		let lastMonthMaxDay = fromDateExtns.GetNumberOfDaysInMonth(this.year, this.monthNumber - 1);
+
+		for (let i = 1; i < firstDayPosition; i++) {
+			arr.push(lastMonthMaxDay--);
 		}
 
 		return arr.reverse();
 	}
 
-	public ngOnInit() {
+	public ngOnInit() : void {
+		console.log(fromDateExtns.GetDayOfWeek(new Date(2019, 7, 1)));
 		this.route.params.pipe(
-			map((prms: Params) => {
+			map((prms : Params) => {
 				this.monthNumber = +prms.monthNumber;
 				this.DisplayDays = [
-					...this.getPreviousMonthLastDays(2019, this.monthNumber),
-					...this.getCurrentMonthDays(this.year, this.monthNumber) ];
+					...this.getPreviousMonthLastDays(),
+					...this.getCurrentMonthDays(),
+					...this.getNextMonthFirstDays() ];
+
+				console.log('prev days ');
+				console.log(this.getPreviousMonthLastDays());
+
+				console.log('curr days ');
+				console.log(this.getCurrentMonthDays());
+
+				console.log('next days ');
+				console.log(this.getNextMonthFirstDays());
 			})
 		).subscribe();
 	}

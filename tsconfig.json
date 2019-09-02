@@ -2,7 +2,10 @@
   "compileOnSave": false,
   "compilerOptions": {
     "allowUnusedLabels": false,
-    "baseUrl": "./",
+    "baseUrl": "./src",
+    "paths": {
+      "@extensions/*": ["app/extensions/*.ts"]
+    },
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
