@@ -22,3 +22,41 @@ export function GetMonthName(index : number) : string {
 
 	return monthNames[index - 1];
 }
+
+export function GetCurrentMonthDays(year : number, month : number) : number[] {
+	const arr = [];
+	const maxDayNumber = GetNumberOfDaysInMonth(year, month);
+
+	for (let i = 1; i <= maxDayNumber; i++) {
+		arr.push(i);
+	}
+
+	return arr;
+}
+
+export function GetPreviousMonthLastDays(year : number, month : number) : number[] {
+	const arr = [];
+	const firstDayPosition = GetDayOfWeek( new Date(year, month, 1) );
+
+	let lastMonthMaxDay = GetNumberOfDaysInMonth(year, month - 1);
+
+	for (let i = 1; i < firstDayPosition; i++) {
+		arr.push(lastMonthMaxDay--);
+	}
+
+	return arr.reverse();
+}
+
+export function GetNextMonthFirstDays(year : number, month : number) : number[] {
+	const arr = [];
+	const nextMonthFirstDayPosition = GetDayOfWeek( new Date(year, month + 1, 1) );
+
+	// we don't want to get the whole week of next month if it starts from Monday
+	if (nextMonthFirstDayPosition === 1) { return arr; }
+
+	for (let i = 1; i <= 8 - nextMonthFirstDayPosition; i++) {
+		arr.push(i);
+	}
+
+	return arr;
+}
