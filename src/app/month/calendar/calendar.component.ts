@@ -1,4 +1,5 @@
-import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
+import { Component, Input, ViewEncapsulation } from '@angular/core';
+import { Day } from '../day/day.model';
 
 @Component({
 	selector: 'app-calendar',
@@ -6,13 +7,8 @@ import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 	styleUrls: ['./calendar.component.scss'],
 	encapsulation: ViewEncapsulation.None
 })
-export class CalendarComponent implements OnInit {
+export class CalendarComponent {
 
 	@Input()
-	public Days: number[];
-
-	constructor() { }
-
-	ngOnInit() { }
-
+	public Days : Day[];
 }

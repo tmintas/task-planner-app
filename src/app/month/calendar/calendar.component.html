@@ -1,7 +1,7 @@
 <div class="calendar">
 	<div class="bordered-flex">
-		<div class="day-flex-item" *ngFor="let day of Days">
-			<app-day [DayNumber]="day"></app-day>
+		<div class="day-flex-item" *ngFor="let day of Days" [ngClass]="{ 'not-current' : !day.IsCurrentMonth }">
+			<app-day [Day]="day"></app-day>
 		</div>
 	</div>
 </div>
