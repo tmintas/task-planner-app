@@ -7,16 +7,34 @@
         flex-wrap: wrap;
         justify-content: flex-start;
         align-items: stretch;
-        height: 790px;
+        // height: 790px;
         border: 1px solid gray;
         border-radius: 3px;
 
-        > .day-flex-item {
-            flex-basis: calc(100%/7);
+        > .day-flex-item {            
             border: 1px solid gray;
             border-style: solid;
             border-radius: 3px;
             box-sizing: border-box;
+            height: 150px;
         }
+    }
+}
+
+@media(min-width: 1200px) {
+    .day-flex-item {
+        flex-basis: calc(100%/7);
+    }
+}
+
+@media(max-width: 1200px) {
+    .day-flex-item {
+        flex-basis: 25%;
+    }
+}
+
+@media(max-width: 700px) {
+    .day-flex-item {
+        flex-basis: 100%;
     }
 }
