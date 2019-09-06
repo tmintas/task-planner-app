@@ -3,6 +3,7 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { map } from 'rxjs/operators';
 
 import * as fromDateExtns from '@extensions/date';
+import { Day } from './day/day.model';
 
 @Component({
 	selector: 'app-month',
@@ -14,10 +15,14 @@ export class MonthComponent implements OnInit {
 
 	constructor(private route : ActivatedRoute) {}
 
-	public DisplayDays : number[];
+	public DisplayDays : Day[];
 
 	private monthNumber : number;
 	private year = 2019;
+
+	public get Year() : number {
+		return this.year;
+	}
 
 	public get MonthName() : string {
 		return fromDateExtns.GetMonthName(this.monthNumber);
@@ -29,9 +34,9 @@ export class MonthComponent implements OnInit {
 			map((prms : Params) => {
 				this.monthNumber = +prms.monthNumber;
 				this.DisplayDays = [
-					...fromDateExtns.GetPreviousMonthLastDays(this.year, this.monthNumber),
-					...fromDateExtns.GetCurrentMonthDays(this.year, this.monthNumber),
-					...fromDateExtns.GetNextMonthFirstDays(this.year, this.monthNumber) ];
+					...fromDateExtns.GetPreviousMonthLastDays(this.year, this.monthNumber).map(dayNum => new Day(dayNum, false)),
+					...fromDateExtns.GetCurrentMonthDays(this.year, this.monthNumber).map(dayNum => new Day(dayNum, true)),
+					...fromDateExtns.GetNextMonthFirstDays(this.year, this.monthNumber).map(dayNum => new Day(dayNum, false)) ];
 			})
 		).subscribe();
 	}

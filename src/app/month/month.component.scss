@@ -1,5 +1,7 @@
+@import '../styles/variables.scss';
+
 .month {
-    border: rgb(137, 216, 163) 8px solid;
+    border: $turquoise 8px solid;
     border-radius: 6px;
     display: flex;
     flex-direction: row;
@@ -10,23 +12,35 @@
         flex-basis: 20%;
         min-width: 200px;
 
-        > .month-title {
-            font-size: 30px;
-            padding-top: 8px;
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            width: 70%;
-            margin: 0 auto;
+        > .title {
+            background-color: $turquoise;
+            height: 6em;
+            margin: 20px auto;
+            width: 90%;
+            display: flex column;
+            align-content: center;
 
-            > a:visited, a:active {
-                color: rgb(95, 94, 94);
+            > .month-title {
+                font-size: 30px;
+                padding: 8px 5px;
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                    
+                > a:visited, a:active {
+                    color: rgb(95, 94, 94);
+                }
+            }
+
+            > .year-title {
+                margin: 0 auto;
+                font-size: 35px;
+                width: 70px;
             }
         }
     }
 
     .calendar-area {
-        border: 2px solid green;
         border-radius: 3px;
         flex-grow: 1;
         display: flex;

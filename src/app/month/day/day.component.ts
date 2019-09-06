@@ -1,4 +1,5 @@
 import { Component, Input, ViewEncapsulation } from '@angular/core';
+import { Day } from './day.model';
 
 @Component({
 	selector: 'app-day',
@@ -8,5 +9,9 @@ import { Component, Input, ViewEncapsulation } from '@angular/core';
 })
 export class DayComponent {
 	@Input()
-	public DayNumber: number;
+	public Day : Day;
+
+	public get DayNumber() : number {
+		return this.Day ? this.Day.Index : 0;
+	}
 }
