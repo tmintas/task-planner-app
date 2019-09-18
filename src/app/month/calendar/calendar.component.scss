@@ -25,13 +25,13 @@
     }
 }
 
-@media(min-width: 1200px) {
+@media(min-width: 1500px) {
     .day-flex-item {
         flex-basis: calc(100%/7);
     }
 }
 
-@media(max-width: 1200px) {
+@media(max-width: 1500px) {
     .day-flex-item {
         flex-basis: 25%;
     }
