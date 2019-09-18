@@ -1,0 +1,27 @@
+.edit-todo-item {
+    .importance-container {
+        width: 100% !important;
+        display: flex !important;
+        flex-direction: row;
+        justify-content: space-between;
+
+    }
+
+    legend {
+        padding-left: 0;
+    }
+
+    .form-check-input {
+        width: 20px;
+        height: 20px;
+    }
+
+    .flex-item {
+        display: flex;
+        align-items: center;
+    }
+
+   .custom-label::before {
+        background-color: blue;
+    }
+}

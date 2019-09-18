@@ -1,6 +1,10 @@
 <div class="day">
-	{{ DayNumber }}
-	<a [routerLink]="['add']" class="add-item-link">
-		<fa-icon [icon]="['fas', 'plus-circle']"></fa-icon>
-	</a>
+	<div class="day-header">
+		<span>
+			{{ DayNumber }}
+		</span> 
+		<a [routerLink]="[DayNumber, 'add']" class="add-item-link">
+			<fa-icon [icon]="['fas', 'plus-circle']"></fa-icon>
+		</a>
+	</div>
 </div>

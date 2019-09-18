@@ -1,4 +1,4 @@
-@import '../styles/variables.scss';
+@import 'variables';
 
 .month {
     border: $turquoise 8px solid;
@@ -8,21 +8,25 @@
     height: 100%;
 
     .notes-area {
-        background-color: #fcfafada;
-        flex-basis: 20%;
-        min-width: 200px;
+        background-color: $gray;
+        min-width: 270px;
+        display: flex;
+        flex-direction: column;
+        align-content: center;
+        padding: 0 10px;
+        box-sizing: border-box;
 
         > .title {
             background-color: $turquoise;
-            height: 6em;
+            height: fit-content;
             margin: 20px auto;
-            width: 90%;
-            display: flex column;
+            padding: 15px 3px;
+            width: 100%;
             align-content: center;
 
             > .month-title {
                 font-size: 30px;
-                padding: 8px 5px;
+                margin-bottom: 10px;
                 display: flex;
                 flex-direction: row;
                 justify-content: space-between;
@@ -34,8 +38,10 @@
 
             > .year-title {
                 margin: 0 auto;
-                font-size: 35px;
+                font-size: 25px;
                 width: 70px;
+                text-align: center;
+                line-height: 20px;
             }
         }
     }
@@ -46,16 +52,16 @@
         overflow-y: auto;
 
         > .week-days-bar {
-            display: flex;
             padding: 0 1%;
-            background-color: rgb(250, 248, 248);
+            background-color: $gray;
             font-size: 22px;
-            height: 50px;
+            height: 55px;
     
             > .week-day {
                 text-align: center;
                 flex-basis: 12.8%;
                 margin: 1% 0.7%;
+                line-height: 20px;
             }
         }
     }

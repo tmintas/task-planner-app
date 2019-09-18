@@ -1,3 +1,5 @@
+@import 'variables';
+
 .calendar {
     padding: 1% 1%;
 
@@ -20,7 +22,7 @@
         }
 
         > .not-current {
-            background-color: rgb(241, 250, 248);
+            background-color: #c0e4de;
         }
     }
 }

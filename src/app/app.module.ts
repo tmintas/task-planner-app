@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MonthModule } from './month/month.module';
+import { ToDosModule } from './to-dos/to-dos.module';
 
 @NgModule({
 	declarations: [
@@ -12,7 +13,8 @@ import { MonthModule } from './month/month.module';
 	imports: [
 		BrowserModule,
 		AppRoutingModule,
-		MonthModule
+		MonthModule,
+		ToDosModule
 	],
 	providers: [],
 	bootstrap: [AppComponent]

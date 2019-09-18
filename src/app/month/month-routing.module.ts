@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { MonthComponent } from './month.component';
-import { DayComponent } from './day/day.component';
+import { EditTodoItemComponent } from 'app/to-dos/edit-todo-item/edit-todo-item.component';
 
 const routes: Routes = [
 	{
@@ -14,8 +14,8 @@ const routes: Routes = [
 		component: MonthComponent,
 		children: [
 			{
-				path: 'add',
-				component: DayComponent
+				path: ':day/add',
+				component: EditTodoItemComponent
 			}
 		]
 	}

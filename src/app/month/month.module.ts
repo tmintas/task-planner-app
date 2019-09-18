@@ -5,6 +5,7 @@ import { MonthComponent } from './month.component';
 import { DayComponent } from './day/day.component';
 import { CalendarComponent } from './calendar/calendar.component';
 import { SharedModule } from '../shared/shared.module';
+import { ToDosModule } from 'app/to-dos/to-dos.module';
 
 @NgModule({
 	declarations: [
@@ -14,7 +15,8 @@ import { SharedModule } from '../shared/shared.module';
 	],
 	imports: [
 		MonthRoutingModule,
-		SharedModule
+		SharedModule,
+		ToDosModule
 	],
 	exports: [
 		MonthComponent,
