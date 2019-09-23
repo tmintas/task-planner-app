@@ -3,6 +3,7 @@
   "compilerOptions": {
     "allowUnusedLabels": false,
     "baseUrl": "./src",
+    "downlevelIteration": true,
     "paths": {
       "@extensions/*": ["app/extensions/*.ts"]
     },
@@ -14,7 +15,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
-    "target": "es5",    
+    "target": "es2015",    
     "typeRoots": [
       "node_modules/@types"
     ],
