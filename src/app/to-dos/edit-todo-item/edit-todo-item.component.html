@@ -1,27 +1,58 @@
 <div class="edit-todo-item">
-	<form>
+    <form [formGroup]="ToDoForm"> 
+        <div class="form-group">
+            <label for="date">Which day?</label>
+            <div class="input-group">
+                <input
+                    class="form-control" 
+                    placeholder="yyyy-mm-dd"
+                    id="date"
+                    name="date"
+                    ngbDatepicker 
+                    #d="ngbDatepicker"
+                    formControlName="Date"/>
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
+                </div>
+            </div>
+        </div>
+
+        <label>When?</label>
+        <ngb-timepicker formControlName="Time"></ngb-timepicker>
+
         <div class="form-group">
             <label for="name">Short name</label>
-            <input class="form-control" id="name" placeholder="To wash my cat">
+            <input type="text"
+                class="form-control" 
+                id="name" 
+                placeholder="To wash my cat"
+                formControlName="Name">
         </div>
+        
         <div class="form-group">
             <label for="description">Description</label>
-            <textarea class="form-control" id="description" rows="7" placeholder="I should wash my cat thoroughly"></textarea>
+            <textarea 
+                class="form-control" 
+                id="description" 
+                rows="7" 
+                placeholder="I should wash my cat thoroughly"
+                formControlName="Description">
+            </textarea>
         </div>
-        <legend class="col-form-label col-sm-2 pt-0">Importance</legend>
-        <div class="form-check form-check-inline importance-container">
-            <div class="flex-item">
-                <input class="form-check-input" name="importanceOptions" type="radio" id="box1" value="option1">
-                <label class="form-check-label" for="box1">Low</label>
-            </div>
-            <div class="flex-item">
-                <input class="form-check-input" name="importanceOptions" type="radio" id="box2" value="option2">
-                <label class="form-check-label" for="box2">Middle</label>
-            </div>
-            <div class="flex-item">
-                <input class="form-check-input" name="importanceOptions" type="radio" id="box3" value="option3">
-                <label class="form-check-label" for="box3">Hidh</label>
-            </div>
+
+        <div class="form-group">
+            <label for="importance">Select importance</label>
+            <select 
+                class="form-control" 
+                formControlName="Importance" 
+                id="importance" 
+                name="importance">
+                <option *ngFor="let option of ImportanceOptions" [value]="option.Id">{{option.Name}}</option>
+            </select>
         </div>
     </form>
+
+    <div *ngFor="let control of ToDoForm.controls | keyvalue">
+        {{ control.value.value }}
+    </div>
 </div>
