@@ -7,6 +7,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MonthModule } from './month/month.module';
 import { ToDosModule } from './to-dos/to-dos.module';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
 	declarations: [
@@ -20,7 +21,7 @@ import { ToDosModule } from './to-dos/to-dos.module';
 		NgbModule,
 		FormsModule
 	],
-	providers: [],
+	providers: [DatePipe],
 	bootstrap: [AppComponent]
 })
 export class AppModule { }

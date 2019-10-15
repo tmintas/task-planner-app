@@ -42,12 +42,8 @@
 
         <div class="form-group">
             <label for="importance">Select importance</label>
-            <select 
-                class="form-control" 
-                formControlName="Importance" 
-                id="importance" 
-                name="importance">
-                <option *ngFor="let option of ImportanceOptions" [value]="option.Id">{{option.Name}}</option>
+            <select class="form-control" formControlName="Importance">
+                <option *ngFor="let key of ImportanceKeys" [value]="key"> {{ ImportanceOptions[key] }} </option>
             </select>
         </div>
     </form>
@@ -55,4 +51,6 @@
     <div *ngFor="let control of ToDoForm.controls | keyvalue">
         {{ control.value.value }}
     </div>
+s
+    {{ImportanceKeys}}
 </div>

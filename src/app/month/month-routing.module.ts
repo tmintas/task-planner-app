@@ -12,9 +12,10 @@ const routes: Routes = [
 	{
 		path: ':monthNumber',
 		component: MonthComponent,
-		children: [
+		children: 
+		[
 			{
-				path: ':day/add',
+				path: ':dayNumber/add',
 				component: EditTodoItemComponent
 			}
 		]
