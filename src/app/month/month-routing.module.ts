@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { MonthComponent } from './month.component';
-import { EditTodoItemComponent } from 'app/to-dos/edit-todo-item/edit-todo-item.component';
+import { EditTodoItemComponent } from 'app/to-dos/components/edit-todo-item/edit-todo-item.component';
 
 const routes: Routes = [
 	{

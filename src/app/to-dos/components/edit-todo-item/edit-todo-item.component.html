@@ -46,11 +46,14 @@
                 <option *ngFor="let key of ImportanceKeys" [value]="key"> {{ ImportanceOptions[key] }} </option>
             </select>
         </div>
+
+        <button type="submit" class="btn btn-primary" (click)="OnSave()">Submit</button>
     </form>
 
-    <div *ngFor="let control of ToDoForm.controls | keyvalue">
+    <!-- <div *ngFor="let control of ToDoForm.controls | keyvalue">
         {{ control.value.value }}
     </div>
 s
-    {{ImportanceKeys}}
+    {{ImportanceKeys}} -->
+
 </div>

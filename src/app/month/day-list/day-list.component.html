@@ -1,7 +1,7 @@
-<div class="calendar">
+<div class="day-list">
 	<div class="bordered-flex">
 		<div class="day-flex-item" *ngFor="let day of Days; let i = index" [ngClass]="{ 'not-current' : !day.IsCurrentMonth }">
-			<app-day [Day]="day" [Items]="DayItems(i)"></app-day>
+			<app-day [Day]="day" [Items]="DayItems(day.Index)"></app-day>
 		</div>
 	</div>
 </div>

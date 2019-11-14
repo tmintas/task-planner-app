@@ -7,4 +7,12 @@
 			<fa-icon [icon]="['fas', 'plus-circle']"></fa-icon>
 		</a>
 	</div>
+	<div class="item-list d-flex flex-row bd-highlight mb-3">
+		<span
+		class="mr-2"
+			[ngClass]="{ 'high-imp-item' : IsItemHighImportant(item), 'mid-imp-item' : IsItemMidmportant(item),	'low-imp-item' : IsItemLowImportant(item) }"
+			*ngFor="let item of Items">
+			{{ item.Name }}
+		</span>
+	</div>
 </div>

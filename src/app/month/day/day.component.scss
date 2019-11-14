@@ -21,6 +21,28 @@
             font-size: 30px;
         }
     }
+
+    .item-list {
+        padding: 0 5px;
+
+        > span {
+            font-size: 13px;
+            padding: 3px;
+            border-radius: 5px;
+        }
+
+        > .low-imp-item {
+            background-color: rgb(132, 200, 221);
+        }
+
+        > .mid-imp-item {
+            background-color: rgb(238, 221, 71);
+        }
+
+        > .high-imp-item {
+            background-color: rgb(238, 116, 116);
+        }
+    }
 }
 
 .day:hover .add-item-link {

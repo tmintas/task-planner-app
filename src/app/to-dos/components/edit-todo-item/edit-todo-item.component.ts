@@ -4,9 +4,8 @@ import { FormBuilder } from '@angular/forms';
 import { map } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-date-struct';
-import { Importance } from '../enums/importance.model';
+import { Importance } from '../../enums/importance.model';
 import { NgbDate, NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
-import { NgbTime } from '@ng-bootstrap/ng-bootstrap/timepicker/ngb-time';
 
 @Component({
 	selector: 'app-edit-todo-item',
@@ -25,6 +24,8 @@ export class EditTodoItemComponent implements OnInit {
 	constructor(private fb : FormBuilder, private route : ActivatedRoute) { }
 
 	public ngOnInit() : void {
+
+		
 		const initialImportance = Importance.Middle;
 		const initialTime : NgbTimeStruct = { hour: 12, minute: 0, second: 0 };
 
@@ -42,10 +43,14 @@ export class EditTodoItemComponent implements OnInit {
 			map(p => {
 				this.month = +p['monthNumber'];
 				this.day = +p['dayNumber'];
-				
+
 				const initialDate : NgbDateStruct = new NgbDate(2019, this.month, this.day);
 				this.ToDoForm.get('Date').setValue(initialDate);
 			})
 		).subscribe();
+	}
+
+	public OnSave() : void {
+		console.log(this.ToDoForm.value);
 	}
 }
