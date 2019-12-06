@@ -1,4 +1,7 @@
 import { createAction, props } from '@ngrx/store';
 import { ToDoItem } from 'app/to-dos/models/to-do-item.model';
 
-export const AddTodo = createAction('[Tdodo] Add', props<{item : ToDoItem}>())
+// type '[Tdodo] Add', payload of type ToDoItem
+export const AddTodo = createAction('[Todo] Add', props<ToDoItem>());
+
+export const GetTodo = createAction('[Todo] Get');

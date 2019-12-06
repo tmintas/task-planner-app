@@ -28,6 +28,6 @@
 			<div class="week-day">Saturday</div>
 			<div class="week-day">Sunday</div>
 		</div>
-		<app-day-list [Days]="DisplayDays" [MonthItems]="MonthItems" [MonthName]="MonthName"></app-day-list>
+		<app-day-list [Days]="DisplayDays" [MonthItems]="Items$ | async" [MonthName]="MonthName"></app-day-list>
 	</div>
 </div>

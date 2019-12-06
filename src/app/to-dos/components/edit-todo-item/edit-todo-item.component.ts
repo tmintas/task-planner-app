@@ -6,6 +6,11 @@ import { ActivatedRoute } from '@angular/router';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-date-struct';
 import { Importance } from '../../enums/importance.model';
 import { NgbDate, NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
+import { Store } from '@ngrx/store';
+import * as fromTodoState from '../../../store/state/todo.state';
+import { AddTodo } from 'app/store/actions/todo.actions';
+import { ToDoItem } from 'app/to-dos/models/to-do-item.model';
+import { NgbTime } from '@ng-bootstrap/ng-bootstrap/timepicker/ngb-time';
 
 @Component({
 	selector: 'app-edit-todo-item',
@@ -21,7 +26,7 @@ export class EditTodoItemComponent implements OnInit {
 
 	public ToDoForm : FormGroup;
 
-	constructor(private fb : FormBuilder, private route : ActivatedRoute) { }
+	constructor(private fb : FormBuilder, private route : ActivatedRoute, private store : Store<fromTodoState.ToDoState>) { }
 
 	public ngOnInit() : void {
 
@@ -51,6 +56,15 @@ export class EditTodoItemComponent implements OnInit {
 	}
 
 	public OnSave() : void {
-		console.log(this.ToDoForm.value);
+		const ngbDateValue = this.ToDoForm.get('Date').value as NgbDate;
+		const ngbTimeValue = this.ToDoForm.get('Date').value as NgbTime;
+		const date = new Date(ngbDateValue.year, ngbDateValue.month, ngbDateValue.day, ngbTimeValue.hour, ngbTimeValue.minute, ngbTimeValue.second);
+
+		this.store.dispatch(AddTodo(new ToDoItem(
+			date, 
+			this.ToDoForm.get('Name').value, 
+			this.ToDoForm.get('Description').value, 
+			this.ToDoForm.get('Importance').value))
+		)
 	}
 }

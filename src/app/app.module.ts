@@ -9,21 +9,12 @@ import { MonthModule } from './month/month.module';
 import { DatePipe } from '@angular/common';
 import { StoreModule } from '@ngrx/store';
 
-import * as fromApp from './store/reducers/app.reducer';
-
 @NgModule({
 	declarations: [
 		AppComponent,
 	],
 	imports: [
-		StoreModule.forRoot(fromApp.appReducer, {
-			runtimeChecks: {
-				strictStateImmutability: true,
-				strictActionImmutability: true,
-				strictStateSerializability: true,
-				strictActionSerializability: true,
-			}
-		}),
+		StoreModule.forRoot({}),
 		BrowserModule,
 		AppRoutingModule,
 		MonthModule,

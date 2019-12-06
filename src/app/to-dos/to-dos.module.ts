@@ -4,12 +4,15 @@ import { EditTodoItemComponent } from './components/edit-todo-item/edit-todo-ite
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
+import { StoreModule } from '@ngrx/store';
+import * as fromTodo from '../store/reducers/todo.reducer';
 
 @NgModule({
 	declarations: [
 		EditTodoItemComponent
 	],
 	imports: [
+		StoreModule.forFeature(fromTodo.todoFeatureKey, fromTodo.TodoReducer),
 		CommonModule,
 		FormsModule,
 		NgbModule,
