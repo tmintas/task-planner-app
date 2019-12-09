@@ -17,7 +17,7 @@ export class DayComponent implements OnInit {
 	public Items : ToDoItem[];
 
 	public IsItemHighImportant(item : ToDoItem) : boolean {
-		return item.Importance === Importance.High
+		return item.Importance == Importance.High
 	}
 
 	public IsItemMidmportant(item : ToDoItem) : boolean {

@@ -4,9 +4,11 @@ import { map } from 'rxjs/operators';
 
 import * as fromDateExtns from '@extensions/date';
 import { Day } from './day/day.model';
-import { ToDoItem } from 'app/to-dos/models/to-do-item.model';
 import { Store, select } from '@ngrx/store';
-import * as fromTodoState from '../store/state/todo.state';
+// import * as fromTodoState from '../store/states/todo.state';
+import * as fromTodoSelectors from '../store/selectors/todo.selector';
+import ToDoState from '../store/states/todo.state';
+import { ToDoItem } from 'app/to-dos/models/to-do-item.model';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -17,12 +19,12 @@ import { Observable } from 'rxjs';
 })
 export class MonthComponent implements OnInit {
 
-	constructor(private route : ActivatedRoute, private store : Store<fromTodoState.ToDoState>) {	}
+	constructor(private route : ActivatedRoute, private store : Store<ToDoState>) {	}
 	
 	private monthNumber : number;
 	private year = 2019;
 	
-	public Items$ : Observable<ToDoItem[]>;
+	// public Items$ : Observable<ToDoItem[]>;
 	public DisplayDays : Day[];
 	public get Year() : number {
 		return this.year;
@@ -40,9 +42,17 @@ export class MonthComponent implements OnInit {
 					...fromDateExtns.GetPreviousMonthLastDays(this.year, this.monthNumber).map(dayNum => new Day(dayNum, false)),
 					...fromDateExtns.GetCurrentMonthDays(this.year, this.monthNumber).map(dayNum => new Day(dayNum, true)),
 					...fromDateExtns.GetNextMonthFirstDays(this.year, this.monthNumber).map(dayNum => new Day(dayNum, false)) ];
-
-				this.Items$ = this.store.pipe(select(fromTodoState.selectTodosByMonth, { month : this.monthNumber }));
 			})
 		).subscribe();
+
+		this.store.pipe(
+			map(s => {
+				console.log(s);
+			})
+		).subscribe();
+	}
+
+	public TodosByDay(dayIndex : number) : Observable<ToDoItem[]> {
+		return this.store.pipe(select(fromTodoSelectors.selectTodosByMonthAndDay, { month : this.monthNumber, day : dayIndex }));
 	}
 }
