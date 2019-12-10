@@ -1,32 +1,41 @@
 <div class="edit-todo-item">
     <form [formGroup]="ToDoForm"> 
         <div class="form-group">
-            <label for="date">Which day?</label>
+            <label for="date" [ngClass]="{'error-label': HasError('Date')}">Which day? *</label>
             <div class="input-group">
                 <input
                     class="form-control" 
                     placeholder="yyyy-mm-dd"
+                    [ngClass]="{'is-invalid': HasError('Date')}" 
                     id="date"
-                    name="date"
                     ngbDatepicker 
                     #d="ngbDatepicker"
-                    formControlName="Date"/>
+                    formControlName="Date"
+                    required/>
                 <div class="input-group-append">
                     <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"></button>
                 </div>
             </div>
+            <small class="error-hint" *ngIf="HasError('Date')">
+                {{ ErrorName('Date') }}
+            </small> 
         </div>
 
         <label>When?</label>
         <ngb-timepicker formControlName="Time"></ngb-timepicker>
 
-        <div class="form-group">
-            <label for="name">Short name</label>
+        <div class="form-group" >
+            <label for="name" [ngClass]="{'error-label': HasError('Name')}">Short name *</label>
             <input type="text"
-                class="form-control" 
+                class="form-control"
+                [ngClass]="{'is-invalid': HasError('Name')}" 
                 id="name" 
                 placeholder="To wash my cat"
-                formControlName="Name">
+                formControlName="Name"
+                required>
+            <small class="error-hint" *ngIf="HasError('Name')">
+                {{ ErrorName('Name') }}
+            </small> 
         </div>
         
         <div class="form-group">
@@ -50,10 +59,5 @@
         <button type="submit" class="btn btn-primary" (click)="OnSave()">Submit</button>
     </form>
 
-    <!-- <div *ngFor="let control of ToDoForm.controls | keyvalue">
-        {{ control.value.value }}
-    </div>
-s
-    {{ImportanceKeys}} -->
-
+    {{ToDoForm.get('Time').value}}
 </div>

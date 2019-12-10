@@ -25,22 +25,47 @@
     .item-list {
         padding: 0 5px;
 
-        > span {
+        > .todo-item {
             font-size: 13px;
             padding: 3px;
             border-radius: 5px;
+            margin: 3px;
+            white-space: nowrap;
+
+            .todo-text {
+                white-space: nowrap;
+            }
+
+            .todo-delete-btn {
+                background: transparent;
+                border: transparent;
+                margin-left: 2px;
+                border-radius: 5px;
+            }
         }
 
         > .low-imp-item {
             background-color: rgb(132, 200, 221);
+
+            button:hover {
+                background: darken($color: rgb(132, 200, 221), $amount: 10%);
+            }
         }
 
         > .mid-imp-item {
             background-color: rgb(238, 221, 71);
+        
+            button:hover {
+                background: darken($color: rgb(238, 221, 71), $amount: 10%);
+            }
         }
 
         > .high-imp-item {
             background-color: rgb(238, 116, 116);
+
+            button:hover {
+                background: darken($color: rgb(238, 116, 116), $amount: 10%);
+            }
         }
     }
 }

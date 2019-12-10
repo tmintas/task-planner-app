@@ -1,7 +1,11 @@
 import { Component, Input, ViewEncapsulation, OnInit } from '@angular/core';
-import { Day } from './day.model';
-import { ToDoItem } from 'app/to-dos/models/to-do-item.model';
-import { Importance } from 'app/to-dos/enums/importance.model';
+import { Store } from '@ngrx/store';
+
+import { Day } from '../../models/day.model';
+import { Importance } from 'app/to-dos/enums/importance.enum';
+import { DeleteTodo } from '@actions/todo';
+import { ToDoItem } from '@todo-models';
+import ToDoState from '@states/todo';
 
 @Component({
 	selector: 'app-day',
@@ -15,6 +19,8 @@ export class DayComponent implements OnInit {
 	public Day : Day;
 	@Input()
 	public Items : ToDoItem[];
+
+	constructor(private store : Store<ToDoState>) { }
 
 	public IsItemHighImportant(item : ToDoItem) : boolean {
 		return item.Importance == Importance.High
@@ -33,10 +39,15 @@ export class DayComponent implements OnInit {
 	}
 
 	ngOnInit() : void {
-		console.log('[Day] Init');
-		
-		console.log(`${this.DayNumber}  items:  `);		
-		console.log(this.Items);
-		
+		if (this.Items.length > 0) console.log(this.Items);
+	 }
+
+	public OnDelete(item : ToDoItem) : void{
+		this.store.dispatch(DeleteTodo({ payload : item.Id }))
+	}
+
+	public ItemDisplayText(item : ToDoItem) : string {
+		const minuteText = item.Time.minute < 10 ? `0${item.Time.minute}` : `${item.Time.minute}`;
+		return `${item.Name} [${item.Time.hour}:${minuteText}]`;
 	}
 }

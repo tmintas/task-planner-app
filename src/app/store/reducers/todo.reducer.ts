@@ -1,7 +1,6 @@
 import { Action, createReducer, on } from '@ngrx/store';
-import * as fromTodoActions from '../actions/todo.actions';
-import * as fromTodoState from '../states/todo.state';
-import ToDoState from '../states/todo.state';
+import ToDoState, * as fromTodoState from '@states/todo';
+import * as fromTodoActions from '@actions/todo';
 import { ToDoItem } from 'app/to-dos/models/to-do-item.model';
 
 export const initialState = fromTodoState.initializeState();
@@ -12,7 +11,15 @@ const toDoReducer = createReducer(
 		fromTodoActions.AddTodo, 
 		(state : ToDoState, newItem : { payload : ToDoItem }) => 
 		{
+			newItem.payload.Id = state.items.length;
 			return { ...state, items : [ ...state.items, newItem.payload ] };
+		}
+	),
+	on(
+		fromTodoActions.DeleteTodo,
+		(state : ToDoState, indexToRemove : { payload : number }) => 
+		{
+			return { ...state, items : [...state.items.filter(i => i.Id !== indexToRemove.payload)]}
 		}
 	)
 )

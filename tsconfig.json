@@ -5,7 +5,14 @@
     "baseUrl": "./src",
     "downlevelIteration": true,
     "paths": {
-      "@extensions/*": ["app/extensions/*.ts"]
+      "@shared-functions/*": ["app/shared/functions/*.functions.ts"],
+      "@month-models": ["app/month/models/index.ts"],
+      "@todo-enums": ["app/to-dos/enums/index.ts"],
+      "@todo-models": ["app/to-dos/models/index.ts"],
+      "@actions/*": ["app/store/actions/*.actions.ts"],
+      "@states/*": ["app/store/states/*.state.ts"],
+      "@reducers/*": ["app/store/reducers/*.reducer.ts"],
+      "@selectors/*": ["app/store/selectors/*.selector.ts"],
     },
     "outDir": "./dist/out-tsc",
     "sourceMap": true,

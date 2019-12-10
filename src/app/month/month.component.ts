@@ -2,14 +2,13 @@ import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { map } from 'rxjs/operators';
 
-import * as fromDateExtns from '@extensions/date';
-import { Day } from './day/day.model';
+import * as fromDateExtns from '@shared-functions/date';
 import { Store, select } from '@ngrx/store';
-// import * as fromTodoState from '../store/states/todo.state';
 import * as fromTodoSelectors from '../store/selectors/todo.selector';
-import ToDoState from '../store/states/todo.state';
 import { ToDoItem } from 'app/to-dos/models/to-do-item.model';
 import { Observable } from 'rxjs';
+import { Day } from '@month-models';
+import ToDoState from '@states/todo';
 
 @Component({
 	selector: 'app-month',
@@ -24,7 +23,6 @@ export class MonthComponent implements OnInit {
 	private monthNumber : number;
 	private year = 2019;
 	
-	// public Items$ : Observable<ToDoItem[]>;
 	public DisplayDays : Day[];
 	public get Year() : number {
 		return this.year;
@@ -47,7 +45,9 @@ export class MonthComponent implements OnInit {
 
 		this.store.pipe(
 			map(s => {
+				console.group('[new TODOS]')
 				console.log(s);
+				console.groupEnd();
 			})
 		).subscribe();
 	}
