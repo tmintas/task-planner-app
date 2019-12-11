@@ -14,12 +14,25 @@
         font-size: 18px;
         align-items: center;
 
-        > .add-item-link {
+        > .day-actions {
+
+            > a {
+                margin-left: 3px;
+                cursor: pointer;
+                color: $blue;
+
+                :hover {
+                    color: darken($blue, 10%);
+                }
+            }
+
             visibility: hidden;
-            color: $blue;
-            cursor: pointer;
             font-size: 30px;
         }
+    }
+
+    &:hover .day-actions {
+        visibility: visible;
     }
 
     .item-list {
@@ -70,6 +83,3 @@
     }
 }
 
-.day:hover .add-item-link {
-    visibility: visible;
-}

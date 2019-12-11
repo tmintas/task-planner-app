@@ -4,7 +4,7 @@ import { map } from 'rxjs/operators';
 
 import * as fromDateExtns from '@shared-functions/date';
 import { Store, select } from '@ngrx/store';
-import * as fromTodoSelectors from '../store/selectors/todo.selector';
+import * as fromTodoSelectors from '@selectors/todo';
 import { ToDoItem } from 'app/to-dos/models/to-do-item.model';
 import { Observable } from 'rxjs';
 import { Day } from '@month-models';

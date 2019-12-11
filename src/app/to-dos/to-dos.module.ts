@@ -8,10 +8,12 @@ import * as fromTodoState from '../store/states/todo.state';
 import * as fromTodoReducer from '../store/reducers/todo.reducer';
 
 import { EditTodoItemComponent } from './components/edit-todo-item/edit-todo-item.component';
+import { DayTodoListComponent } from './components/day-todo-list/day-todo-list.component';
 
 @NgModule({
 	declarations: [
-		EditTodoItemComponent
+		EditTodoItemComponent,
+		DayTodoListComponent
 	],
 	imports: [
 		StoreModule.forFeature(fromTodoState.todoFeatureKey, fromTodoReducer.TodoReducer),
