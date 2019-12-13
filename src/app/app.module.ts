@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { MonthModule } from './month/month.module';
 import { DatePipe } from '@angular/common';
 import { StoreModule } from '@ngrx/store';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
 	declarations: [
@@ -15,6 +16,7 @@ import { StoreModule } from '@ngrx/store';
 	],
 	imports: [
 		StoreModule.forRoot({}),
+		SharedModule,
 		BrowserModule,
 		AppRoutingModule,
 		MonthModule,

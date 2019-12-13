@@ -1,1 +1,5 @@
-<div *ngFor="let todo of Todos">{{todo.Name}}</div>
+<div class="day-todo-list">
+    <div *ngFor="let todo of Todos" class="item-info" coloredImportance [importance]="todo.Importance">{{todo.Name}}
+        <hr>
+    </div>
+</div>

@@ -58,7 +58,7 @@
         }
 
         > .low-imp-item {
-            background-color: rgb(132, 200, 221);
+            background-color: #84c8dd;
 
             button:hover {
                 background: darken($color: rgb(132, 200, 221), $amount: 10%);
@@ -66,7 +66,7 @@
         }
 
         > .mid-imp-item {
-            background-color: rgb(238, 221, 71);
+            background-color: #eedd47;
         
             button:hover {
                 background: darken($color: rgb(238, 221, 71), $amount: 10%);
@@ -74,7 +74,7 @@
         }
 
         > .high-imp-item {
-            background-color: rgb(238, 116, 116);
+            background-color: #ee7474;
 
             button:hover {
                 background: darken($color: rgb(238, 116, 116), $amount: 10%);

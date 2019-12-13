@@ -18,6 +18,8 @@ export class DayTodoListComponent implements OnInit {
         this.route.data.pipe(
             map(v => { 
                 this.Todos = v.todos;
+                console.log(this.Todos);
+                
             })
         ).subscribe();        
     }

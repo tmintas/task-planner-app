@@ -1,0 +1,19 @@
+.day-todo-list {
+    width: 80%;
+    
+    .item-info {
+        > .low-imp-item {
+            background-color: rgb(132, 200, 221);
+        }
+    
+        > .mid-imp-item {
+            background-color: rgb(238, 221, 71);
+        }
+    
+        > .high-imp-item {
+            background-color: rgb(238, 116, 116);
+        }
+    }
+
+}
+

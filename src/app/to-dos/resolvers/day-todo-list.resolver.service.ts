@@ -6,7 +6,7 @@ import ToDoState from '@states/todo';
 import { Store, select } from '@ngrx/store';
 
 import * as fromTodoSelectors from '@selectors/todo';
-import { map, take } from 'rxjs/operators';
+import { map, take, delay } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
@@ -25,10 +25,11 @@ export class DayTodoListResolverService implements Resolve<ToDoItem[]> {
         console.log(route.paramMap.get('dayNumber'));
 
         return this.store.pipe(
+            delay(1000),
             select(fromTodoSelectors.selectTodosByMonthAndDay, { month : +route.paramMap.get('monthNumber'), day : +route.paramMap.get('dayNumber') }),
             take(1),
             map(todo => {
-                if (todo != null) return todo;
+                if (todo) return todo;
                 else {
                     this.router.navigate(['../']);
                     return null;

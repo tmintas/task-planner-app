@@ -75,7 +75,7 @@ export class EditTodoItemComponent implements OnInit {
 			ngbTimeValue,
 			this.ToDoForm.get('Name').value, 
 			this.ToDoForm.get('Description').value, 
-			this.ToDoForm.get('Importance').value)})
+			+this.ToDoForm.get('Importance').value)})
 		)
 	}
 

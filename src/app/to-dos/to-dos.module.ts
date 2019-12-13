@@ -9,11 +9,13 @@ import * as fromTodoReducer from '../store/reducers/todo.reducer';
 
 import { EditTodoItemComponent } from './components/edit-todo-item/edit-todo-item.component';
 import { DayTodoListComponent } from './components/day-todo-list/day-todo-list.component';
+import { ImportanceBgDirective } from './directives/importance-bg.directive';
 
 @NgModule({
 	declarations: [
 		EditTodoItemComponent,
-		DayTodoListComponent
+		DayTodoListComponent,
+		ImportanceBgDirective
 	],
 	imports: [
 		StoreModule.forFeature(fromTodoState.todoFeatureKey, fromTodoReducer.TodoReducer),
