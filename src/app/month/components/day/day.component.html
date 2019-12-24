@@ -1,4 +1,4 @@
-<div class="day">
+<div class="day" #dayRef>
 	<div class="day-header">
 		<span>
 			{{ DayNumber }}
@@ -13,11 +13,15 @@
 		</span>
 	</div>
 	<div class="item-list">
-		<span *ngFor="let item of Items" class="todo-item" [ngClass]="{ 'high-imp-item' : IsItemHighImportant(item), 'mid-imp-item' : IsItemMidmportant(item),	'low-imp-item' : IsItemLowImportant(item) }">
+		<span *ngFor="let item of Items" class="todo-item" coloredImportance [importance]="item.Importance" 
+		[ngStyle]="{ 'visibility': item.Visible ? 'visible' : 'hidden' }">
 			<span class="todo-text">{{ ItemDisplayText(item) }}</span>
 			<button class="todo-delete-btn" (click)="OnDelete(item)">
 				<fa-icon [icon]="['fas', 'times']"></fa-icon>
 			</button>
 		</span>
+	</div>
+	<div class="more-container" *ngIf = "NotVisibleCount > 0">
+		<span> {{ NotVisibleCount }} more ... </span>
 	</div>
 </div>

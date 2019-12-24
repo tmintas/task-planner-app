@@ -1,7 +1,6 @@
-import { Component, Input, ViewEncapsulation, OnInit } from '@angular/core';
+import { Component, Input, ViewEncapsulation, OnInit, OnChanges, SimpleChanges, ViewChild, ElementRef } from '@angular/core';
 import { Store } from '@ngrx/store';
 
-import { Day } from '../../models/day.model';
 import { Importance } from 'app/to-dos/enums/importance.enum';
 import { DeleteTodo } from '@actions/todo';
 import { ToDoItem } from '@todo-models';
@@ -13,14 +12,21 @@ import ToDoState from '@states/todo';
 	styleUrls: ['./day.component.scss'],
 	encapsulation: ViewEncapsulation.None
 })
-export class DayComponent implements OnInit {
+export class DayComponent implements OnInit, OnChanges {
 
 	@Input()
-	public Day : Day;
+	public DayNumber : number;
 	@Input()
 	public Items : ToDoItem[];
 
-	constructor(private store : Store<ToDoState>) { }
+	@ViewChild("dayRef", { static: true })
+	public DayRef: ViewChild;
+
+	public get NotVisibleCount() : number {
+		return this.Items.filter(el => !el.Visible).length;
+	}
+
+	constructor(private store : Store<ToDoState>, private elRef: ElementRef) { }
 
 	public IsItemHighImportant(item : ToDoItem) : boolean {
 		return item.Importance == Importance.High
@@ -34,13 +40,24 @@ export class DayComponent implements OnInit {
 		return item.Importance == Importance.Low
 	}
 
-	public get DayNumber() : number {
-		return this.Day ? this.Day.Index : 0;
+	ngOnInit() : void {
+		if (this.DayNumber !== 6) return;
+		console.log(this.elRef.nativeElement.getBoundingClientRect().bottom);
 	}
 
-	ngOnInit() : void {
-		if (this.Items.length > 0) console.log(this.Items);
-	 }
+	ngOnChanges(changes: SimpleChanges) : void {
+		// hide new todo item if overflowing the Day container
+		const todoElements =  this.elRef.nativeElement.querySelectorAll(".todo-item");
+		
+		if (!todoElements || todoElements.length ===0 ) return;
+
+		const lastBottomX = todoElements[todoElements.length - 1].getBoundingClientRect().bottom;
+		const containerBottomCord = this.elRef.nativeElement.getBoundingClientRect().bottom;
+
+		if (lastBottomX > containerBottomCord - 20) {
+			changes.Items.currentValue[changes.Items.currentValue.length - 1].Visible = false;
+		}
+	}
 
 	public OnDelete(item : ToDoItem) : void{
 		this.store.dispatch(DeleteTodo({ payload : item.Id }))

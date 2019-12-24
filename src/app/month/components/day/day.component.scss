@@ -5,10 +5,14 @@
     height: 100%;
     border-radius: 5px;
     position: relative;
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
 
     > .day-header {
         margin: 2px 5px 5px 5px;
-        height: 35px;
+        height: 26px;
         display: flex;
         justify-content: space-between;
         font-size: 18px;
@@ -27,7 +31,7 @@
             }
 
             visibility: hidden;
-            font-size: 30px;
+            font-size: 24px;
         }
     }
 
@@ -37,6 +41,8 @@
 
     .item-list {
         padding: 0 5px;
+        overflow-y: hidden;
+        flex-grow: 1;
 
         > .todo-item {
             font-size: 13px;
@@ -56,30 +62,12 @@
                 border-radius: 5px;
             }
         }
-
-        > .low-imp-item {
-            background-color: #84c8dd;
-
-            button:hover {
-                background: darken($color: rgb(132, 200, 221), $amount: 10%);
-            }
-        }
-
-        > .mid-imp-item {
-            background-color: #eedd47;
-        
-            button:hover {
-                background: darken($color: rgb(238, 221, 71), $amount: 10%);
-            }
-        }
-
-        > .high-imp-item {
-            background-color: #ee7474;
-
-            button:hover {
-                background: darken($color: rgb(238, 116, 116), $amount: 10%);
-            }
-        }
     }
+
+    .more-container {
+        flex-basis: 20px;
+        display: flex;
+        justify-content: center;
+    } 
 }
 

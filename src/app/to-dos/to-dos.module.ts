@@ -9,15 +9,15 @@ import * as fromTodoReducer from '../store/reducers/todo.reducer';
 
 import { EditTodoItemComponent } from './components/edit-todo-item/edit-todo-item.component';
 import { DayTodoListComponent } from './components/day-todo-list/day-todo-list.component';
-import { ImportanceBgDirective } from './directives/importance-bg.directive';
+import { SharedModule } from 'app/shared/shared.module';
 
 @NgModule({
 	declarations: [
 		EditTodoItemComponent,
 		DayTodoListComponent,
-		ImportanceBgDirective
 	],
 	imports: [
+		SharedModule,
 		StoreModule.forFeature(fromTodoState.todoFeatureKey, fromTodoReducer.TodoReducer),
 		CommonModule,
 		FormsModule,

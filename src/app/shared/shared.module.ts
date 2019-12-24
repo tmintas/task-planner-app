@@ -9,10 +9,12 @@ import { far } from '@fortawesome/free-regular-svg-icons';
 library.add(fas, far);
 
 import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
+import { ImportanceBgDirective } from 'app/to-dos/directives/importance-bg.directive';
 
 @NgModule({
 	declarations: [
-		LoadingSpinnerComponent
+		LoadingSpinnerComponent,
+		ImportanceBgDirective,
 	],
 	imports: [
 		CommonModule,
@@ -20,7 +22,8 @@ import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.compo
 	exports: [
 		CommonModule,
 		FontAwesomeModule,
-		LoadingSpinnerComponent
+		LoadingSpinnerComponent,
+		ImportanceBgDirective,
 	]
 })
 export class SharedModule { }

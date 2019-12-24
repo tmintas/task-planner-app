@@ -9,6 +9,7 @@ export class ToDoItem {
 	public Name : string;
 	public Description : string;
     public Importance : Importance;
+    public Visible : boolean = true;
 
     public get Type() : ItemType {
         return !this.Time 

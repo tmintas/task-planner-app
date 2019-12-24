@@ -32,7 +32,7 @@
 		<div class="day-list">
 			<div class="bordered-flex">
 				<div class="day-flex-item" *ngFor="let day of DisplayDays; let i = index" [ngClass]="{ 'not-current' : !day.IsCurrentMonth }">
-					<app-day [Day]="day" [Items]="TodosByDay(day.Index) | async"></app-day>
+					<app-day [DayNumber]="day.Index" [Items]="TodosByDay(day.Index) | async"></app-day>
 				</div>
 			</div>
 		</div>

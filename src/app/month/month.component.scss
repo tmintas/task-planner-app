@@ -5,8 +5,10 @@
     border-radius: 6px;
     display: flex;
     flex-direction: row;
-    height: 100%;
-   
+
+    // to get rid of right-hand scroll bar
+    height: 101%;
+
     .notes-area {
         background-color: $gray;
         min-width: 270px;
@@ -19,9 +21,7 @@
         > .title {
             background-color: $turquoise;
             margin: 20px 0;
-            padding: 15px 3px;
-            // to make equal with notes without scroll bar
-            width: 97%;
+            padding: 15px 3px;;
             align-content: center;
 
             flex: 0 1 50px;
@@ -50,7 +50,7 @@
         > .notes {
             overflow-y: auto;
             flex: 1 1 auto;
-            width: 106%;
+            width: 100%;
         };
     }
 
@@ -91,7 +91,7 @@
                     border-style: solid;
                     border-radius: 3px;
                     box-sizing: border-box;
-                    height: 150px;
+                    height: 163px;
                 }
 
                 > .not-current {
@@ -109,6 +109,12 @@
         @media(max-width: 1500px) {
             .day-flex-item {
                 flex-basis: 25%;
+            }
+        }
+
+        @media(max-width: 1100px) {
+            .day-flex-item {
+                flex-basis: 50%;
             }
         }
 
