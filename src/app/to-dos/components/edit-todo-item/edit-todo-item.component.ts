@@ -70,7 +70,7 @@ export class EditTodoItemComponent implements OnInit {
 		const ngbDateValue = this.ToDoForm.get('Date').value as NgbDate;
 		const ngbTimeValue = this.ToDoForm.get('Time').value as NgbTimeStruct;
 		
-		this.store.dispatch(AddTodo({ payload : new ToDoItem(
+		this.store.dispatch(AddTodo({ item : new ToDoItem(
 			ngbDateValue, 
 			ngbTimeValue,
 			this.ToDoForm.get('Name').value, 

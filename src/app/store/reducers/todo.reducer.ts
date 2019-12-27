@@ -1,25 +1,32 @@
 import { Action, createReducer, on } from '@ngrx/store';
-import ToDoState, * as fromTodoState from '@states/todo';
+import ToDoState , * as fromTodoState from '@states/todo';
 import * as fromTodoActions from '@actions/todo';
 import { ToDoItem } from 'app/to-dos/models/to-do-item.model';
 
-export const initialState = fromTodoState.initializeState();
-
 const toDoReducer = createReducer(
-	fromTodoState.initialState,
+	fromTodoState.TODO_INITIAL_STATE,
 	on(
 		fromTodoActions.AddTodo, 
-		(state : ToDoState, newItem : { payload : ToDoItem }) => 
+		(state : ToDoState, payload : { item : ToDoItem }) => 
 		{
-			newItem.payload.Id = state.items.length;
-			return { ...state, items : [ ...state.items, newItem.payload ] };
+			payload.item.Id = state.items.length;
+			return { ...state, items : [ ...state.items, payload.item ] };
 		}
 	),
 	on(
 		fromTodoActions.DeleteTodo,
-		(state : ToDoState, indexToRemove : { payload : number }) => 
+		(state : ToDoState, payload : { id : number })  => 
 		{
-			return { ...state, items : [...state.items.filter(i => i.Id !== indexToRemove.payload)]}
+			return { ...state, items : [...state.items.filter(i => i.Id !== payload.id)] }
+		}
+	),
+	on(
+		fromTodoActions.LoadMonthTodosSuccess,
+		(state : ToDoState, payload : { items : ToDoItem[] }) => 
+		{
+			console.log('load sucess');
+			
+			return { ...state, items : payload.items }
 		}
 	)
 )

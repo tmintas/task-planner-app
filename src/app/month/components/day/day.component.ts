@@ -60,7 +60,7 @@ export class DayComponent implements OnInit, OnChanges {
 	}
 
 	public OnDelete(item : ToDoItem) : void{
-		this.store.dispatch(DeleteTodo({ payload : item.Id }))
+		this.store.dispatch(DeleteTodo({ id : item.Id }))
 	}
 
 	public ItemDisplayText(item : ToDoItem) : string {

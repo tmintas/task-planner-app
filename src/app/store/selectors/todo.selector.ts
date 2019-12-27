@@ -2,11 +2,11 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 
 import { ItemType } from '@todo-enums';
-import ToDoState, { todoFeatureKey } from '@states/todo';
+import ToDoState, { TODO_FEATURE_KEY } from '@states/todo';
 
 export const selectAllTodos = (state: ToDoState) => state.items;
 
-export const selectFeature = createFeatureSelector(todoFeatureKey);
+export const selectFeature = createFeatureSelector(TODO_FEATURE_KEY);
 
 export const selectTodosByMonthAndDay = createSelector(
     selectFeature,

@@ -5,14 +5,16 @@ import { EditTodoItemComponent } from 'app/to-dos/components/edit-todo-item/edit
 import { DayTodoListComponent } from 'app/to-dos/components/day-todo-list/day-todo-list.component';
 import { DayTodoListResolverService } from 'app/to-dos/resolvers/day-todo-list.resolver.service';
 
+import * as fromCalendarState from '@states/calendar';
+
 const routes: Routes = [
 	{
 		path: '',
 		pathMatch: 'full',
-		redirectTo: '/1'
+		redirectTo: `${fromCalendarState.CALENDAR_INITIAL_STATE.selectedYear}/${fromCalendarState.CALENDAR_INITIAL_STATE.selectedMonth}`
 	},
 	{
-		path: ':monthNumber',
+		path: ':year/:month',
 		component: MonthComponent,
 		children: 
 		[

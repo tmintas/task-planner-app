@@ -31,8 +31,14 @@
 
 		<div class="day-list">
 			<div class="bordered-flex">
-				<div class="day-flex-item" *ngFor="let day of DisplayDays; let i = index" [ngClass]="{ 'not-current' : !day.IsCurrentMonth }">
-					<app-day [DayNumber]="day.Index" [Items]="TodosByDay(day.Index) | async"></app-day>
+				<div class="day-flex-item not-current" *ngFor="let day of PreviousDays$ | async; let i = index">
+					<app-day [DayNumber]="i" [Items]="TodosByDay(i) | async"></app-day>
+				</div>
+				<div class="day-flex-item" *ngFor="let day of CurrentDays$ | async; let i = index">
+					<app-day [DayNumber]="i" [Items]="TodosByDay(i) | async"></app-day>
+				</div>
+				<div class="day-flex-item not-current" *ngFor="let day of NextDays$ | async; let i = index">
+					<app-day [DayNumber]="i" [Items]="TodosByDay(i) | async"></app-day>
 				</div>
 			</div>
 		</div>

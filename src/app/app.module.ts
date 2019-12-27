@@ -9,6 +9,7 @@ import { MonthModule } from './month/month.module';
 import { DatePipe } from '@angular/common';
 import { StoreModule } from '@ngrx/store';
 import { SharedModule } from './shared/shared.module';
+import { EffectsModule } from '@ngrx/effects';
 
 @NgModule({
 	declarations: [
@@ -16,6 +17,7 @@ import { SharedModule } from './shared/shared.module';
 	],
 	imports: [
 		StoreModule.forRoot({}),
+		EffectsModule.forRoot([]),
 		SharedModule,
 		BrowserModule,
 		AppRoutingModule,

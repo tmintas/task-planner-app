@@ -4,6 +4,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { TodoEffect } from 'app/store/effects/todo.effects';
+
 import * as fromTodoState from '../store/states/todo.state';
 import * as fromTodoReducer from '../store/reducers/todo.reducer';
 
@@ -18,7 +21,8 @@ import { SharedModule } from 'app/shared/shared.module';
 	],
 	imports: [
 		SharedModule,
-		StoreModule.forFeature(fromTodoState.todoFeatureKey, fromTodoReducer.TodoReducer),
+		StoreModule.forFeature(fromTodoState.TODO_FEATURE_KEY, fromTodoReducer.TodoReducer),
+		EffectsModule.forFeature([TodoEffect]),
 		CommonModule,
 		FormsModule,
 		NgbModule,
