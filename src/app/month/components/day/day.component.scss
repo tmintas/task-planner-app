@@ -11,7 +11,7 @@
     flex-direction: column;
 
     > .day-header {
-        margin: 2px 5px 5px 5px;
+        margin: 2px 5px 2px 5px;
         height: 26px;
         display: flex;
         justify-content: space-between;
@@ -45,10 +45,14 @@
         flex-grow: 1;
 
         > .todo-item {
+            font-weight: 500;
+            display: flex;
+            justify-content: space-between;
             font-size: 13px;
             padding: 3px;
+            padding-left: 7px;
             border-radius: 5px;
-            margin: 3px;
+            margin-bottom: 3px;
             white-space: nowrap;
 
             .todo-text {

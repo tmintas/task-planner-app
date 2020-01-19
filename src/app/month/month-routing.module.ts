@@ -11,7 +11,8 @@ const routes: Routes = [
 	{
 		path: '',
 		pathMatch: 'full',
-		redirectTo: `${fromCalendarState.CALENDAR_INITIAL_STATE.selectedYear}/${fromCalendarState.CALENDAR_INITIAL_STATE.selectedMonth}`
+		redirectTo: `${fromCalendarState.CALENDAR_INITIAL_STATE.selectedYear}/
+					 ${fromCalendarState.CALENDAR_INITIAL_STATE.selectedMonth}`
 	},
 	{
 		path: ':year/:month',
@@ -19,16 +20,12 @@ const routes: Routes = [
 		children: 
 		[
 			{
-				path: ':dayNumber/add',
+				path: ':day/add',
 				component: EditTodoItemComponent
 			},
 			{
-				path: ':dayNumber/items-list',
-				component: DayTodoListComponent,
-				resolve: 
-				{
-					todos :	DayTodoListResolverService
-				}
+				path: ':day/items-list',
+				component: DayTodoListComponent
 			}
 		]
 	}

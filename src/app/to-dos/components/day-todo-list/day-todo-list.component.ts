@@ -1,27 +1,36 @@
 import { Component, OnInit } from '@angular/core';
+import { ToDoItem } from '@todo-models';
+import ToDoState from '@states/todo';
+import { Store, select } from '@ngrx/store';
 import { ActivatedRoute } from '@angular/router';
 import { map } from 'rxjs/operators';
-import { ToDoItem } from '@todo-models';
+import * as fromTodoSelectors from '@selectors/todo';
+import { Observable } from 'rxjs';
 
 @Component({
-    selector: 'app-day-todo-list',
-    templateUrl: './day-todo-list.component.html',
-    styleUrls: ['./day-todo-list.component.scss']
+	selector: 'app-day-todo-list',
+	templateUrl: './day-todo-list.component.html',
+	styleUrls: ['./day-todo-list.component.scss']
 })
 export class DayTodoListComponent implements OnInit {
 
-    public Todos : ToDoItem[];
+	public Todos$ : Observable<ToDoItem[]>;
+	public IsLoading$: Observable<boolean>;
 
-    constructor(private route: ActivatedRoute) { }
+	constructor(private store : Store<ToDoState>, private route : ActivatedRoute) { }
 
-    ngOnInit() {
-        this.route.data.pipe(
-            map(v => { 
-                this.Todos = v.todos;
-                console.log(this.Todos);
-                
-            })
-        ).subscribe();        
-    }
+	public ngOnInit() : void {
+		this.route.params.pipe(
+			map(params => {
+                this.Todos$ = this.store.pipe(
+                    select(fromTodoSelectors.selectTodosByMonthAndDay, 
+                    { 
+                        month : +params['month'], 
+                        day : +params['day'] 
+                    }));
+           	 	}
+			)
+		).subscribe();
+	}
 
 }

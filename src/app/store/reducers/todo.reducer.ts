@@ -10,23 +10,37 @@ const toDoReducer = createReducer(
 		(state : ToDoState, payload : { item : ToDoItem }) => 
 		{
 			payload.item.Id = state.items.length;
-			return { ...state, items : [ ...state.items, payload.item ] };
+			return { ...state, 
+				items : [ ...state.items, payload.item ] 
+			};
 		}
 	),
 	on(
 		fromTodoActions.DeleteTodo,
 		(state : ToDoState, payload : { id : number })  => 
 		{
-			return { ...state, items : [...state.items.filter(i => i.Id !== payload.id)] }
+			return { ...state, 
+				items : [...state.items.filter(i => i.Id !== payload.id)] 
+			}
+		}
+	),
+	on(fromTodoActions.LoadMonthTodos,
+		(state : ToDoState) => {
+			return { ...state,
+				itemsLoading : true, 
+				itemsLoaded : false 
+			}
 		}
 	),
 	on(
 		fromTodoActions.LoadMonthTodosSuccess,
 		(state : ToDoState, payload : { items : ToDoItem[] }) => 
 		{
-			console.log('load sucess');
-			
-			return { ...state, items : payload.items }
+			return { ...state, 
+				items : payload.items, 
+				itemsLoaded: true, 
+				itemsLoading: false
+			}
 		}
 	)
 )

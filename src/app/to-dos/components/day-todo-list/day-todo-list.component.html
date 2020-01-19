@@ -1,5 +1,10 @@
 <div class="day-todo-list">
-    <div *ngFor="let todo of Todos" class="item-info" coloredImportance [importance]="todo.Importance">{{todo.Name}}
-        <hr>
-    </div>
+    <div class="item card" *ngFor="let todo of Todos$ | async" coloredImportance [importance]="todo.Importance">
+        <h5 class="card-header">{{ todo.Name }}</h5>
+        <div class="card-body">
+            <h5 class="card-title"> {{ todo.Time | displayTime }} </h5>
+            <p class="card-text"> {{ todo.Description }} </p>
+        </div>
+      </div>
+
 </div>
