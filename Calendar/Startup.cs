@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Web.Repositories;
+using Web.Repositories.Contracts;
 
 namespace Calendar
 {
@@ -22,8 +24,10 @@ namespace Calendar
         {
             services.AddControllers();
 
-            services.AddDbContext<CalendarContext>(options =>
+            services.AddDbContextPool<AppDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DevConnection")));
+
+            services.AddScoped(typeof(IDatabaseRepository<>), typeof(SqlRepository<>));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,6 +48,13 @@ namespace Calendar
             {
                 endpoints.MapControllers();
             });
+
+            // to debug migrations
+            //var optionsBuilder = new DbContextOptionsBuilder<CalendarContext>();
+            //optionsBuilder.UseSqlServer(Configuration.GetConnectionString("DevConnection"));
+
+            //var context = new CalendarContext(optionsBuilder.Options);
+            //context.Database.Migrate();
         }
     }
 }

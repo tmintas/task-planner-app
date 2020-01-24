@@ -9,9 +9,9 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Infrastructure.Migrations
 {
-    [DbContext(typeof(CalendarContext))]
-    [Migration("20200108161618_SeedItems")]
-    partial class SeedItems
+    [DbContext(typeof(AppDbContext))]
+    [Migration("20200124112109_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,6 +20,36 @@ namespace Infrastructure.Migrations
                 .HasAnnotation("ProductVersion", "3.1.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("Domain.ImportanceTypeDto", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ImportanceTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 2,
+                            Name = "High"
+                        },
+                        new
+                        {
+                            Id = 1,
+                            Name = "Middle"
+                        },
+                        new
+                        {
+                            Id = 0,
+                            Name = "Low"
+                        });
+                });
 
             modelBuilder.Entity("Domain.ToDoItem", b =>
                 {
@@ -31,10 +61,10 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Descriptionh")
+                    b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Importance")
+                    b.Property<int>("ImportanceType")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -43,6 +73,16 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ToDoItems");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Date = new DateTime(2019, 5, 1, 13, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "testdbdesc",
+                            ImportanceType = 2,
+                            Name = "testdbname"
+                        });
                 });
 #pragma warning restore 612, 618
         }
