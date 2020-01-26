@@ -12,10 +12,12 @@ const calendarReducer = createReducer(
 		fromCalendarActions.LoadMonthDays, 
 		(state : CalendarState, payload : { month : number, year : number }) => 
 		{
-            return { ...state, 
+			return { ...state, 
                 previousMonthDays : fromDateFunctions.GetPreviousMonthLastDays(payload.year, payload.month).map(i => new Day(i)),
-                selectedMonthDays : fromDateFunctions.GetCurrentMonthDays(payload.year, payload.month).map(i => new Day(i)),
-                nextMonthDays : fromDateFunctions.GetNextMonthFirstDays(payload.year, payload.month).map(i => new Day(i)),
+                currentMonthDays : fromDateFunctions.GetCurrentMonthDays(payload.year, payload.month).map(i => new Day(i)),
+				nextMonthDays : fromDateFunctions.GetNextMonthFirstDays(payload.year, payload.month).map(i => new Day(i)),
+				loaded : true,
+				loading : false
             };
 		}
 	)

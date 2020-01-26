@@ -1,4 +1,3 @@
-
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 
 import { ItemType } from '@todo-enums';
@@ -20,4 +19,17 @@ export const selectTodosByMonthAndDay = createSelector(
                 return next.Time.hour - prev.Time.hour;
             });
     }
+);
+
+export const selectTodosByMonth = createSelector(
+    selectFeature,
+    (state: ToDoState, props: { month: number }) => {
+        return state.items
+            .filter(i => i.Date.month === props.month);
+    }
+);
+
+export const itemsLoading = createSelector(
+    selectFeature,
+    (state: ToDoState) => state.itemsLoading
 );

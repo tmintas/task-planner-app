@@ -44,8 +44,8 @@ export class EditTodoItemComponent implements OnInit {
 		// handle date changes
 		this.route.params.pipe(
 			map(p => {
-				this.month = +p['monthNumber'];
-				this.day = +p['dayNumber'];
+				this.month = +p['month'];
+				this.day = +p['day'];
 
 				const initialDate : NgbDateStruct = new NgbDate(2019, this.month, this.day);
 				this.ToDoForm.reset();

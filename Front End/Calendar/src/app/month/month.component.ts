@@ -3,7 +3,8 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { map } from 'rxjs/operators';
 
 import * as fromDateFunctions from '@shared-functions/date';
-import { Store, select } from '@ngrx/store';
+import { Store } from '@ngrx/store';
+import * as fromCalendarSelectors from '@selectors/calendar';
 import * as fromTodoSelectors from '@selectors/todo';
 import * as fromTodoActions from '@actions/todo';
 import * as fromCalendarActions from '@actions/calendar';
@@ -23,11 +24,16 @@ export class MonthComponent implements OnInit {
 	constructor(private route : ActivatedRoute, private store : Store<AppState>) {	}
 	
 	private month : number;
-	private year = 2019;
-	
+	private year : number;
+
 	public CurrentDays$ : Observable<Day[]>;
 	public PreviousDays$ : Observable<Day[]>;
 	public NextDays$ : Observable<Day[]>;
+	public IsLoading$ : Observable<boolean>;
+
+	public get Month() : number {
+		return this.month;
+	}
 
 	public get Year() : number {
 		return this.year;
@@ -38,29 +44,42 @@ export class MonthComponent implements OnInit {
 	}
 
 	public ngOnInit() : void {
+
 		this.route.params.pipe(
 			map((prms : Params) => {
-				this.month = +prms.month;
+				if (!prms || !prms.month || !prms.year) return; 
 
-				this.store.dispatch(fromCalendarActions.LoadMonthDays({ month : this.month, year : this.year }))
-				this.store.dispatch(fromTodoActions.LoadMonthTodos())
+				this.month = +prms.month;
+				this.year = +prms.year;
+
+				this.store.dispatch(fromCalendarActions.LoadMonthDays(
+				{ 
+					month : this.month, 
+					year : this.year 
+				}));
+
+				this.store.dispatch(fromTodoActions.LoadMonthTodos());
+
+				this.CurrentDays$ = this.store.select(fromCalendarSelectors.currentMonthDays);
+				this.PreviousDays$ = this.store.select(fromCalendarSelectors.previousMonthDays);
+				this.NextDays$ = this.store.select(fromCalendarSelectors.nextMonthDays);
+				this.IsLoading$ = this.store.select(fromTodoSelectors.itemsLoading);
 			})
 		).subscribe();
 
-		this.CurrentDays$ = this.store.select('calendar').pipe(
-			map(c => c.selectedMonthDays)
-		);
-
-		this.PreviousDays$ = this.store.select('calendar').pipe(
-			map(c => c.previousMonthDays)
-		);
-
-		this.NextDays$ = this.store.select('calendar').pipe(
-			map(c => c.nextMonthDays)
-		);
+		this.store.pipe(
+			map(s => {
+				console.log(s);
+				
+			})
+		).subscribe();
 	}
 
-	public TodosByDay(dayIndex : number) : Observable<ToDoItem[]> {
-		return this.store.pipe(select(fromTodoSelectors.selectTodosByMonthAndDay, { month : this.month, day : dayIndex }));
+	public TodosByDay(dayIndex : number, month: number) : Observable<ToDoItem[]> {
+		return this.store.select(fromTodoSelectors.selectTodosByMonthAndDay, 
+		{
+			month: month,
+			day : dayIndex
+		})
 	}
 }

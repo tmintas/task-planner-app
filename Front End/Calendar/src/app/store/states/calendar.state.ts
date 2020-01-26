@@ -6,16 +6,19 @@ export const CALENDAR_INITIAL_STATE = {
     selectedMonth: 1,
     selectedYear: 2019,
 
-    selectedMonthDays : [],
+    currentMonthDays : [],
     previousMonthDays : [],
-    nextMonthDays : [],
+    nextMonthDays : []
 };
 
 export default class CalendarState {
     selectedMonth : number;
     selectedYear : number;
 
-    selectedMonthDays : Day[];
+    currentMonthDays : Day[];
     previousMonthDays : Day[];
     nextMonthDays : Day[];
+
+    daysLoading : boolean;
+    daysLoaded : boolean;
 };
