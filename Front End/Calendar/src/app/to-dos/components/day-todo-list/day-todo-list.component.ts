@@ -1,13 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ToDoItem } from '@todo-models';
-import ToDoState from '@states/todo';
-import { Store, select } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { ActivatedRoute } from '@angular/router';
-import { map, switchMap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import * as fromTodoSelectors from '@selectors/todo';
 import { Observable } from 'rxjs';
-import { AppState } from '@states/app.state';
-import { AppState } from '@states/app.state';
+import AppState from '@states/app';
 
 @Component({
 	selector: 'app-day-todo-list',

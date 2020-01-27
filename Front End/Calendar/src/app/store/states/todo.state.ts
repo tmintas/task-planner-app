@@ -7,10 +7,13 @@ export default class ToDoState {
 
 	public itemsLoading : boolean;
 	public itemsLoaded : boolean;
+
+	public error : any;
 }
 
 export const TODO_INITIAL_STATE : ToDoState = {
 	items : [ ],
 	itemsLoaded : false,
-	itemsLoading : true
+	itemsLoading : true,
+	error : null
 };

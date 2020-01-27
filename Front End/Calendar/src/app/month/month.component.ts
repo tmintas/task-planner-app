@@ -10,7 +10,7 @@ import * as fromTodoActions from '@actions/todo';
 import * as fromCalendarActions from '@actions/calendar';
 import { ToDoItem } from 'app/to-dos/models/to-do-item.model';
 import { Observable } from 'rxjs';
-import { AppState } from '@states/app';
+import AppState from '@states/app';
 import { Day } from '@month-models';
 
 @Component({
@@ -22,7 +22,7 @@ import { Day } from '@month-models';
 export class MonthComponent implements OnInit {
 
 	constructor(private route : ActivatedRoute, private store : Store<AppState>) {	}
-	
+
 	private month : number;
 	private year : number;
 
@@ -47,39 +47,27 @@ export class MonthComponent implements OnInit {
 
 		this.route.params.pipe(
 			map((prms : Params) => {
-				if (!prms || !prms.month || !prms.year) return; 
+				if (!prms || !prms.month || !prms.year) { return; }
 
 				this.month = +prms.month;
 				this.year = +prms.year;
 
-				this.store.dispatch(fromCalendarActions.LoadMonthDays(
-				{ 
-					month : this.month, 
-					year : this.year 
-				}));
-
-				this.store.dispatch(fromTodoActions.LoadMonthTodos());
-
-				this.CurrentDays$ = this.store.select(fromCalendarSelectors.currentMonthDays);
-				this.PreviousDays$ = this.store.select(fromCalendarSelectors.previousMonthDays);
-				this.NextDays$ = this.store.select(fromCalendarSelectors.nextMonthDays);
-				this.IsLoading$ = this.store.select(fromTodoSelectors.itemsLoading);
+				this.store.dispatch(fromCalendarActions.LoadMonthDays({ month : this.month, year : this.year }));
+				this.store.dispatch(fromTodoActions.LoadTodosMonth());
 			})
 		).subscribe();
 
-		this.store.pipe(
-			map(s => {
-				console.log(s);
-				
-			})
-		).subscribe();
+		this.CurrentDays$ = this.store.select(fromCalendarSelectors.currentMonthDays);
+		this.PreviousDays$ = this.store.select(fromCalendarSelectors.previousMonthDays);
+		this.NextDays$ = this.store.select(fromCalendarSelectors.nextMonthDays);
+		this.IsLoading$ = this.store.select(fromTodoSelectors.itemsLoading);
 	}
 
-	public TodosByDay(dayIndex : number, month: number) : Observable<ToDoItem[]> {
-		return this.store.select(fromTodoSelectors.selectTodosByMonthAndDay, 
+	public TodosByDay(dayIndex : number, month : number) : Observable<ToDoItem[]> {
+		return this.store.select(fromTodoSelectors.selectTodosByMonthAndDay,
 		{
 			month: month,
 			day : dayIndex
-		})
+		});
 	}
 }
