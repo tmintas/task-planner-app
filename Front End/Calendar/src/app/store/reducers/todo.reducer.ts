@@ -5,6 +5,36 @@ import { ToDoItem } from 'app/to-dos/models/to-do-item.model';
 
 const toDoReducer = createReducer(
 	fromTodoState.TODO_INITIAL_STATE,
+	// load all
+	on(fromTodoActions.LoadTodosAll,
+		(state : ToDoState) => {
+			return { ...state,
+				itemsLoading : true,
+				itemsLoaded : false
+			};
+		}
+	),
+	on(
+		fromTodoActions.LoadTodosAllSuccess,
+		(state : ToDoState, payload : { items : ToDoItem[] }) => {
+			return { ...state,
+				items : payload.items,
+				itemsLoading: false,
+				itemsLoaded: true
+			};
+		}
+	),
+	on(
+		fromTodoActions.LoadTodosAllFail,
+		(state : ToDoState, payload : { err : any }) => {
+			return { ...state,
+				items : [],
+				itemsLoading: false,
+				itemsLoaded: true,
+				error : payload.err
+			};
+		}
+	),
 	// load month
 	on(fromTodoActions.LoadTodosMonth,
 		(state : ToDoState) => {

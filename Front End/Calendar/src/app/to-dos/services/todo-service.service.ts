@@ -1,41 +1,37 @@
 import { Injectable } from '@angular/core';
-import { ToDoItem } from '@todo-models';
-import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
-import { Importance } from '@todo-enums';
 import { Observable, of } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { delay, take } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { ToDoItem } from '@todo-models';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class TodoService {
 
-	public static items = [
-		new ToDoItem(new NgbDate(2019, 5, 5), { hour: 12, minute: 0, second: 1 }, 'namet32e', 'destest', Importance.High, 0),
-		new ToDoItem(new NgbDate(2019, 5, 5), { hour: 12, minute: 0, second: 1 }, 'namete', 'destest', Importance.High, 1)
-	];
+	constructor(private http : HttpClient) {}
 
-	public GetMonthTodos() : Observable<ToDoItem[] > {
-		return  of(TodoService.items).pipe(delay(400));
+	public GetAll() : Observable<ToDoItem[]> {
+		return this.http.get<ToDoItem[]>('http://localhost:3000/todos').pipe(take(1));
 	}
 
-	public GetDayTodos() : Observable<ToDoItem[] > {
-		return  of(TodoService.items).pipe(delay(400));
-	}
+	// public GetDayTodos() : Observable<ToDoItem[] > {
+	// 	return  of(TodoService.items).pipe(delay(400));
+	// }
 
-	public GetById(id : number) : Observable<ToDoItem> {
-		return  of(TodoService.items[0]).pipe(delay(400));
-	}
+	// public GetById(id : number) : Observable<ToDoItem> {
+	// 	return  of(TodoService.items[0]).pipe(delay(400));
+	// }
 
 	public CreateTodo(item : ToDoItem) : Observable<ToDoItem> {
-		TodoService.items.push(item);
+		this.http.post('http://localhost:3000/todos', item);
 
 		return of(item).pipe(delay(400));
 	}
 
-	public DeleteTodo(id : number) : Observable<number> {
-		TodoService.items.splice(id, 1);
+	// public DeleteTodo(id : number) : Observable<number> {
+	// 	TodoService.items.splice(id, 1);
 
-		return of(id).pipe(delay(400));
-	}
+	// 	return of(id).pipe(delay(400));
+	// }
 }

@@ -9,9 +9,10 @@ import * as fromTodoSelectors from '@selectors/todo';
 import * as fromTodoActions from '@actions/todo';
 import * as fromCalendarActions from '@actions/calendar';
 import { ToDoItem } from 'app/to-dos/models/to-do-item.model';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import AppState from '@states/app';
 import { Day } from '@month-models';
+import { TodoService } from 'app/to-dos/services/todo-service.service';
 
 @Component({
 	selector: 'app-month',
@@ -21,7 +22,7 @@ import { Day } from '@month-models';
 })
 export class MonthComponent implements OnInit {
 
-	constructor(private route : ActivatedRoute, private store : Store<AppState>) {	}
+	constructor(private route : ActivatedRoute, private store : Store<AppState>, private s:TodoService) {	}
 
 	private month : number;
 	private year : number;
@@ -53,9 +54,10 @@ export class MonthComponent implements OnInit {
 				this.year = +prms.year;
 
 				this.store.dispatch(fromCalendarActions.LoadMonthDays({ month : this.month, year : this.year }));
-				this.store.dispatch(fromTodoActions.LoadTodosMonth());
 			})
 		).subscribe();
+
+		this.store.dispatch(fromTodoActions.LoadTodosAll());
 
 		this.CurrentDays$ = this.store.select(fromCalendarSelectors.currentMonthDays);
 		this.PreviousDays$ = this.store.select(fromCalendarSelectors.previousMonthDays);

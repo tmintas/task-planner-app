@@ -70,13 +70,13 @@ export class EditTodoItemComponent implements OnInit {
 		const ngbDateValue = this.ToDoForm.get('Date').value as NgbDate;
 		const ngbTimeValue = this.ToDoForm.get('Time').value as NgbTimeStruct;
 
-		this.store.dispatch(CreateTodo({ item : new ToDoItem(
-			ngbDateValue,
-			ngbTimeValue,
-			this.ToDoForm.get('Name').value,
-			this.ToDoForm.get('Description').value,
-			+this.ToDoForm.get('Importance').value)})
-		);
+		this.store.dispatch(CreateTodo({
+			Date : ngbDateValue,
+			Time: ngbTimeValue,
+			Name: this.ToDoForm.get('Name').value,
+			Description: this.ToDoForm.get('Description').value,
+			Importance: +this.ToDoForm.get('Importance').value
+		}));
 	}
 
 	public HasError(controlName : string) : boolean {
