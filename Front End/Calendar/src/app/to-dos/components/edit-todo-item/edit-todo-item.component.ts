@@ -10,7 +10,6 @@ import { Store } from '@ngrx/store';
 import ToDoState from '@states/todo';
 
 import { Importance } from '@todo-enums';
-import { ToDoItem } from '@todo-models';
 import { CreateTodo } from '@actions/todo';
 
 @Component({
@@ -71,11 +70,11 @@ export class EditTodoItemComponent implements OnInit {
 		const ngbTimeValue = this.ToDoForm.get('Time').value as NgbTimeStruct;
 
 		this.store.dispatch(CreateTodo({
-			Date : ngbDateValue,
-			Time: ngbTimeValue,
-			Name: this.ToDoForm.get('Name').value,
-			Description: this.ToDoForm.get('Description').value,
-			Importance: +this.ToDoForm.get('Importance').value
+			date : ngbDateValue,
+			time: ngbTimeValue,
+			name: this.ToDoForm.get('Name').value,
+			description: this.ToDoForm.get('Description').value,
+			importance: +this.ToDoForm.get('Importance').value
 		}));
 	}
 

@@ -59,8 +59,8 @@ export class DayComponent implements OnInit, OnChanges {
 		}
 	}
 
-	public OnDelete(item : ToDoItem) : void{
-		this.store.dispatch(DeleteTodo({ id : item.Id }))
+	public OnDelete(id : number) : void {
+		this.store.dispatch(DeleteTodo({ id }));
 	}
 
 	public OnEdit(item : ToDoItem) : void{

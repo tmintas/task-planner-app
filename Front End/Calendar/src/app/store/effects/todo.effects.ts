@@ -48,37 +48,41 @@ export class TodoEffect {
 		ofType(fromTodoActions.LoadTodosAll),
 		mergeMap(() => {
 			return this.todoService.GetAll().pipe(
-				map(items => fromTodoActions.LoadTodosAllSuccess({items})),
+				map(items => {
+					console.log(items);
+					
+					return fromTodoActions.LoadTodosAllSuccess({items})
+				}),
 				catchError(err => of(fromTodoActions.CreateTodoFail({ err })))
 			);
 		})
 	));
 
-	public CreateTodo$ = createEffect(() => this.actions$.pipe(
-		ofType(fromTodoActions.CreateTodo),
-		mergeMap((item) => {
-			return this.todoService.CreateTodo(item).pipe(
-				map(newItem => fromTodoActions.CreateTodoSuccess({ item : newItem })),
-				catchError(err => of(fromTodoActions.CreateTodoFail({ err })))
-			);
-		})
-	));
+	// public CreateTodo$ = createEffect(() => this.actions$.pipe(
+	// 	ofType(fromTodoActions.CreateTodo),
+	// 	mergeMap((item) => {
+	// 		return this.todoService.CreateTodo(item).pipe(
+	// 			map(newItem => fromTodoActions.CreateTodoSuccess({ item : newItem })),
+	// 			catchError(err => of(fromTodoActions.CreateTodoFail({ err })))
+	// 		);
+	// 	})
+	// ));
 
-	public UpdateTodo$ = createEffect(() => this.actions$.pipe(
-		ofType(fromTodoActions.UpdateTodo),
-		mergeMap((action) => {
-			return this.todoService.CreateTodo(action.item).pipe(
-				map(updatedItem => fromTodoActions.UpdateTodoSuccess({ id: action.id, updatedItem : action.item })),
-				catchError(err => of(fromTodoActions.UpdateTodoFail({ err })))
-			);
-		})
-	));
+	// public UpdateTodo$ = createEffect(() => this.actions$.pipe(
+	// 	ofType(fromTodoActions.UpdateTodo),
+	// 	mergeMap((action) => {
+	// 		return this.todoService.CreateTodo(action.item).pipe(
+	// 			map(updatedItem => fromTodoActions.UpdateTodoSuccess({ id: action.id, updatedItem : action.item })),
+	// 			catchError(err => of(fromTodoActions.UpdateTodoFail({ err })))
+	// 		);
+	// 	})
+	// ));
 
 	// public DeleteTodo$ = createEffect(() => this.actions$.pipe(
 	// 	ofType(fromTodoActions.DeleteTodo),
 	// 	mergeMap((action) => {
 	// 		return this.todoService.DeleteTodo(action.id).pipe(
-	// 			map(() => fromTodoActions.DeleteTodoSuccess({ id : action.id })),
+	// 			map(() => fromTodoActions.DeleteTodoSuccess({ id: action.id })),
 	// 			catchError(err => of(fromTodoActions.DeleteTodoFail({ err })))
 	// 		);
 	// 	})

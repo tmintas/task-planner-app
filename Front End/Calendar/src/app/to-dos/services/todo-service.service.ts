@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { delay, take } from 'rxjs/operators';
+import { delay, take, map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { ToDoItem } from '@todo-models';
+import { TodoItemDto } from '../models/to-do-item-dto.model';
 
 @Injectable({
 	providedIn: 'root'
@@ -12,7 +13,18 @@ export class TodoService {
 	constructor(private http : HttpClient) {}
 
 	public GetAll() : Observable<ToDoItem[]> {
-		return this.http.get<ToDoItem[]>('http://localhost:3000/todos').pipe(take(1));
+		return this.http.get<TodoItemDto[]>('http://localhost:3000/todos').pipe(
+			map(dtos => {
+				console.log('dtos:');
+				console.log(dtos);
+				
+				console.log('models:');
+				console.log(dtos.map(dto => new ToDoItem().Deserialize(dto)));
+				
+				return dtos.map(dto => new ToDoItem().Deserialize(dto))
+			},
+			take(1),
+		));
 	}
 
 	// public GetDayTodos() : Observable<ToDoItem[] > {
@@ -29,9 +41,9 @@ export class TodoService {
 		return of(item).pipe(delay(400));
 	}
 
-	// public DeleteTodo(id : number) : Observable<number> {
-	// 	TodoService.items.splice(id, 1);
+	public DeleteTodo(id : number) : Observable<{}> {
+		const url = `http://localhost:3000/todos/${id}`;
 
-	// 	return of(id).pipe(delay(400));
-	// }
+		return this.http.delete(url);
+	}
 }

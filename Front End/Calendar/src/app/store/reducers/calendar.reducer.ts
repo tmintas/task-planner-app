@@ -2,7 +2,7 @@ import { Action, createReducer, on } from '@ngrx/store';
 
 import CalendarState, * as fromCalendarState from '@states/calendar';
 import * as fromCalendarActions from '@actions/calendar';
-import * as fromTodoActions from '@actions/todo';
+// import * as fromTodoActions from '@actions/todo';
 import * as fromDateFunctions from '@shared-functions/date';
 import { Day } from 'app/month/models/day.model';
 
@@ -15,18 +15,20 @@ const calendarReducer = createReducer(
 				previousMonthDays : fromDateFunctions.GetPreviousMonthLastDays(payload.year, payload.month).map(i => new Day(i)),
 				currentMonthDays : fromDateFunctions.GetCurrentMonthDays(payload.year, payload.month).map(i => new Day(i)),
 				nextMonthDays : fromDateFunctions.GetNextMonthFirstDays(payload.year, payload.month).map(i => new Day(i)),
+				selectedMonth : payload.month,
+				selectedYear : payload.year,
 				loaded : true,
 				loading : false
 			};
 		}
 	),
-	on(fromTodoActions.LoadTodosDay,
-		(state : CalendarState, payload : { selectedDay : number }) => {
-			return { ...state,
-				selectedDay : payload.selectedDay
-			};
-		}
-	),
+	// on(fromTodoActions.LoadTodosDay,
+	// 	(state : CalendarState, payload : { selectedDay : number }) => {
+	// 		return { ...state,
+	// 			selectedDay : payload.selectedDay
+	// 		};
+	// 	}
+	// ),
 );
 
 // tslint:disable-next-line: typedef

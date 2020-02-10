@@ -14,6 +14,6 @@ export default class ToDoState {
 export const TODO_INITIAL_STATE : ToDoState = {
 	items : [ ],
 	itemsLoaded : false,
-	itemsLoading : true,
+	itemsLoading : false,
 	error : null
 };

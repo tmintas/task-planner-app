@@ -9,10 +9,9 @@ import * as fromTodoSelectors from '@selectors/todo';
 import * as fromTodoActions from '@actions/todo';
 import * as fromCalendarActions from '@actions/calendar';
 import { ToDoItem } from 'app/to-dos/models/to-do-item.model';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import AppState from '@states/app';
 import { Day } from '@month-models';
-import { TodoService } from 'app/to-dos/services/todo-service.service';
 
 @Component({
 	selector: 'app-month',
@@ -22,7 +21,7 @@ import { TodoService } from 'app/to-dos/services/todo-service.service';
 })
 export class MonthComponent implements OnInit {
 
-	constructor(private route : ActivatedRoute, private store : Store<AppState>, private s:TodoService) {	}
+	constructor(private route : ActivatedRoute, private store : Store<AppState>) {	}
 
 	private month : number;
 	private year : number;
