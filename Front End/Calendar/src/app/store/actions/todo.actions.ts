@@ -1,6 +1,7 @@
 import { createAction, props } from '@ngrx/store';
 import { ToDoItem } from 'app/to-dos/models/to-do-item.model';
 import { TodoItemDto } from 'app/to-dos/models/to-do-item-dto.model';
+import { DropdownOption } from 'app/shared/models/dropdown-option.model';
 
 export const enum TodoActionTypes {
 	LOAD_TODOS_ALL = '[Todo] LoadAll',
@@ -24,8 +25,13 @@ export const enum TodoActionTypes {
 	CREATE_TODO = '[Todo] CreateTodo',
 	UPDATE_TODO_SUCCESS = '[Todo] LoadMonthSuccess',
 	UPDATE_TODO_FAIL = '[Todo] LoadMonthFail',
-	UPDATE_TODO = '[Todo] UpdateTodo'
+	UPDATE_TODO = '[Todo] UpdateTodo',
+	LOAD_IMPORTANCE = '[Todo] LoadImportance',
+	LOAD_IMPORTANCE_SUCCESS = '[Todo] LoadImportanceSuccess'
 }
+
+export const LoadImportanceOptions = createAction(TodoActionTypes.LOAD_IMPORTANCE);
+export const LoadImportanceOptionsSuccess = createAction(TodoActionTypes.LOAD_IMPORTANCE_SUCCESS, props<{ options : DropdownOption[] }>());
 
 export const LoadTodosAll = createAction(TodoActionTypes.LOAD_TODOS_ALL);
 export const LoadTodosAllSuccess = createAction(TodoActionTypes.LOAD_TODOS_ALL_SUCCESS, props<{items : ToDoItem[]}>());
@@ -41,8 +47,8 @@ export const LoadTodosMonthFail = createAction(TodoActionTypes.LOAD_TODOS_MONTH_
 // export const LoadTodoSuccess = createAction(TodoActionTypes.LOAD_TODO_SUCCESS, props<{ item : ToDoItem }>());
 // export const LoadTodoFail = createAction(TodoActionTypes.LOAD_TODO_FAIL, props<{ err : any }>());
 
-export const CreateTodo = createAction(TodoActionTypes.CREATE_TODO , props<TodoItemDto>());
-export const CreateTodoSuccess = createAction(TodoActionTypes.CREATE_TODO_SUCCESS , props<{ item : TodoItemDto }>());
+export const CreateTodo = createAction(TodoActionTypes.CREATE_TODO , props<{ item : ToDoItem }>());
+export const CreateTodoSuccess = createAction(TodoActionTypes.CREATE_TODO_SUCCESS , props<{ item : ToDoItem }>());
 export const CreateTodoFail = createAction(TodoActionTypes.CREATE_TODO_FAIL , props<{ err : any }>());
 
 export const UpdateTodo = createAction(TodoActionTypes.UPDATE_TODO, props<{ id : number, item : ToDoItem}>());

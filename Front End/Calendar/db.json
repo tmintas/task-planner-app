@@ -1,79 +1,165 @@
 {
   "todos": [
     {
-      "Name": "Wash the car",
-      "Description": "Should wash two times",
-      "Importance": 2,
-      "Id": 1,
-      "Date": {
-        "day": 10,
-        "month": 1,
-        "year": 2019
-      },
-      "Time": {
-        "hour": 12,
-        "minute": 15
-      }
-    },
-    {
-      "Name": "test",
-      "Description": "tddesc",
-      "Importance": 1,
-      "Id": 2,
-      "Date": {
-        "day": 12,
-        "month": 1,
-        "year": 2019
-      },
-      "Time": {
-        "hour": 12,
-        "minute": 10
-      }
-    },
-    {
-      "Name": "test",
-      "Description": "tddesc",
-      "Importance": 1,
-      "Id": 3,
-      "Date": {
+      "name": "test",
+      "description": "tddesc",
+      "importance": 1,
+      "id": 3,
+      "date": {
         "day": 2,
         "month": 1,
         "year": 2019
       },
-      "Time": {
+      "time": {
         "hour": 12,
         "minute": 0
-      }
+      },
+      "Visible": true
     },
     {
-      "Name": "test",
-      "Description": "tddesc",
-      "Importance": 1,
-      "Id": 4,
-      "Date": {
+      "name": "test",
+      "description": "tddesc",
+      "importance": 1,
+      "id": 4,
+      "date": {
         "day": 10,
         "month": 1,
         "year": 2019
       },
-      "Time": {
+      "time": {
         "hour": 12,
         "minute": 0
-      }
+      },
+      "visible": true
     },
     {
-      "Name": "test",
-      "Description": "tddesc",
-      "Importance": 1,
-      "Id": 5,
-      "Date": {
+      "tame": "test",
+      "description": "tddesc",
+      "importance": 1,
+      "id": 5,
+      "date": {
         "day": 12,
         "month": 1,
         "year": 2019
       },
-      "Time": {
+      "time": {
         "hour": 14,
         "minute": 10
-      }
+      },
+      "visible": true
+    },
+    {
+      "id": 6
+    },
+    {
+      "id": 7
+    },
+    {
+      "tame": "te2st",
+      "description": "tddesc",
+      "importance": 1,
+      "date": {
+        "day": 12,
+        "month": 1,
+        "year": 2019
+      },
+      "time": {
+        "hour": 14,
+        "minute": 10
+      },
+      "id": 8
+    },
+    {
+      "date": {
+        "year": 2019,
+        "month": 1,
+        "day": 8
+      },
+      "time": {
+        "hour": 12,
+        "minute": 0,
+        "second": 0
+      },
+      "name": "sd",
+      "description": null,
+      "importance": 2,
+      "id": 9
+    },
+    {
+      "date": {
+        "year": 2019,
+        "month": 1,
+        "day": 8
+      },
+      "time": {
+        "hour": 14,
+        "minute": 2,
+        "second": 0
+      },
+      "name": "abcd",
+      "description": "abcd",
+      "importance": "3",
+      "id": 10
+    },
+    {
+      "date": {
+        "year": 2019,
+        "month": 1,
+        "day": 11
+      },
+      "time": {
+        "hour": 18,
+        "minute": 18,
+        "second": 0
+      },
+      "name": "catt",
+      "description": "catt",
+      "importance": "3",
+      "id": 11
+    },
+    {
+      "date": {
+        "year": 2019,
+        "month": 1,
+        "day": 2
+      },
+      "time": {
+        "hour": 12,
+        "minute": 0,
+        "second": 0
+      },
+      "name": "asdf",
+      "description": "aasdfasd",
+      "importance": 3,
+      "id": 12
+    },
+    {
+      "date": {
+        "year": 2019,
+        "month": 1,
+        "day": 2
+      },
+      "time": {
+        "hour": 12,
+        "minute": 0,
+        "second": 0
+      },
+      "name": "asdf",
+      "description": "aasdfasd",
+      "importance": 1,
+      "id": 13
+    },
+    {
+      "id": 14
+    },
+    {
+      "id": 15
+    },
+    {
+      "id": 16
+    },
+    {
+      "id": 17
     }
   ]
 }

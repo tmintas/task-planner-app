@@ -56,6 +56,7 @@ export class MonthComponent implements OnInit {
 			})
 		).subscribe();
 
+		this.store.dispatch(fromTodoActions.LoadImportanceOptions());
 		this.store.dispatch(fromTodoActions.LoadTodosAll());
 
 		this.CurrentDays$ = this.store.select(fromCalendarSelectors.currentMonthDays);

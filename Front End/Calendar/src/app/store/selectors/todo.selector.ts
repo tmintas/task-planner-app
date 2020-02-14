@@ -10,7 +10,7 @@ export const selectTodosByMonthAndDay = createSelector(
 	selectFeature,
 	(state : ToDoState, props : { month : number, day : number }) => {
 		return state.items
-			.filter(i => i.Date.month === props.month && i.Date.day === props.day)
+			.filter(i => i.Date && i.Date.month === props.month && i.Date.day === props.day)
 			.sort((next, prev) => {
 				// put todos without time to the end
 				// if (next.Type === ItemType.UndefiniteTime) { return 1; }

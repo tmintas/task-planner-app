@@ -1,4 +1,4 @@
-import { Component, Input, ViewEncapsulation, OnInit, OnChanges, SimpleChanges, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input, ViewEncapsulation, OnChanges, SimpleChanges, ViewChild, ElementRef } from '@angular/core';
 import { Store } from '@ngrx/store';
 
 import { Importance } from 'app/to-dos/enums/importance.enum';
@@ -12,7 +12,7 @@ import ToDoState from '@states/todo';
 	styleUrls: ['./day.component.scss'],
 	encapsulation: ViewEncapsulation.None
 })
-export class DayComponent implements OnInit, OnChanges {
+export class DayComponent implements OnChanges {
 
 	@Input()
 	public DayNumber : number;
@@ -38,11 +38,6 @@ export class DayComponent implements OnInit, OnChanges {
 
 	public IsItemLowImportant(item : ToDoItem) : boolean {
 		return item.Importance == Importance.Low
-	}
-
-	ngOnInit() : void {
-		if (this.DayNumber !== 6) return;
-		console.log(this.elRef.nativeElement.getBoundingClientRect().bottom);
 	}
 
 	ngOnChanges(changes: SimpleChanges) : void {

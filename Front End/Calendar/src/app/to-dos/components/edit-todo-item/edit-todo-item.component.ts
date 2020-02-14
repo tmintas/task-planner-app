@@ -10,7 +10,11 @@ import { Store } from '@ngrx/store';
 import ToDoState from '@states/todo';
 
 import { Importance } from '@todo-enums';
-import { CreateTodo } from '@actions/todo';
+import { CreateTodo, LoadImportanceOptionsSuccess, LoadImportanceOptions } from '@actions/todo';
+import { ToDoItem } from '@todo-models';
+import { DropdownOption } from 'app/shared/models/dropdown-option.model';
+import { Observable } from 'rxjs';
+import AppState from '@states/app.state';
 
 @Component({
 	selector: 'app-edit-todo-item',
@@ -21,13 +25,14 @@ export class EditTodoItemComponent implements OnInit {
 	private month : number;
 	private day : number;
 
-	public ImportanceOptions = Importance;
-	public ImportanceKeys = Object.keys(this.ImportanceOptions).filter(key => !isNaN(Number(key)));
+	public ImportanceOptions : Observable<DropdownOption[]>;
 	public ToDoForm : FormGroup;
 
-	constructor(private fb : FormBuilder, private route : ActivatedRoute, private store : Store<ToDoState>) { }
+	constructor(private fb : FormBuilder, private route : ActivatedRoute, private store : Store<AppState>) { }
 
 	public ngOnInit() : void {
+		this.ImportanceOptions = this.store.select(s => s.todo.imprtanceOptions);
+
 		const initialImportance = Importance.Middle;
 		const initialTime : NgbTimeStruct = { hour: 12, minute: 0, second: 0 };
 
@@ -53,29 +58,29 @@ export class EditTodoItemComponent implements OnInit {
 				this.ToDoForm.get('Importance').setValue(initialImportance);
 			})
 		).subscribe();
-
-		this.ToDoForm.valueChanges.pipe(
-			map(v => {
-				console.log(this.ToDoForm.get('Time').value);
-			})
-		).subscribe();
 	}
 
 	public OnSave() : void {
 		this.ToDoForm.markAllAsTouched();
-
 		if (this.ToDoForm.invalid) { return; }
 
-		const ngbDateValue = this.ToDoForm.get('Date').value as NgbDate;
-		const ngbTimeValue = this.ToDoForm.get('Time').value as NgbTimeStruct;
+		const item : ToDoItem = this.mapToTodo();
+		this.store.dispatch(CreateTodo({ item } ));
+	}
 
-		this.store.dispatch(CreateTodo({
-			date : ngbDateValue,
-			time: ngbTimeValue,
-			name: this.ToDoForm.get('Name').value,
-			description: this.ToDoForm.get('Description').value,
-			importance: +this.ToDoForm.get('Importance').value
-		}));
+	private mapToTodo() : ToDoItem
+	{
+		// return {
+		// 	Date : this.ToDoForm.get('Date').value as NgbDate, 
+		// 	Time : this.ToDoForm.get('Time').value as NgbTimeStruct, 
+		// 	Name : this.ToDoForm.get('Name').value,  
+		// 	Description : this.ToDoForm.get('Description').value, 
+		// 	Importance : +this.ToDoForm.get('Importance').value as Importance
+		// };
+
+		const a = new ToDoItem().Deserialize(this.ToDoForm.value);
+
+		return new ToDoItem().Deserialize(this.ToDoForm.value)
 	}
 
 	public HasError(controlName : string) : boolean {

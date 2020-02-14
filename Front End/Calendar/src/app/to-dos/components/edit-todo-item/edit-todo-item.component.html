@@ -52,7 +52,7 @@
         <div class="form-group">
             <label for="importance">Select importance</label>
             <select class="form-control" formControlName="Importance">
-                <option *ngFor="let key of ImportanceKeys" [value]="key"> {{ ImportanceOptions[key] }} </option>
+                <option *ngFor="let option of ImportanceOptions | async" [value]="option.Value"> {{ option.DisplayName }} </option>
             </select>
         </div>
 

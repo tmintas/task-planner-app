@@ -2,7 +2,7 @@ import { Action, createReducer, on } from '@ngrx/store';
 import ToDoState , * as fromTodoState from '@states/todo';
 import * as fromTodoActions from '@actions/todo';
 import { ToDoItem } from 'app/to-dos/models/to-do-item.model';
-import { TodoItemDto } from 'app/to-dos/models/to-do-item-dto.model';
+import { DropdownOption } from 'app/shared/models/dropdown-option.model';
 
 const toDoReducer = createReducer(
 	fromTodoState.TODO_INITIAL_STATE,
@@ -90,34 +90,42 @@ const toDoReducer = createReducer(
 	// create
 	on(
 		fromTodoActions.CreateTodo,
-		(state : ToDoState) => {
+		(state : ToDoState, payload : { item : ToDoItem }) => {
 			return { ...state,
 				itemsLoaded: false,
 				itemsLoading: true
 			};
 		}
 	),
-	// on(
-	// 	fromTodoActions.CreateTodoSuccess,
-	// 	(state : ToDoState, payload : { item : ToDoItem }) => {
-	// 		payload.item.Id = state.items.length;
-	// 		return { ...state,
-	// 			items : [ ...state.items, payload.item ],
-	// 			itemsLoaded: true,
-	// 			itemsLoading: false
-	// 		};
-	// 	}
-	// ),
-	// on(
-	// 	fromTodoActions.CreateTodoFail,
-	// 	(state : ToDoState, payload : { err : any }) => {
-	// 		return { ...state,
-	// 			itemsLoaded: true,
-	// 			itemsLoading: false,
-	// 			error : payload.err
-	// 		};
-	// 	}
-	// ),
+	on(
+		fromTodoActions.CreateTodoSuccess,
+		(state : ToDoState, payload : { item : ToDoItem }) => {
+			payload.item.Id = state.items.length;
+			return { ...state,
+				items : [ ...state.items, payload.item ],
+				itemsLoaded: true,
+				itemsLoading: false
+			};
+		}
+	),
+	on(
+		fromTodoActions.CreateTodoFail,
+		(state : ToDoState, payload : { err : any }) => {
+			return { ...state,
+				itemsLoaded: true,
+				itemsLoading: false,
+				error : payload.err
+			};
+		}
+	),
+	on(
+		fromTodoActions.LoadImportanceOptionsSuccess,
+		(state : ToDoState, payload : { options : DropdownOption[]}) => {
+			return { ...state,
+				imprtanceOptions : payload.options,
+			};
+		}
+	),
 	// // delete
 	// on(
 	// 	fromTodoActions.DeleteTodo,
