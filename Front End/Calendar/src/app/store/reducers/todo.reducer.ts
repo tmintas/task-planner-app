@@ -36,57 +36,6 @@ const toDoReducer = createReducer(
 			};
 		}
 	),
-	// load month
-	on(fromTodoActions.LoadTodosMonth,
-		(state : ToDoState) => {
-			return { ...state,
-				itemsLoading : true,
-				itemsLoaded : false
-			};
-		}
-	),
-	on(
-		fromTodoActions.LoadTodosMonthSuccess,
-		(state : ToDoState, payload : { items : ToDoItem[] }) => {
-			return { ...state,
-				items : payload.items,
-				itemsLoading: false,
-				itemsLoaded: true
-			};
-		}
-	),
-	on(
-		fromTodoActions.LoadTodosMonthFail,
-		(state : ToDoState, payload : { err : any }) => {
-			return { ...state,
-				items : [],
-				itemsLoading: false,
-				itemsLoaded: true,
-				error : payload.err
-			};
-		}
-	),
-	// load day
-	// on(fromTodoActions.LoadTodosDaySuccess,
-	// 	(state : ToDoState, payload : { items : ToDoItem[] }) => {
-	// 		return { ...state,
-	// 			items : payload.items,
-	// 			itemsLoading : true,
-	// 			itemsLoaded : false
-	// 		};
-	// 	}
-	// ),
-	// on(
-	// 	fromTodoActions.LoadTodosDayFail,
-	// 	(state : ToDoState, payload : { err : any }) => {
-	// 		return { ...state,
-	// 			items : [],
-	// 			itemsLoading: false,
-	// 			itemsLoaded: true,
-	// 			error : payload.err
-	// 		};
-	// 	}
-	// ),
 	// create
 	on(
 		fromTodoActions.CreateTodo,
@@ -126,36 +75,36 @@ const toDoReducer = createReducer(
 			};
 		}
 	),
-	// // delete
-	// on(
-	// 	fromTodoActions.DeleteTodo,
-	// 	(state : ToDoState)  => {
-	// 		return { ...state,
-	// 			itemsLoading: true,
-	// 			itemsLoaded: false
-	// 		};
-	// 	}
-	// ),
-	// on(
-	// 	fromTodoActions.DeleteTodoSuccess,
-	// 	(state : ToDoState, payload : { id : number })  => {
-	// 		return { ...state,
-	// 			items : [...state.items.filter(i => i.Id !== payload.id)],
-	// 			itemsLoaded: true,
-	// 			itemsLoading: false
-	// 		};
-	// 	}
-	// ),
-	// on(
-	// 	fromTodoActions.DeleteTodoFail,
-	// 	(state : ToDoState, payload : { err : any })  => {
-	// 		return { ...state,
-	// 			itemsLoaded: true,
-	// 			itemsLoading: false,
-	// 			error : payload.err
-	// 		};
-	// 	}
-	// ),
+	// delete
+	on(
+		fromTodoActions.DeleteTodo,
+		(state : ToDoState)  => {
+			return { ...state,
+				itemsLoading: true,
+				itemsLoaded: false
+			};
+		}
+	),
+	on(
+		fromTodoActions.DeleteTodoSuccess,
+		(state : ToDoState, payload : { id : number })  => {
+			return { ...state,
+				items : [...state.items.filter(i => i.Id !== payload.id)],
+				itemsLoaded: true,
+				itemsLoading: false
+			};
+		}
+	),
+	on(
+		fromTodoActions.DeleteTodoFail,
+		(state : ToDoState, payload : { err : any })  => {
+			return { ...state,
+				itemsLoaded: true,
+				itemsLoading: false,
+				error : payload.err
+			};
+		}
+	),
 	// // update
 	// on(
 	// 	fromTodoActions.UpdateTodo,

@@ -1,10 +1,7 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-
 import ToDoState, { TODO_FEATURE_KEY } from '@states/todo';
 
-export const selectAllTodos = (state : ToDoState) => state.items;
-
-export const selectFeature = createFeatureSelector(TODO_FEATURE_KEY);
+export const selectFeature = createFeatureSelector<ToDoState>(TODO_FEATURE_KEY);
 
 export const selectTodosByMonthAndDay = createSelector(
 	selectFeature,
@@ -24,11 +21,16 @@ export const selectTodosByMonth = createSelector(
 	selectFeature,
 	(state : ToDoState, props : { month : number }) => {
 		return state.items
-			.filter(i => i.Date.month === props.month);
+			.filter(i => i.Date && i.Date.month === props.month);
 	}
 );
 
 export const itemsLoading = createSelector(
 	selectFeature,
 	(state : ToDoState) => state.itemsLoading
+);
+
+export const selectImportanceOptions = createSelector(
+	selectFeature,
+	(state : ToDoState) => state.imprtanceOptions
 );

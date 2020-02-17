@@ -11,8 +11,12 @@ const routes: Routes = [
 	{
 		path: '',
 		pathMatch: 'full',
-		redirectTo: `${fromCalendarState.CALENDAR_INITIAL_STATE.selectedYear}/
-					 ${fromCalendarState.CALENDAR_INITIAL_STATE.selectedMonth}`
+		redirectTo: `${fromCalendarState.CALENDAR_INITIAL_STATE.selectedYear}/${fromCalendarState.CALENDAR_INITIAL_STATE.selectedMonth}`
+	},
+	{
+		path: ':year',
+		redirectTo : `:year/${fromCalendarState.CALENDAR_INITIAL_STATE.selectedMonth}`,
+		pathMatch: 'full'
 	},
 	{
 		path: ':year/:month',
@@ -20,7 +24,11 @@ const routes: Routes = [
 		children: 
 		[
 			{
-				path: ':day/add',
+				path: 'add',
+				component: EditTodoItemComponent
+			},
+			{
+				path: 'edit/:itemId',
 				component: EditTodoItemComponent
 			},
 			{

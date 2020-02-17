@@ -17,10 +17,10 @@
 		[ngStyle]="{ 'visibility': item.Visible ? 'visible' : 'hidden' }">
 			<span class="todo-text">{{ ItemDisplayText(item) }}</span>
 			<div>
-				<button class="todo-delete-btn" (click)="OnDelete(item.Id)">
+				<a class="todo-delete-btn" [routerLink]="['./', 'edit', item.Id]">
 					<fa-icon [icon]="['fas', 'edit']"></fa-icon>
-				</button>
-				<button class="todo-delete-btn" (click)="OnEdit(item)">
+				</a>
+				<button class="todo-delete-btn" (click)="OnDelete(item)">
 					<fa-icon [icon]="['fas', 'times']"></fa-icon>
 				</button>
 			</div>

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { delay, take, map, catchError } from 'rxjs/operators';
+import { take, map, catchError } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ToDoItem } from '@todo-models';
 import { TodoItemDto } from '../models/to-do-item-dto.model';
@@ -10,7 +10,7 @@ import { Importance } from '../enums/importance.enum';
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type':  'application/json' })
 };
-  
+
 @Injectable({
 	providedIn: 'root'
 })
@@ -26,18 +26,7 @@ export class TodoService {
 		));
 	}
 
-	// public GetDayTodos() : Observable<ToDoItem[] > {
-	// 	return  of(TodoService.items).pipe(delay(400));
-	// }
-
-	// public GetById(id : number) : Observable<ToDoItem> {
-	// 	return  of(TodoService.items[0]).pipe(delay(400));
-	// }
-
 	public CreateTodo(item : ToDoItem) : Observable<ToDoItem> {
-		const dto = item.MapToDto();
-		console.log(dto);
-		
 		return this.http.post<TodoItemDto>('http://localhost:3000/todos', item.MapToDto(), httpOptions).pipe(
 			map(() => item),
 			catchError((err) => of(err))
@@ -50,8 +39,13 @@ export class TodoService {
 		return this.http.delete(url);
 	}
 
-	public GetImportanceOptions() : DropdownOption[] 
-	{
+	public Update(id : number, updateModel : ToDoItem) : Observable<{}> {
+		const url = `http://localhost:3000/todos/${id}`;
+
+		return this.http.put(url, { updateModel }, httpOptions);
+	}
+
+	public GetImportanceOptions() : DropdownOption[] {
 		return [
 			{ Value : Importance.Low, DisplayName : "Low" },
 			{ Value : Importance.Middle, DisplayName : "Middle" },

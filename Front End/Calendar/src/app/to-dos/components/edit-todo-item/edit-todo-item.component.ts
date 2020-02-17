@@ -2,19 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-date-struct';
 import { NgbDate, NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngrx/store';
-
-import ToDoState from '@states/todo';
+import * as fromTodoSelectors from '@selectors/todo';
 
 import { Importance } from '@todo-enums';
-import { CreateTodo, LoadImportanceOptionsSuccess, LoadImportanceOptions } from '@actions/todo';
+import { CreateTodo } from '@actions/todo';
 import { ToDoItem } from '@todo-models';
 import { DropdownOption } from 'app/shared/models/dropdown-option.model';
 import { Observable } from 'rxjs';
-import AppState from '@states/app.state';
+import AppState from '@states/app';
 
 @Component({
 	selector: 'app-edit-todo-item',
@@ -31,7 +30,7 @@ export class EditTodoItemComponent implements OnInit {
 	constructor(private fb : FormBuilder, private route : ActivatedRoute, private store : Store<AppState>) { }
 
 	public ngOnInit() : void {
-		this.ImportanceOptions = this.store.select(s => s.todo.imprtanceOptions);
+		this.ImportanceOptions = this.store.select(fromTodoSelectors.selectImportanceOptions);
 
 		const initialImportance = Importance.Middle;
 		const initialTime : NgbTimeStruct = { hour: 12, minute: 0, second: 0 };
@@ -47,7 +46,7 @@ export class EditTodoItemComponent implements OnInit {
 
 		// handle date changes
 		this.route.params.pipe(
-			map(p => {
+			switchMap(p => {
 				this.month = +p['month'];
 				this.day = +p['day'];
 
@@ -56,6 +55,24 @@ export class EditTodoItemComponent implements OnInit {
 				this.ToDoForm.get('Date').setValue(initialDate);
 				this.ToDoForm.get('Time').setValue(initialTime);
 				this.ToDoForm.get('Importance').setValue(initialImportance);
+
+				const itemId = +p['itemId'];
+				return this.store.pipe(map((s) => s.todo.items.find(i => i.Id === itemId)));
+
+			}),
+			map((el : ToDoItem) => {
+				if (el) {
+					this.ToDoForm.get('Date').setValue(el.Date);
+					this.ToDoForm.get('Name').setValue(el.Name);
+				}
+			})
+		).subscribe();
+		
+		const itemId = +this.route.snapshot.params['itemId'];
+		this.store.pipe(
+			map((s) => {
+				const item = s.todo.items.filter(i => i.Id === itemId);
+				console.log(item);						
 			})
 		).subscribe();
 	}
@@ -70,15 +87,6 @@ export class EditTodoItemComponent implements OnInit {
 
 	private mapToTodo() : ToDoItem
 	{
-		// return {
-		// 	Date : this.ToDoForm.get('Date').value as NgbDate, 
-		// 	Time : this.ToDoForm.get('Time').value as NgbTimeStruct, 
-		// 	Name : this.ToDoForm.get('Name').value,  
-		// 	Description : this.ToDoForm.get('Description').value, 
-		// 	Importance : +this.ToDoForm.get('Importance').value as Importance
-		// };
-
-		const a = new ToDoItem().Deserialize(this.ToDoForm.value);
 
 		return new ToDoItem().Deserialize(this.ToDoForm.value)
 	}

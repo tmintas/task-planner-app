@@ -4,11 +4,11 @@ import { Routes, RouterModule } from '@angular/router';
 const routes : Routes = [
 	{
 		path: '',
-		redirectTo: 'month',
+		redirectTo: 'calendar',
 		pathMatch: 'full'
 	},
 	{
-		path: 'month',
+		path: 'calendar',
 		loadChildren: () => import('./month/month.module').then(m => m.MonthModule)
 	}
 ];

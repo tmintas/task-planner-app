@@ -55,7 +55,7 @@ export class TodoEffect {
 				catchError(err => of(fromTodoActions.CreateTodoFail({ err })))
 			);
 		})
-));
+	));
 
 	public CreateTodo$ = createEffect(() => this.actions$.pipe(
 		ofType(fromTodoActions.CreateTodo),
@@ -86,13 +86,13 @@ export class TodoEffect {
 	// 	})
 	// ));
 
-	// public DeleteTodo$ = createEffect(() => this.actions$.pipe(
-	// 	ofType(fromTodoActions.DeleteTodo),
-	// 	mergeMap((action) => {
-	// 		return this.todoService.DeleteTodo(action.id).pipe(
-	// 			map(() => fromTodoActions.DeleteTodoSuccess({ id: action.id })),
-	// 			catchError(err => of(fromTodoActions.DeleteTodoFail({ err })))
-	// 		);
-	// 	})
-	// ));
+	public DeleteTodo$ = createEffect(() => this.actions$.pipe(
+		ofType(fromTodoActions.DeleteTodo),
+		mergeMap((action) => {
+			return this.todoService.DeleteTodo(action.id).pipe(
+				map(() => fromTodoActions.DeleteTodoSuccess({ id: action.id })),
+				catchError(err => of(fromTodoActions.DeleteTodoFail({ err })))
+			);
+		})
+	));
 }

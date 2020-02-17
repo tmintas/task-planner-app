@@ -2,9 +2,8 @@ import { Action, createReducer, on } from '@ngrx/store';
 
 import CalendarState, * as fromCalendarState from '@states/calendar';
 import * as fromCalendarActions from '@actions/calendar';
-// import * as fromTodoActions from '@actions/todo';
 import * as fromDateFunctions from '@shared-functions/date';
-import { Day } from 'app/month/models/day.model';
+import { Day } from '@month-models';
 
 const calendarReducer = createReducer(
 	fromCalendarState.CALENDAR_INITIAL_STATE,
