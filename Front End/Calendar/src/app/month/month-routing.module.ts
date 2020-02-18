@@ -24,17 +24,13 @@ const routes: Routes = [
 		children: 
 		[
 			{
-				path: 'add',
-				component: EditTodoItemComponent
-			},
-			{
-				path: 'edit/:itemId',
-				component: EditTodoItemComponent
-			},
-			{
-				path: ':day/items-list',
+				path: ':day',
 				component: DayTodoListComponent
-			}
+			},
+			{
+				path: ':day/edit/:itemId',
+				component: EditTodoItemComponent
+			},
 		]
 	}
 ];
