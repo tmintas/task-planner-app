@@ -9,20 +9,17 @@ export const selectTodosByMonthAndDay = createSelector(
 		return state.items
 			.filter(i => i.Date && i.Date.month === props.month && i.Date.day === props.day)
 			.sort((next, prev) => {
-				// put todos without time to the end
-				// if (next.Type === ItemType.UndefiniteTime) { return 1; }
+				// TODO add moving todos without time to the end
+				if (!prev.Time || !next.Time) { return 1; }
 				// if (prev.Type === ItemType.UndefiniteTime) { return -1; }
 				return next.Time.hour - prev.Time.hour;
 			});
 	}
 );
 
-export const selectTodosByMonth = createSelector(
+export const selectById = createSelector(
 	selectFeature,
-	(state : ToDoState, props : { month : number }) => {
-		return state.items
-			.filter(i => i.Date && i.Date.month === props.month);
-	}
+	(state : ToDoState, props : { id : number }) => state.items.find(i => i.Id === props.id)
 );
 
 export const itemsLoading = createSelector(

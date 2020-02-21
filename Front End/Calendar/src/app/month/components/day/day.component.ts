@@ -5,7 +5,6 @@ import { Importance } from 'app/to-dos/enums/importance.enum';
 import { DeleteTodo } from '@actions/todo';
 import { ToDoItem } from '@todo-models';
 import ToDoState from '@states/todo';
-import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
 	selector: 'app-day',
@@ -24,10 +23,12 @@ export class DayComponent implements OnChanges {
 	public DayRef: ViewChild;
 
 	public get NotVisibleCount() : number {
+		if (!this.Items) return 0; 
+		 
 		return this.Items.filter(el => !el.Visible).length;
 	}
 
-	constructor(private store : Store<ToDoState>, private elRef: ElementRef, private router: Router, private route : ActivatedRoute) { }
+	constructor(private store : Store<ToDoState>, private elRef: ElementRef) { }
 
 	public IsItemHighImportant(item : ToDoItem) : boolean {
 		return item.Importance == Importance.High
@@ -42,9 +43,6 @@ export class DayComponent implements OnChanges {
 	}
 
 	ngOnChanges(changes: SimpleChanges) : void {
-		if (this.Items && this.Items.length > 0) console.log(this.Items);
-		
-
 		// hide new todo item if overflowing the Day container
 		const todoElements =  this.elRef.nativeElement.querySelectorAll(".todo-item");
 		
@@ -62,11 +60,11 @@ export class DayComponent implements OnChanges {
 		this.store.dispatch(DeleteTodo({ id }));
 	}
 
-	public OnEdit(item : ToDoItem) : void{
-		this.router.navigate(['./', 'edit', { id : item.Id }], { relativeTo : this.route })
-	}
-
 	public ItemDisplayText(item : ToDoItem) : string {
+		// TODO use pipe for that
+		if (!item) return '';
+		if (!item.Time || !item.Time.hour) return item.Name;
+
 		const minuteText = item.Time.minute < 10 ? `0${item.Time.minute}` : `${item.Time.minute}`;
 		return `${item.Name} [${item.Time.hour}:${minuteText}]`;
 	}

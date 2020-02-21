@@ -19,8 +19,8 @@ export const enum TodoActionTypes {
 	DELETE_TODO = '[Todo] DeleteTodo',
 	DELETE_TODO_SUCCESS = '[Todo] DeleteTodoSuccess',
 	DELETE_TODO_FAIL = '[Todo] DeleteTodoFail',
-	CREATE_TODO_SUCCESS = '[Todo] CreateMonthSuccess',
-	CREATE_TODO_FAIL = '[Todo] CreateMonthFail',
+	CREATE_TODO_SUCCESS = '[Todo] CreateTodoSuccess',
+	CREATE_TODO_FAIL = '[Todo] CreateTodoFail',
 	CREATE_TODO = '[Todo] CreateTodo',
 	UPDATE_TODO_SUCCESS = '[Todo] LoadMonthSuccess',
 	UPDATE_TODO_FAIL = '[Todo] LoadMonthFail',
@@ -41,7 +41,7 @@ export const CreateTodoSuccess = createAction(TodoActionTypes.CREATE_TODO_SUCCES
 export const CreateTodoFail = createAction(TodoActionTypes.CREATE_TODO_FAIL , props<{ err : any }>());
 
 export const UpdateTodo = createAction(TodoActionTypes.UPDATE_TODO, props<{ id : number, item : ToDoItem}>());
-export const UpdateTodoSuccess = createAction(TodoActionTypes.UPDATE_TODO_SUCCESS, props<{ id : number, updatedItem : ToDoItem }>());
+export const UpdateTodoSuccess = createAction(TodoActionTypes.UPDATE_TODO_SUCCESS, props<{ updatedItem : ToDoItem }>());
 export const UpdateTodoFail = createAction(TodoActionTypes.UPDATE_TODO_FAIL, props<{ err : any }>());
 
 export const DeleteTodo = createAction(TodoActionTypes.DELETE_TODO, props<{ id : number }>());

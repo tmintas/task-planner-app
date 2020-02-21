@@ -18,12 +18,6 @@ export class DayTodoListResolverService implements Resolve<ToDoItem[]> {
     ) {}
         
     resolve(route: ActivatedRouteSnapshot): Observable<ToDoItem[]> | Observable<never> {
-        console.log('month in resolver...');
-        console.log(route.paramMap.get('month'));
-
-        console.log('month in resolver...');
-        console.log(route.paramMap.get('day'));
-
         return this.store.pipe(
             delay(1000),
             select(fromTodoSelectors.selectTodosByMonthAndDay, { month : +route.paramMap.get('monthNumber'), day : +route.paramMap.get('dayNumber') }),

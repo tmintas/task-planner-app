@@ -21,14 +21,17 @@ export class TodoService {
 	public GetAll() : Observable<ToDoItem[]> {
 		// TODO get viewmodels instead of dtos
 		return this.http.get<TodoItemDto[]>('http://localhost:3000/todos').pipe(
-			map(dtos => dtos.map(dto => new ToDoItem().Deserialize(dto)),
+			map(dtos => dtos.map(dto => ToDoItem.GetFromDto(dto)),
 			take(1),
 		));
 	}
 
 	public CreateTodo(item : ToDoItem) : Observable<ToDoItem> {
-		return this.http.post<TodoItemDto>('http://localhost:3000/todos', item.MapToDto(), httpOptions).pipe(
-			map(() => item),
+		return this.http.post<TodoItemDto>('http://localhost:3000/todos', ToDoItem.MapToDto(item), httpOptions).pipe(
+			map((itemDto) => {
+				item.Id = itemDto.id; 
+				return item;
+			}),
 			catchError((err) => of(err))
 		);
 	}
@@ -39,10 +42,12 @@ export class TodoService {
 		return this.http.delete(url);
 	}
 
-	public Update(id : number, updateModel : ToDoItem) : Observable<{}> {
+	public Update(id : number, updateModel : ToDoItem) : Observable<ToDoItem> {
 		const url = `http://localhost:3000/todos/${id}`;
 
-		return this.http.put(url, { updateModel }, httpOptions);
+		return this.http.put<TodoItemDto>(url, ToDoItem.MapToDto(updateModel), httpOptions).pipe(
+			map(dto => ToDoItem.GetFromDto(dto))
+		);
 	}
 
 	public GetImportanceOptions() : DropdownOption[] {

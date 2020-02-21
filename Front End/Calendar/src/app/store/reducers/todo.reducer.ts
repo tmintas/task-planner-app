@@ -18,8 +18,11 @@ const toDoReducer = createReducer(
 	on(
 		fromTodoActions.LoadTodosAllSuccess,
 		(state : ToDoState, payload : { items : ToDoItem[] }) => {
+			const items = payload.items.slice();
+			items.forEach(i => i.Visible = true);
+
 			return { ...state,
-				items : payload.items,
+				items : items,
 				itemsLoading: false,
 				itemsLoaded: true
 			};
@@ -49,7 +52,8 @@ const toDoReducer = createReducer(
 	on(
 		fromTodoActions.CreateTodoSuccess,
 		(state : ToDoState, payload : { item : ToDoItem }) => {
-			payload.item.Id = state.items.length;
+			payload.item.Visible = true;
+
 			return { ...state,
 				items : [ ...state.items, payload.item ],
 				itemsLoaded: true,
@@ -105,45 +109,27 @@ const toDoReducer = createReducer(
 			};
 		}
 	),
-	// // update
-	// on(
-	// 	fromTodoActions.UpdateTodo,
-	// 	(state : ToDoState) => {
-	// 		return { ...state,
-	// 			itemsLoaded: false,
-	// 			itemsLoading: true,
-	// 		};
-	// 	}
-	// ),
-	// on(
-	// 	fromTodoActions.UpdateTodoSuccess,
-	// 	(state : ToDoState, payload : { id : number, updatedItem : ToDoItem }) => {
-	// 		const updatedTodo : ToDoItem = {
-	// 			...state.items[payload.id],
-	// 			...payload.updatedItem
-	// 		};
+	// update
+	on(
+		fromTodoActions.UpdateTodo,
+		(state : ToDoState, payload : { id : number, item : ToDoItem }) => {
+			return { ...state,
+				itemsLoaded: false,
+				itemsLoading: true,
+			};
+		}
+	),
+	on(
+		fromTodoActions.UpdateTodoFail,
+		(state : ToDoState, payload : { err : any }) => {
 
-	// 		const itemsCopy = [...state.items];
-	// 		itemsCopy[payload.id] = updatedTodo;
-
-	// 		return { ...state,
-	// 			items: itemsCopy,
-	// 			itemsLoaded: true,
-	// 			itemsLoading: false,
-	// 		};
-	// 	}
-	// ),
-	// on(
-	// 	fromTodoActions.UpdateTodoFail,
-	// 	(state : ToDoState, payload : { err : any }) => {
-
-	// 		return { ...state,
-	// 			error : payload.err,
-	// 			itemsLoaded: true,
-	// 			itemsLoading: false,
-	// 		};
-	// 	}
-	// )
+			return { ...state,
+				error : payload.err,
+				itemsLoaded: true,
+				itemsLoading: false,
+			};
+		}
+	)
 );
 
 // tslint:disable-next-line: typedef

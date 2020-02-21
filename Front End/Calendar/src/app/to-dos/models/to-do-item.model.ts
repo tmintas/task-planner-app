@@ -11,27 +11,46 @@ export class ToDoItem {
 	public Description : string;
 	public Importance : Importance;
 
-	public Visible = true;
+	public Visible? = true;
 
-	// mapping from DTO
-	public Deserialize(source : TodoItemDto) : this {
-		this.Name = source.name;
-		this.Date = source.date;
-		this.Time = source.time;
-		this.Description = source.description;
-		this.Importance = source.importance;
-		this.Id = source.id;
-
-		return this;
+	constructor(id : number, date? : NgbDate, time? : NgbTimeStruct, name? : string, description? : string, importance? : Importance ) {
+		this.Id = id;
+		this.Name = name;
+		this.Date = date;
+		this.Time = time;
+		this.Description = description;
+		this.Importance = importance;
 	}
 
-	public MapToDto() : TodoItemDto {
+	public static GetFromDto(source : TodoItemDto) : ToDoItem {
+		return new ToDoItem(
+			source.id,
+			source.date, 
+			source.time, 
+			source.name, 
+			source.description, 
+			source.importance
+		);
+	}
+
+	// public static GetFromEditForm(formValue : { [ctrl : string] : any }) : ToDoItem {
+	// 	return new ToDoItem(
+	// 		formValue.Name,
+	// 		formValue., 
+	// 		source.time, 
+	// 		source.name, 
+	// 		source.description, 
+	// 		source.importance
+	// 	);
+	// }
+
+	public static MapToDto(source : ToDoItem) : TodoItemDto {
 		return {
-			date : this.Date,
-			time : this.Time,
-			name : this.Name,
-			description : this.Description,
-			importance : this.Importance
+			date : source.Date,
+			time : source.Time,
+			name : source.Name,
+			description : source.Description,
+			importance : source.Importance
 		}	
 	}
 }

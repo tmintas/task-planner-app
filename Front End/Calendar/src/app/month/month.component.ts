@@ -44,7 +44,6 @@ export class MonthComponent implements OnInit {
 	}
 
 	public ngOnInit() : void {
-
 		this.route.params.pipe(
 			map((prms : Params) => {
 				if (!prms || !prms.month || !prms.year) { return; }
@@ -63,10 +62,6 @@ export class MonthComponent implements OnInit {
 		this.PreviousDays$ = this.store.select(fromCalendarSelectors.previousMonthDays);
 		this.NextDays$ = this.store.select(fromCalendarSelectors.nextMonthDays);
 		this.IsLoading$ = this.store.select(fromTodoSelectors.itemsLoading);
-
-		this.store.select(fromTodoSelectors.selectTodosByMonth, { month : this.Month }).pipe(
-			map((v) => console.log(v))
-		).subscribe();
 	}
 
 	public TodosByDay(dayIndex : number, month : number) : Observable<ToDoItem[]> {
@@ -74,9 +69,6 @@ export class MonthComponent implements OnInit {
 		{
 			month: month,
 			day : dayIndex
-		}).pipe(map((v) => {
-			if (v && v.length > 0)console.log(v);
-			return v;
-		}));
+		});
 	}
 }

@@ -1,17 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { map, switchMap, pluck, distinct, distinctUntilChanged } from 'rxjs/operators';
+import { map, switchMap, pluck, distinct, takeUntil, take, distinctUntilChanged } from 'rxjs/operators';
 import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngrx/store';
 import * as fromTodoSelectors from '@selectors/todo';
 
 import { Importance } from '@todo-enums';
-import { CreateTodo } from '@actions/todo';
+import { CreateTodo, UpdateTodo } from '@actions/todo';
 import { ToDoItem } from '@todo-models';
 import { DropdownOption } from 'app/shared/models/dropdown-option.model';
-import { Observable, of } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import AppState from '@states/app';
 
 @Component({
@@ -19,11 +19,16 @@ import AppState from '@states/app';
 	templateUrl: './edit-todo-item.component.html',
 	styleUrls: ['./edit-todo-item.component.scss']
 })
-export class EditTodoItemComponent implements OnInit {
+export class EditTodoItemComponent implements OnInit, OnDestroy {
 	private month : number;
+	private itemId : number;
+	private dftImportance : Importance = Importance.Low;
+	private destroy$ : Subject<boolean> = new Subject<boolean>();
+	private isAddMode : boolean;
+
+	public ToDoForm : FormGroup;
 
 	public ImportanceOptions$ : Observable<DropdownOption[]> = this.store.select(fromTodoSelectors.selectImportanceOptions);
-	public ToDoForm : FormGroup;
 
 	constructor(private fb : FormBuilder, private route : ActivatedRoute, private store : Store<AppState>) {
 		this.ToDoForm = this.fb.group({
@@ -37,7 +42,7 @@ export class EditTodoItemComponent implements OnInit {
 
 	public ngOnInit() : void {
 		this.month = parseInt(this.route.snapshot.paramMap.get('month'));
-		this.patchFromUrl();
+		this.isAddMode = parseInt(this.route.snapshot.paramMap.get('itemId')) === 0;
 
 		// handle date changes
 		this.route.params.pipe(
@@ -51,25 +56,16 @@ export class EditTodoItemComponent implements OnInit {
 			pluck('itemId'),
 			distinctUntilChanged(),
 			switchMap(prm => {
-				const itemId = parseInt(prm, 10);
+				this.itemId = parseInt(prm, 10);
+				this.isAddMode = this.itemId === 0;
 
-				return this.store.pipe(map((s) => s.todo.items.find(i => i.Id === itemId)));
+				return this.store.select(fromTodoSelectors.selectById, { id : this.itemId });
 			}),
 			map((item : ToDoItem) => {
-				if (item) { 
-					this.patchFromItem(item); 
-				} else {
-					this.patchFromUrl();
-				}
-			})
-		).subscribe();
-		
-		const itemId = +this.route.snapshot.params['itemId'];
-		this.store.pipe(
-			map((s) => {
-				const item = s.todo.items.filter(i => i.Id === itemId);
-				console.log(item);						
-			})
+				if (item) this.patchFromItem(item)
+				else 	  this.patchFromUrl()
+			}),
+			takeUntil(this.destroy$)
 		).subscribe();
 	}
 
@@ -77,7 +73,9 @@ export class EditTodoItemComponent implements OnInit {
 		const urlDay = parseInt(this.route.snapshot.paramMap.get('day'), 10) || 1;
 		const date = new NgbDate(2019, this.month, urlDay);
 
+		this.ToDoForm.reset();
 		this.ToDoForm.patchValue({
+			Importance : this.dftImportance,
 			Date : date
 		});
 	}
@@ -95,31 +93,20 @@ export class EditTodoItemComponent implements OnInit {
 		});
 	}
 
-	// private resetToDft() : void {
-	// 	const dftImportance = Importance.Middle;
-	// 	const dftTime = { hour: 12, minute : 0 };
-	// 	const dftDate = new NgbDate(2019, this.month, this.day);
-		
-	// 	this.ToDoForm.reset();
-	// 	this.ToDoForm.patchValue({
-	// 		Date : dftDate,
-	// 		Time: dftTime,
-	// 		Importance: dftImportance
-	// 	});
-	// }
-
 	public OnSave() : void {
 		this.ToDoForm.markAllAsTouched();
 		if (this.ToDoForm.invalid) { return; }
+		
+		const item : ToDoItem = {
+			Name : this.ToDoForm.get('Name').value,
+			Description : this.ToDoForm.get('Description').value,
+			Date : this.ToDoForm.get('Date').value,
+			Time : this.ToDoForm.get('Time').value,
+			Importance : +this.ToDoForm.get('Importance').value,
+		}
 
-		const item : ToDoItem = this.mapToTodo();
-		this.store.dispatch(CreateTodo({ item } ));
-	}
-
-	private mapToTodo() : ToDoItem
-	{
-
-		return new ToDoItem().Deserialize(this.ToDoForm.value)
+		if (this.isAddMode) { this.store.dispatch(CreateTodo({ item })); }
+		else 				{ this.store.dispatch(UpdateTodo({ id : this.itemId, item : item })); }
 	}
 
 	public HasError(controlName : string) : boolean {
@@ -141,5 +128,10 @@ export class EditTodoItemComponent implements OnInit {
 			default:
 				return;
 		}
+	}
+
+	public ngOnDestroy() : void {
+		this.destroy$.next(true);
+		this.destroy$.unsubscribe();
 	}
 }
