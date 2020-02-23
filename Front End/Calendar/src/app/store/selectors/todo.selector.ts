@@ -1,8 +1,21 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import ToDoState, { TODO_FEATURE_KEY } from '@states/todo';
+import { CustomRouterReducerState } from './router.selector';
 
 export const selectFeature = createFeatureSelector<ToDoState>(TODO_FEATURE_KEY);
+export const selectRouteFeature = createFeatureSelector<CustomRouterReducerState>('router');
 
+export const selectAll = createSelector(
+	selectFeature,
+	(state : ToDoState) => state.items
+)
+
+export const getSelectedTodo = createSelector(
+    selectAll, 
+    selectRouteFeature,
+	(todos, customRoute) => todos.find(i => { return i.Id === +customRoute.state.params['itemId']; })
+);
+	
 export const selectTodosByMonthAndDay = createSelector(
 	selectFeature,
 	(state : ToDoState, props : { month : number, day : number }) => {

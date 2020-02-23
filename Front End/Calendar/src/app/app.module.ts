@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { StoreRouterConnectingModule, routerReducer } from '@ngrx/router-store';
+import { routerReducer } from '@ngrx/router-store';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { DatePipe } from '@angular/common';
@@ -13,21 +13,15 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MonthModule } from './month/month.module';
 import { SharedModule } from './shared/shared.module';
-import { CustomSerializer } from './shared/utils/custom-router-serializer';
 
 @NgModule({
 	declarations: [
 		AppComponent
 	],
 	imports: [
-		StoreModule.forRoot({
-			router: routerReducer
-		}),
+		StoreModule.forRoot([]),
 		EffectsModule.forRoot([]),
 		StoreDevtoolsModule.instrument({}),
-		StoreRouterConnectingModule.forRoot({
-			serializer: CustomSerializer
-		}),
 		SharedModule,
 		BrowserModule,
 		AppRoutingModule,

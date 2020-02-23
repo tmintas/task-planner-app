@@ -1,11 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { map, switchMap, pluck, distinct, takeUntil, take, distinctUntilChanged } from 'rxjs/operators';
+import { map, takeUntil, filter } from 'rxjs/operators';
 import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import * as fromTodoSelectors from '@selectors/todo';
+import * as fromRouterSelectors from '@selectors/router';
 
 import { Importance } from '@todo-enums';
 import { CreateTodo, UpdateTodo } from '@actions/todo';
@@ -20,7 +20,6 @@ import AppState from '@states/app';
 	styleUrls: ['./edit-todo-item.component.scss']
 })
 export class EditTodoItemComponent implements OnInit, OnDestroy {
-	private month : number;
 	private itemId : number;
 	private dftImportance : Importance = Importance.Low;
 	private destroy$ : Subject<boolean> = new Subject<boolean>();
@@ -30,7 +29,7 @@ export class EditTodoItemComponent implements OnInit, OnDestroy {
 
 	public ImportanceOptions$ : Observable<DropdownOption[]> = this.store.select(fromTodoSelectors.selectImportanceOptions);
 
-	constructor(private fb : FormBuilder, private route : ActivatedRoute, private store : Store<AppState>) {
+	constructor(private fb : FormBuilder, private store : Store<AppState>) {
 		this.ToDoForm = this.fb.group({
 			Date : [null, Validators.required],
 			Time: [null],
@@ -41,37 +40,25 @@ export class EditTodoItemComponent implements OnInit, OnDestroy {
 	}
 
 	public ngOnInit() : void {
-		this.month = parseInt(this.route.snapshot.paramMap.get('month'));
-		this.isAddMode = parseInt(this.route.snapshot.paramMap.get('itemId')) === 0;
-
-		// handle date changes
-		this.route.params.pipe(
-			pluck('day'),
-			distinct(),
-			map(() => this.patchFromUrl())
+		this.store.pipe(
+			select(fromRouterSelectors.getDateParamsFromRoute),
+			map(({ year, month, day }) => this.patchDate(year, month, day))
 		).subscribe();
 
-		// handle item id changes
-		this.route.params.pipe(
-			pluck('itemId'),
-			distinctUntilChanged(),
-			switchMap(prm => {
-				this.itemId = parseInt(prm, 10);
-				this.isAddMode = this.itemId === 0;
-
-				return this.store.select(fromTodoSelectors.selectById, { id : this.itemId });
+		this.store.pipe(
+			select(fromTodoSelectors.getSelectedTodo),
+			map(item => { 
+				this.isAddMode = item == null;
+				return item;
 			}),
-			map((item : ToDoItem) => {
-				if (item) this.patchFromItem(item)
-				else 	  this.patchFromUrl()
-			}),
+			filter(item => item != null),
+			map((item : ToDoItem) => this.patchFromItem(item)),
 			takeUntil(this.destroy$)
 		).subscribe();
 	}
 
-	private patchFromUrl() : void {
-		const urlDay = parseInt(this.route.snapshot.paramMap.get('day'), 10) || 1;
-		const date = new NgbDate(2019, this.month, urlDay);
+	private patchDate(year : number, month : number, day : number) : void {
+		const date = new NgbDate(year, month, day);
 
 		this.ToDoForm.reset();
 		this.ToDoForm.patchValue({
@@ -95,6 +82,7 @@ export class EditTodoItemComponent implements OnInit, OnDestroy {
 
 	public OnSave() : void {
 		this.ToDoForm.markAllAsTouched();
+		
 		if (this.ToDoForm.invalid) { return; }
 		
 		const item : ToDoItem = {

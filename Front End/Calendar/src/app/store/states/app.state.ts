@@ -10,5 +10,5 @@ export default interface AppState {
 
 export const APP_INITIAL_STATE : AppState = {
 	[fromCalendarState.CALENDAR_FEATURE_KEY] : CALENDAR_INITIAL_STATE,
-	[fromTodoState.TODO_FEATURE_KEY] : TODO_INITIAL_STATE
+	[fromTodoState.TODO_FEATURE_KEY] : TODO_INITIAL_STATE,
 };

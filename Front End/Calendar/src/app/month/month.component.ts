@@ -3,13 +3,13 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { map } from 'rxjs/operators';
 
 import * as fromDateFunctions from '@shared-functions/date';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import * as fromCalendarSelectors from '@selectors/calendar';
 import * as fromTodoSelectors from '@selectors/todo';
 import * as fromTodoActions from '@actions/todo';
 import * as fromCalendarActions from '@actions/calendar';
 import { ToDoItem } from 'app/to-dos/models/to-do-item.model';
-import { Observable } from 'rxjs';
+import { Observable, pipe } from 'rxjs';
 import AppState from '@states/app';
 import { Day } from '@month-models';
 
