@@ -1,4 +1,6 @@
-﻿using Domain.Models;
+﻿using Domain;
+using Domain.Models;
+using Domain.Requests;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -22,22 +24,47 @@ namespace Web.Repositories
 
         public Task<TEntity> GetByIdAsync(int id)
         {
-            return QueryAll().FirstOrDefaultAsync(i => i.Id == id);
+            return dbSet.FirstOrDefaultAsync(i => i.Id == id);
         }
 
         public Task<List<TEntity>> GetByIdsAsync(int[] ids)
         {
-            return QueryAll().Where(i => ids.Contains(i.Id)).ToListAsync();
+            return dbSet.Where(i => ids.Contains(i.Id)).ToListAsync();
         }
 
-        public IQueryable<TEntity> QueryAll()
+        public async Task<TEntity> AddAsync(TEntity item)
         {
-            return dbSet.AsQueryable();
+            dbSet.Add(item);
+            await context.SaveChangesAsync();
+
+            return item;
+        }
+
+        public Task<List<TEntity>> GetAllAsync()
+        {
+            return dbSet.ToListAsync();
+        }
+
+        public async Task<TEntity> UpdateAsync(TEntity item)
+        {
+            context.Entry(item).State = EntityState.Modified;
+            await context.SaveChangesAsync();
+
+            return item;
+        }
+
+        public async Task<TEntity> DeleteAsync(int id)
+        {
+            var item = await GetByIdAsync(id);
+            context.Remove(item);
+            await context.SaveChangesAsync();
+
+            return item;
         }
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+             context?.Dispose();
         }
     }
 }
