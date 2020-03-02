@@ -5,12 +5,12 @@ namespace Domain.Enums
     public enum ImportanceType
     {
         [Display(Name = "Low")]
-        Low = 0,
+        Low = 1,
 
         [Display(Name = "Middle")]
-        Middle = 1,
+        Middle = 2,
 
         [Display(Name = "High")]
-        High = 2
+        High = 3
     }
 }

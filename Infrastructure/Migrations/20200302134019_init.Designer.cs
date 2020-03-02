@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20200124112109_Init")]
-    partial class Init
+    [Migration("20200302134019_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,13 +21,14 @@ namespace Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Domain.ImportanceTypeDto", b =>
+            modelBuilder.Entity("Domain.Entities.ImportanceType", b =>
                 {
                     b.Property<int>("Id")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
 
                     b.HasKey("Id");
 
@@ -36,17 +37,17 @@ namespace Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 2,
+                            Id = 3,
                             Name = "High"
                         },
                         new
                         {
-                            Id = 1,
+                            Id = 2,
                             Name = "Middle"
                         },
                         new
                         {
-                            Id = 0,
+                            Id = 1,
                             Name = "Low"
                         });
                 });
@@ -62,15 +63,20 @@ namespace Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(30)")
+                        .HasMaxLength(30);
 
-                    b.Property<int>("ImportanceType")
+                    b.Property<int>("ImportanceTypeId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(15)")
+                        .HasMaxLength(15);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ImportanceTypeId");
 
                     b.ToTable("ToDoItems");
 
@@ -80,9 +86,18 @@ namespace Infrastructure.Migrations
                             Id = 1,
                             Date = new DateTime(2019, 5, 1, 13, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "testdbdesc",
-                            ImportanceType = 2,
+                            ImportanceTypeId = 3,
                             Name = "testdbname"
                         });
+                });
+
+            modelBuilder.Entity("Domain.ToDoItem", b =>
+                {
+                    b.HasOne("Domain.Entities.ImportanceType", "ImportanceType")
+                        .WithMany()
+                        .HasForeignKey("ImportanceTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

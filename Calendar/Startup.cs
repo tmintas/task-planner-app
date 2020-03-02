@@ -54,11 +54,11 @@ namespace Calendar
             });
 
             // to debug migrations
-            //var optionsBuilder = new DbContextOptionsBuilder<CalendarContext>();
-            //optionsBuilder.UseSqlServer(Configuration.GetConnectionString("DevConnection"));
-
-            //var context = new CalendarContext(optionsBuilder.Options);
-            //context.Database.Migrate();
+            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
+            optionsBuilder.UseSqlServer(Configuration.GetConnectionString("DevConnection"));
+            
+            var context = new AppDbContext(optionsBuilder.Options);
+            context.Database.Migrate();
         }
     }
 }

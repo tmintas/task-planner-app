@@ -1,5 +1,6 @@
 ﻿using Domain;
 using Domain.Requests;
+using Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,18 +13,18 @@ namespace Web.Controllers
     [ApiController]
     public class ToDoController : ControllerBase
     {
-        private readonly IDatabaseRepository<ToDoItem> repository;
+        private readonly IDatabaseRepository<ToDoItem> _todoRepository;
 
         public ToDoController(IDatabaseRepository<ToDoItem> todoRepository)
         {
-            repository = todoRepository;
+            _todoRepository = todoRepository;
         }
 
         // GET: api/ToDoItems
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ToDoItem>>> GetAllTodos()
         {
-            var items = await repository.GetAllAsync();
+            var items = await _todoRepository.GetAllAsync();
 
             return Ok(items);
         }
@@ -32,7 +33,7 @@ namespace Web.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ToDoItem>> GetToDoItem(int id)
         {
-            var item = await repository.GetByIdAsync(id);
+            var item = await _todoRepository.GetByIdAsync(id);
 
             if (item == null) return NotFound();
 
@@ -41,20 +42,45 @@ namespace Web.Controllers
 
         // GET: api/ToDoItems/5
         [HttpPost]
-        public async Task<ActionResult<ToDoItem>> PostToDoItem(ToDoItem item)
+        public async Task<ActionResult<ToDoItem>> PostToDoItem([FromBody] ToDoItemUpdateDto itemUpdateDto)
         {
-            if (item == null) return NotFound();
+            if (itemUpdateDto == null)
+            {
+                return NotFound($"Item is empty");
+            }
 
-            await repository.AddAsync(item);
+            if (!ModelState.IsValid)
+            {
+                var errorList = ModelState.Keys.SelectMany(key => ModelState[key].Errors.Select(err => err.ErrorMessage).ToList());
+                var errorMsg = string.Join(',', errorList);
 
-            return CreatedAtAction("PostToDoItem", new { id = item.Id }, item);
+                return BadRequest(errorMsg);
+            }
+
+            var availbleImportances = new[] { ImportanceType.High, ImportanceType.Middle, ImportanceType.Low };
+            if (!availbleImportances.Any(i => i == itemUpdateDto.ImportanceTypeId))
+            {
+                return BadRequest("Wrong importance type");
+            }
+
+            var newItem = new ToDoItem();
+            newItem.Date = itemUpdateDto.Date;
+            newItem.Description = itemUpdateDto.Description;
+            newItem.ImportanceTypeId = itemUpdateDto.ImportanceTypeId;
+            newItem.Name = itemUpdateDto.Name;
+
+            await _todoRepository.AddAsync(newItem);
+
+            return CreatedAtAction("PostToDoItem", new { id = newItem.Id }, itemUpdateDto);
         }
 
         //PUT: api/ToDoItems/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutToDoItem(int id, [FromBody] ToDoItemUpdateDto itemUpdateDto)
         {
-            if (await repository.GetByIdAsync(id) == null)
+            ToDoItem itemToUpdate = await _todoRepository.GetByIdAsync(id);
+
+            if (itemToUpdate == null)
             {
                 return NotFound($"Item with id {id} was not found in the database");
             }
@@ -66,14 +92,18 @@ namespace Web.Controllers
                 return BadRequest(errorMsg);
             }
 
-            ToDoItem itemToUpdate = await repository.GetByIdAsync(id);
+            var availbleImportances = new[] { ImportanceType.High, ImportanceType.Middle, ImportanceType.Low };
+            if (!availbleImportances.Any(i => i == itemUpdateDto.ImportanceTypeId))
+            {
+                return BadRequest("Wrong importance type");
+            }
 
             itemToUpdate.Date = itemUpdateDto.Date;
             itemToUpdate.Description = itemUpdateDto.Description;
-            itemToUpdate.ImportanceType = itemUpdateDto.ImportanceType;
+            itemToUpdate.ImportanceTypeId = itemUpdateDto.ImportanceTypeId;
             itemToUpdate.Name = itemUpdateDto.Name;
 
-            await repository.UpdateAsync(itemToUpdate);
+            await _todoRepository.UpdateAsync(itemToUpdate);
 
             return NoContent();
         }
@@ -83,14 +113,14 @@ namespace Web.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<ToDoItem>> DeleteToDoItem(int id)
         {
-            var toDoItem = await repository.GetByIdAsync(id);
+            var toDoItem = await _todoRepository.GetByIdAsync(id);
                 
             if (toDoItem == null)
             {
                 return NotFound();
             }
 
-            await repository.DeleteAsync(id);
+            await _todoRepository.DeleteAsync(id);
 
             return toDoItem;
         }

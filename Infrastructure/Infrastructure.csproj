@@ -23,6 +23,24 @@
     <Compile Remove="Migrations\20200124110903_Init.Designer.cs" />
     <Compile Remove="Migrations\20200124111741_Init.cs" />
     <Compile Remove="Migrations\20200124111741_Init.Designer.cs" />
+    <Compile Remove="Migrations\20200124112109_Init.cs" />
+    <Compile Remove="Migrations\20200124112109_Init.Designer.cs" />
+    <Compile Remove="Migrations\20200302102510_init.cs" />
+    <Compile Remove="Migrations\20200302102510_init.Designer.cs" />
+    <Compile Remove="Migrations\20200302103122_init.cs" />
+    <Compile Remove="Migrations\20200302103122_init.Designer.cs" />
+    <Compile Remove="Migrations\20200302104301_init.cs" />
+    <Compile Remove="Migrations\20200302104301_init.Designer.cs" />
+    <Compile Remove="Migrations\20200302104542_init.cs" />
+    <Compile Remove="Migrations\20200302104542_init.Designer.cs" />
+    <Compile Remove="Migrations\20200302115209_init.cs" />
+    <Compile Remove="Migrations\20200302115209_init.Designer.cs" />
+    <Compile Remove="Migrations\20200302123245_init.cs" />
+    <Compile Remove="Migrations\20200302123245_init.Designer.cs" />
+    <Compile Remove="Migrations\20200302132223_init.cs" />
+    <Compile Remove="Migrations\20200302132223_init.Designer.cs" />
+    <Compile Remove="Migrations\20200302132524_init.cs" />
+    <Compile Remove="Migrations\20200302132524_init.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,5 +1,4 @@
-﻿using Domain;
-using Domain.Models;
+﻿using Domain.Models;
 using Domain.Requests;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
@@ -64,7 +63,7 @@ namespace Web.Repositories
 
         public void Dispose()
         {
-             context?.Dispose();
+            context?.Dispose();
         }
     }
 }
