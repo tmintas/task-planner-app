@@ -51,10 +51,7 @@ namespace Web.Controllers
 
             if (!ModelState.IsValid)
             {
-                var errorList = ModelState.Keys.SelectMany(key => ModelState[key].Errors.Select(err => err.ErrorMessage).ToList());
-                var errorMsg = string.Join(',', errorList);
-
-                return BadRequest(errorMsg);
+                return BadRequest(ModelState);
             }
 
             var availbleImportances = new[] { ImportanceType.High, ImportanceType.Middle, ImportanceType.Low };
@@ -76,26 +73,23 @@ namespace Web.Controllers
 
         //PUT: api/ToDoItems/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutToDoItem(int id, [FromBody] ToDoItemUpdateDto itemUpdateDto)
+        public async Task<IActionResult> UpdateToDoItem(int id, [FromBody] ToDoItemUpdateDto itemUpdateDto)
         {
-            ToDoItem itemToUpdate = await _todoRepository.GetByIdAsync(id);
-
-            if (itemToUpdate == null)
-            {
-                return NotFound($"Item with id {id} was not found in the database");
-            }
             if (!ModelState.IsValid)
             {
-                var errorList = ModelState.Keys.SelectMany(key => ModelState[key].Errors.Select(err => err.ErrorMessage).ToList());
-                var errorMsg = string.Join(',', errorList);
-
-                return BadRequest(errorMsg);
+                return BadRequest(ModelState);
             }
 
             var availbleImportances = new[] { ImportanceType.High, ImportanceType.Middle, ImportanceType.Low };
             if (!availbleImportances.Any(i => i == itemUpdateDto.ImportanceTypeId))
             {
                 return BadRequest("Wrong importance type");
+            }
+
+            ToDoItem itemToUpdate = await _todoRepository.GetByIdAsync(id);
+            if (itemToUpdate == null)
+            {
+                return NotFound($"Item with id {id} was not found in the database");
             }
 
             itemToUpdate.Date = itemUpdateDto.Date;
