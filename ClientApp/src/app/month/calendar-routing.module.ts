@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { MonthComponent } from './month.component';
+import { MonthComponent } from './components/month/month.component';
 import { EditTodoItemComponent } from 'app/to-dos/components/edit-todo-item/edit-todo-item.component';
 import { DayTodoListComponent } from 'app/to-dos/components/day-todo-list/day-todo-list.component';
 import { DayTodoListResolverService } from 'app/to-dos/resolvers/day-todo-list.resolver.service';
@@ -40,4 +40,4 @@ const routes: Routes = [
 	exports: [RouterModule],
 	providers: [DayTodoListResolverService]
 })
-export class MonthRoutingModule { }
+export class CalendarRoutingModule { }

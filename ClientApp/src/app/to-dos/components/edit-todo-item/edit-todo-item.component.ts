@@ -52,7 +52,11 @@ export class EditTodoItemComponent implements OnInit, OnDestroy {
 				return item;
 			}),
 			filter(item => item != null),
-			map((item : ToDoItem) => this.patchFromItem(item)),
+			map((item : ToDoItem) => 
+			{
+				this.itemId = item.Id;
+				this.patchFromItem(item);
+			}),
 			takeUntil(this.destroy$)
 		).subscribe();
 	}

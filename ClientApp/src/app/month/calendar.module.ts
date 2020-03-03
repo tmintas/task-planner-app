@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 
-import { MonthRoutingModule } from './month-routing.module';
-import { MonthComponent } from './month.component';
+import { CalendarRoutingModule } from './calendar-routing.module';
+import { MonthComponent } from './components/month/month.component';
 import { DayComponent } from './components/day/day.component';
 import { SharedModule } from '../shared/shared.module';
 import { ToDosModule } from 'app/to-dos/to-dos.module';
@@ -17,7 +17,7 @@ import * as fromCalendarReducers from '@reducers/calendar';
 	],
 	imports: [
 		StoreModule.forFeature(CALENDAR_FEATURE_KEY, fromCalendarReducers.CalendarReducer),
-		MonthRoutingModule,
+		CalendarRoutingModule,
 		SharedModule,
 		ToDosModule
 	],
@@ -26,4 +26,4 @@ import * as fromCalendarReducers from '@reducers/calendar';
 		ToDosModule
 	]
 })
-export class MonthModule { }
+export class CalendarModule { }

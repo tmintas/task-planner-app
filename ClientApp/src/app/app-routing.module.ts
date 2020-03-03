@@ -12,7 +12,7 @@ const routes : Routes = [
 	},
 	{
 		path: 'calendar',
-		loadChildren: () => import('./month/month.module').then(m => m.MonthModule)
+		loadChildren: () => import('./month/calendar.module').then(m => m.CalendarModule)
 	}
 ];
 
