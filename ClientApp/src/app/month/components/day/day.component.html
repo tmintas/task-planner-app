@@ -13,13 +13,18 @@
 		</span>
 	</div>
 	<div class="item-list">
-		<span *ngFor="let item of Items" class="todo-item" coloredImportance [importance]="item.Importance" 
+		<div *ngFor="let item of Items" class="todo-item" coloredImportance [importance]="item.Importance" 
 		[ngStyle]="{ 'visibility': item.Visible ? 'visible' : 'hidden' }">
 			<span class="todo-text">{{ ItemDisplayText(item) }}</span>
-			<button class="todo-delete-btn" (click)="OnDelete(item)">
-				<fa-icon [icon]="['fas', 'times']"></fa-icon>
-			</button>
-		</span>
+			<div>
+				<button class="todo-delete-btn" (click)="OnDelete(item)">
+					<fa-icon [icon]="['fas', 'edit']"></fa-icon>
+				</button>
+				<button class="todo-delete-btn" (click)="OnEdit(item)">
+					<fa-icon [icon]="['fas', 'times']"></fa-icon>
+				</button>
+			</div>
+		</div>
 	</div>
 	<div class="more-container" *ngIf = "NotVisibleCount > 0">
 		<span> {{ NotVisibleCount }} more ... </span>

@@ -63,18 +63,17 @@
             padding: 0 1%;
             background-color: $gray;
             font-size: 22px;
-            height: 55px;
+            height: 45px;
     
             > .week-day {
-                text-align: center;
-                flex-basis: 12.8%;
-                margin: 1% 0.7%;
-                line-height: 20px;
+                display: flex;
+                justify-content: center;
+                flex-basis: calc(100%/7);
             }
         }
         
         .day-list {
-            padding: 1% 1%;
+            padding: 0 1%;
 
             > .bordered-flex {
                 display: flex;
@@ -91,7 +90,7 @@
                     border-style: solid;
                     border-radius: 3px;
                     box-sizing: border-box;
-                    height: 163px;
+                    height: 172px;
                 }
 
                 > .not-current {

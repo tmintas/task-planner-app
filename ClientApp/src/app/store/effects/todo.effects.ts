@@ -9,18 +9,68 @@ import * as fromTodoActions from '@actions/todo';
 
 @Injectable()
 export class TodoEffect {
-    constructor(
-        private actions$: Actions,
-        private todoService: TodoService,
-    ) { }
+	constructor(
+		private actions$ : Actions,
+		private todoService : TodoService,
+	) { }
 
-    loadMonthTodos$ = createEffect(() => this.actions$.pipe(
-        ofType(fromTodoActions.TodoActionTypes.LOAD_MONTH),
-        mergeMap(() => {
-            return this.todoService.getMonthTodos().pipe(
-                map(todos => fromTodoActions.LoadMonthTodosSuccess({ items : todos })),
-                catchError(err => of(fromTodoActions.LoadMonthTodosFail({ err })))
-            );
-        })
-    ));
+	public LoadTodosMonth$ = createEffect(() => this.actions$.pipe(
+		ofType(fromTodoActions.LoadTodosMonth),
+		mergeMap(() => {
+			return this.todoService.GetMonthTodos().pipe(
+				map(todos => fromTodoActions.LoadTodosMonthSuccess({ items : todos })),
+				catchError(err => of(fromTodoActions.LoadTodosMonthFail({ err })))
+			);
+		})
+	));
+
+	public LoadTodosDay$ = createEffect(() => this.actions$.pipe(
+		ofType(fromTodoActions.LoadTodosDay),
+		mergeMap(() => {
+			return this.todoService.GetDayTodos().pipe(
+				map(todos => fromTodoActions.LoadTodosDaySuccess({ items : todos })),
+				catchError(err => of(fromTodoActions.LoadTodosDayFail({ err })))
+			);
+		})
+	));
+
+	public LoadTodo$ = createEffect(() => this.actions$.pipe(
+		ofType(fromTodoActions.LoadTodo),
+		mergeMap((action) => {
+			return this.todoService.GetById(action.id).pipe(
+				map(todo => fromTodoActions.LoadTodoSuccess({ item : todo })),
+				catchError(err => of(fromTodoActions.LoadTodoFail({ err })))
+			);
+		})
+	));
+
+	public CreateTodo$ = createEffect(() => this.actions$.pipe(
+		ofType(fromTodoActions.CreateTodo),
+		mergeMap((action) => {
+			return this.todoService.CreateTodo(action.item).pipe(
+				map(newItem => fromTodoActions.CreateTodoSuccess({ item : newItem })),
+				catchError(err => of(fromTodoActions.CreateTodoFail({ err })))
+			);
+		})
+	));
+
+	public UpdateTodo$ = createEffect(() => this.actions$.pipe(
+		ofType(fromTodoActions.UpdateTodo),
+		mergeMap((action) => {
+			return this.todoService.CreateTodo(action.item).pipe(
+				map(updatedItem => fromTodoActions.UpdateTodoSuccess({ id: action.id, updatedItem : action.item })),
+				catchError(err => of(fromTodoActions.UpdateTodoFail({ err })))
+			);
+		})
+	));
+
+	public DeleteTodo$ = createEffect(() => this.actions$.pipe(
+		ofType(fromTodoActions.DeleteTodo),
+		mergeMap((action) => {
+			return this.todoService.DeleteTodo(action.id).pipe(
+				map(() => fromTodoActions.DeleteTodoSuccess({ id : action.id })),
+				catchError(err => of(fromTodoActions.DeleteTodoFail({ err })))
+			);
+		})
+	));
 }

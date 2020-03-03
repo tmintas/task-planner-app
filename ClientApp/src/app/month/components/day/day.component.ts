@@ -63,6 +63,10 @@ export class DayComponent implements OnInit, OnChanges {
 		this.store.dispatch(DeleteTodo({ id : item.Id }))
 	}
 
+	public OnEdit(item : ToDoItem) : void{
+		this.store.dispatch(DeleteTodo({ id : item.Id }))
+	}
+
 	public ItemDisplayText(item : ToDoItem) : string {
 		const minuteText = item.Time.minute < 10 ? `0${item.Time.minute}` : `${item.Time.minute}`;
 		return `${item.Name} [${item.Time.hour}:${minuteText}]`;

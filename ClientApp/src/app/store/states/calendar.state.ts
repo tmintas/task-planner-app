@@ -3,19 +3,22 @@ import { Day } from '@month-models';
 export const CALENDAR_FEATURE_KEY = 'calendar';
 
 export const CALENDAR_INITIAL_STATE = {
-    selectedMonth: 1,
-    selectedYear: 2019,
+	selectedMonth: 1,
+	selectedYear: 2019,
+	selectedDay: 0,
 
-    selectedMonthDays : [],
-    previousMonthDays : [],
-    nextMonthDays : [],
+	currentMonthDays : [],
+	previousMonthDays : [],
+	nextMonthDays : []
 };
 
 export default class CalendarState {
-    selectedMonth : number;
-    selectedYear : number;
+	public selectedMonth : number;
+	public selectedDay : number;
+	public selectedYear : number;
 
-    selectedMonthDays : Day[];
-    previousMonthDays : Day[];
-    nextMonthDays : Day[];
-};
+	public currentMonthDays : Day[];
+	public previousMonthDays : Day[];
+	public nextMonthDays : Day[];
+}
+

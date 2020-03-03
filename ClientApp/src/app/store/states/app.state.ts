@@ -1,7 +1,12 @@
-import CalendarState from './calendar.state';
-import ToDoState from './todo.state';
+import CalendarState, { CALENDAR_INITIAL_STATE } from './calendar.state';
+import ToDoState, { TODO_INITIAL_STATE } from './todo.state';
 
-export class AppState {
-    'calendar' : CalendarState;
-    'todos' : ToDoState
+export default class AppState {
+	public 'calendar' : CalendarState;
+	public 'todos' : ToDoState;
 }
+
+export const APP_INITIAL_STATE : AppState = {
+	calendar : CALENDAR_INITIAL_STATE,
+	todos : TODO_INITIAL_STATE
+};

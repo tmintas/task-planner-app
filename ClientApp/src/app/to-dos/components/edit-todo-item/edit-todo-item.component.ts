@@ -8,10 +8,10 @@ import { NgbDate, NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngrx/store';
 
 import ToDoState from '@states/todo';
-import { AddTodo } from '@actions/todo';
 
 import { Importance } from '@todo-enums';
 import { ToDoItem } from '@todo-models';
+import { CreateTodo } from '@actions/todo';
 
 @Component({
 	selector: 'app-edit-todo-item',
@@ -44,8 +44,8 @@ export class EditTodoItemComponent implements OnInit {
 		// handle date changes
 		this.route.params.pipe(
 			map(p => {
-				this.month = +p['monthNumber'];
-				this.day = +p['dayNumber'];
+				this.month = +p['month'];
+				this.day = +p['day'];
 
 				const initialDate : NgbDateStruct = new NgbDate(2019, this.month, this.day);
 				this.ToDoForm.reset();
@@ -65,18 +65,18 @@ export class EditTodoItemComponent implements OnInit {
 	public OnSave() : void {
 		this.ToDoForm.markAllAsTouched();
 
-		if (this.ToDoForm.invalid) return;
+		if (this.ToDoForm.invalid) { return; }
 
 		const ngbDateValue = this.ToDoForm.get('Date').value as NgbDate;
 		const ngbTimeValue = this.ToDoForm.get('Time').value as NgbTimeStruct;
-		
-		this.store.dispatch(AddTodo({ item : new ToDoItem(
-			ngbDateValue, 
+
+		this.store.dispatch(CreateTodo({ item : new ToDoItem(
+			ngbDateValue,
 			ngbTimeValue,
-			this.ToDoForm.get('Name').value, 
-			this.ToDoForm.get('Description').value, 
+			this.ToDoForm.get('Name').value,
+			this.ToDoForm.get('Description').value,
 			+this.ToDoForm.get('Importance').value)})
-		)
+		);
 	}
 
 	public HasError(controlName : string) : boolean {
@@ -84,19 +84,18 @@ export class EditTodoItemComponent implements OnInit {
 	}
 
 	public ErrorName(controlName : string) : string {
-		if (!this.HasError(controlName)) return;
+		if (!this.HasError(controlName)) { return; }
 
 		const errObj = this.ToDoForm.get(controlName).errors;
 
-		switch (Object.keys(errObj)[0])
-		{
+		switch (Object.keys(errObj)[0]) {
 			case 'required':
 				return 'Please fill out this field';
 			case 'maxlength':
 				return 'Maximum 10 symbols';
 			case 'ngbDate':
 				return 'Invalid date format';
-			default: 
+			default:
 				return;
 		}
 	}
