@@ -1,4 +1,4 @@
-import { Component, Input, ViewEncapsulation, OnInit, OnChanges, SimpleChanges, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input, ViewEncapsulation, OnChanges, SimpleChanges, ViewChild, ElementRef } from '@angular/core';
 import { Store } from '@ngrx/store';
 
 import { Importance } from 'app/to-dos/enums/importance.enum';
@@ -12,7 +12,7 @@ import ToDoState from '@states/todo';
 	styleUrls: ['./day.component.scss'],
 	encapsulation: ViewEncapsulation.None
 })
-export class DayComponent implements OnInit, OnChanges {
+export class DayComponent implements OnChanges {
 
 	@Input()
 	public DayNumber : number;
@@ -23,6 +23,8 @@ export class DayComponent implements OnInit, OnChanges {
 	public DayRef: ViewChild;
 
 	public get NotVisibleCount() : number {
+		if (!this.Items) return 0; 
+		 
 		return this.Items.filter(el => !el.Visible).length;
 	}
 
@@ -40,11 +42,6 @@ export class DayComponent implements OnInit, OnChanges {
 		return item.Importance == Importance.Low
 	}
 
-	ngOnInit() : void {
-		if (this.DayNumber !== 6) return;
-		console.log(this.elRef.nativeElement.getBoundingClientRect().bottom);
-	}
-
 	ngOnChanges(changes: SimpleChanges) : void {
 		// hide new todo item if overflowing the Day container
 		const todoElements =  this.elRef.nativeElement.querySelectorAll(".todo-item");
@@ -59,15 +56,15 @@ export class DayComponent implements OnInit, OnChanges {
 		}
 	}
 
-	public OnDelete(item : ToDoItem) : void{
-		this.store.dispatch(DeleteTodo({ id : item.Id }))
-	}
-
-	public OnEdit(item : ToDoItem) : void{
-		this.store.dispatch(DeleteTodo({ id : item.Id }))
+	public OnDelete(id : number) : void {
+		this.store.dispatch(DeleteTodo({ id }));
 	}
 
 	public ItemDisplayText(item : ToDoItem) : string {
+		// TODO use pipe for that
+		if (!item) return '';
+		if (!item.Time || !item.Time.hour) return item.Name;
+
 		const minuteText = item.Time.minute < 10 ? `0${item.Time.minute}` : `${item.Time.minute}`;
 		return `${item.Name} [${item.Time.hour}:${minuteText}]`;
 	}

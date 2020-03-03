@@ -1,82 +1,100 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { map } from 'rxjs/operators';
-import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-date-struct';
-import { NgbDate, NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
-import { Store } from '@ngrx/store';
-
-import ToDoState from '@states/todo';
+import { map, takeUntil, filter } from 'rxjs/operators';
+import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
+import { Store, select } from '@ngrx/store';
+import * as fromTodoSelectors from '@selectors/todo';
+import * as fromRouterSelectors from '@selectors/router';
 
 import { Importance } from '@todo-enums';
+import { CreateTodo, UpdateTodo } from '@actions/todo';
 import { ToDoItem } from '@todo-models';
-import { CreateTodo } from '@actions/todo';
+import { DropdownOption } from 'app/shared/models/dropdown-option.model';
+import { Observable, Subject } from 'rxjs';
+import AppState from '@states/app';
 
 @Component({
 	selector: 'app-edit-todo-item',
 	templateUrl: './edit-todo-item.component.html',
 	styleUrls: ['./edit-todo-item.component.scss']
 })
-export class EditTodoItemComponent implements OnInit {
-	private month : number;
-	private day : number;
+export class EditTodoItemComponent implements OnInit, OnDestroy {
+	private itemId : number;
+	private dftImportance : Importance = Importance.Low;
+	private destroy$ : Subject<boolean> = new Subject<boolean>();
+	private isAddMode : boolean;
 
-	public ImportanceOptions = Importance;
-	public ImportanceKeys = Object.keys(this.ImportanceOptions).filter(key => !isNaN(Number(key)));
 	public ToDoForm : FormGroup;
 
-	constructor(private fb : FormBuilder, private route : ActivatedRoute, private store : Store<ToDoState>) { }
+	public ImportanceOptions$ : Observable<DropdownOption[]> = this.store.select(fromTodoSelectors.selectImportanceOptions);
 
-	public ngOnInit() : void {
-		const initialImportance = Importance.Middle;
-		const initialTime : NgbTimeStruct = { hour: 12, minute: 0, second: 0 };
-
-		// init form
+	constructor(private fb : FormBuilder, private store : Store<AppState>) {
 		this.ToDoForm = this.fb.group({
 			Date : [null, Validators.required],
-			Time: [initialTime],
+			Time: [null],
 			Name: [null, [Validators.required, Validators.maxLength(10)]],
 			Description: [null],
-			Importance: [initialImportance]
+			Importance: [null]
 		});
+	}
 
-		// handle date changes
-		this.route.params.pipe(
-			map(p => {
-				this.month = +p['month'];
-				this.day = +p['day'];
-
-				const initialDate : NgbDateStruct = new NgbDate(2019, this.month, this.day);
-				this.ToDoForm.reset();
-				this.ToDoForm.get('Date').setValue(initialDate);
-				this.ToDoForm.get('Time').setValue(initialTime);
-				this.ToDoForm.get('Importance').setValue(initialImportance);
-			})
+	public ngOnInit() : void {
+		this.store.pipe(
+			select(fromRouterSelectors.getDateParamsFromRoute),
+			map(({ year, month, day }) => this.patchDate(year, month, day))
 		).subscribe();
 
-		this.ToDoForm.valueChanges.pipe(
-			map(v => {
-				console.log(this.ToDoForm.get('Time').value);
-			})
+		this.store.pipe(
+			select(fromTodoSelectors.getSelectedTodo),
+			map(item => { 
+				this.isAddMode = item == null;
+				return item;
+			}),
+			filter(item => item != null),
+			map((item : ToDoItem) => this.patchFromItem(item)),
+			takeUntil(this.destroy$)
 		).subscribe();
+	}
+
+	private patchDate(year : number, month : number, day : number) : void {
+		const date = new NgbDate(year, month, day);
+
+		this.ToDoForm.reset();
+		this.ToDoForm.patchValue({
+			Importance : this.dftImportance,
+			Date : date
+		});
+	}
+
+	private patchFromItem(item : ToDoItem) : void {
+		const date = new NgbDate(item.Date.year, item.Date.month, item.Date.day);
+		const time = { hour : item.Time.hour, minute : item.Time.minute };
+
+		this.ToDoForm.patchValue({
+			Date : date,
+			Time: time,
+			Name: item.Name,
+			Description: item.Description,
+			Importance: item.Importance
+		});
 	}
 
 	public OnSave() : void {
 		this.ToDoForm.markAllAsTouched();
-
+		
 		if (this.ToDoForm.invalid) { return; }
+		
+		const item : ToDoItem = {
+			Name : this.ToDoForm.get('Name').value,
+			Description : this.ToDoForm.get('Description').value,
+			Date : this.ToDoForm.get('Date').value,
+			Time : this.ToDoForm.get('Time').value,
+			Importance : +this.ToDoForm.get('Importance').value,
+		}
 
-		const ngbDateValue = this.ToDoForm.get('Date').value as NgbDate;
-		const ngbTimeValue = this.ToDoForm.get('Time').value as NgbTimeStruct;
-
-		this.store.dispatch(CreateTodo({ item : new ToDoItem(
-			ngbDateValue,
-			ngbTimeValue,
-			this.ToDoForm.get('Name').value,
-			this.ToDoForm.get('Description').value,
-			+this.ToDoForm.get('Importance').value)})
-		);
+		if (this.isAddMode) { this.store.dispatch(CreateTodo({ item })); }
+		else 				{ this.store.dispatch(UpdateTodo({ id : this.itemId, item : item })); }
 	}
 
 	public HasError(controlName : string) : boolean {
@@ -98,5 +116,10 @@ export class EditTodoItemComponent implements OnInit {
 			default:
 				return;
 		}
+	}
+
+	public ngOnDestroy() : void {
+		this.destroy$.next(true);
+		this.destroy$.unsubscribe();
 	}
 }

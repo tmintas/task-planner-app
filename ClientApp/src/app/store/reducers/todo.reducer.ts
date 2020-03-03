@@ -2,11 +2,12 @@ import { Action, createReducer, on } from '@ngrx/store';
 import ToDoState , * as fromTodoState from '@states/todo';
 import * as fromTodoActions from '@actions/todo';
 import { ToDoItem } from 'app/to-dos/models/to-do-item.model';
+import { DropdownOption } from 'app/shared/models/dropdown-option.model';
 
 const toDoReducer = createReducer(
 	fromTodoState.TODO_INITIAL_STATE,
-	// load month
-	on(fromTodoActions.LoadTodosMonth,
+	// load all
+	on(fromTodoActions.LoadTodosAll,
 		(state : ToDoState) => {
 			return { ...state,
 				itemsLoading : true,
@@ -15,38 +16,20 @@ const toDoReducer = createReducer(
 		}
 	),
 	on(
-		fromTodoActions.LoadTodosMonthSuccess,
+		fromTodoActions.LoadTodosAllSuccess,
 		(state : ToDoState, payload : { items : ToDoItem[] }) => {
+			const items = payload.items.slice();
+			items.forEach(i => i.Visible = true);
+
 			return { ...state,
-				items : payload.items,
+				items : items,
 				itemsLoading: false,
 				itemsLoaded: true
 			};
 		}
 	),
 	on(
-		fromTodoActions.LoadTodosMonthFail,
-		(state : ToDoState, payload : { err : any }) => {
-			return { ...state,
-				items : [],
-				itemsLoading: false,
-				itemsLoaded: true,
-				error : payload.err
-			};
-		}
-	),
-	// load day
-	on(fromTodoActions.LoadTodosDaySuccess,
-		(state : ToDoState, payload : { items : ToDoItem[] }) => {
-			return { ...state,
-				items : payload.items,
-				itemsLoading : true,
-				itemsLoaded : false
-			};
-		}
-	),
-	on(
-		fromTodoActions.LoadTodosDayFail,
+		fromTodoActions.LoadTodosAllFail,
 		(state : ToDoState, payload : { err : any }) => {
 			return { ...state,
 				items : [],
@@ -59,7 +42,7 @@ const toDoReducer = createReducer(
 	// create
 	on(
 		fromTodoActions.CreateTodo,
-		(state : ToDoState) => {
+		(state : ToDoState, payload : { item : ToDoItem }) => {
 			return { ...state,
 				itemsLoaded: false,
 				itemsLoading: true
@@ -69,7 +52,8 @@ const toDoReducer = createReducer(
 	on(
 		fromTodoActions.CreateTodoSuccess,
 		(state : ToDoState, payload : { item : ToDoItem }) => {
-			payload.item.Id = state.items.length;
+			payload.item.Visible = true;
+
 			return { ...state,
 				items : [ ...state.items, payload.item ],
 				itemsLoaded: true,
@@ -84,6 +68,14 @@ const toDoReducer = createReducer(
 				itemsLoaded: true,
 				itemsLoading: false,
 				error : payload.err
+			};
+		}
+	),
+	on(
+		fromTodoActions.LoadImportanceOptionsSuccess,
+		(state : ToDoState, payload : { options : DropdownOption[]}) => {
+			return { ...state,
+				imprtanceOptions : payload.options,
 			};
 		}
 	),
@@ -120,28 +112,10 @@ const toDoReducer = createReducer(
 	// update
 	on(
 		fromTodoActions.UpdateTodo,
-		(state : ToDoState) => {
+		(state : ToDoState, payload : { id : number, item : ToDoItem }) => {
 			return { ...state,
 				itemsLoaded: false,
 				itemsLoading: true,
-			};
-		}
-	),
-	on(
-		fromTodoActions.UpdateTodoSuccess,
-		(state : ToDoState, payload : { id : number, updatedItem : ToDoItem }) => {
-			const updatedTodo : ToDoItem = {
-				...state.items[payload.id],
-				...payload.updatedItem
-			};
-
-			const itemsCopy = [...state.items];
-			itemsCopy[payload.id] = updatedTodo;
-
-			return { ...state,
-				items: itemsCopy,
-				itemsLoaded: true,
-				itemsLoading: false,
 			};
 		}
 	),

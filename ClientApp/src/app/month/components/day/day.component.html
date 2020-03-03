@@ -4,10 +4,10 @@
 			{{ DayNumber }}
 		</span> 
 		<span class="day-actions">
-			<a [routerLink]="[DayNumber, 'add']">
+			<a [routerLink]="[DayNumber, 'edit', 0]">
 				<fa-icon [icon]="['fas', 'plus-circle']"></fa-icon>
 			</a>
-			<a [routerLink]="[DayNumber, 'items-list']">
+			<a [routerLink]="[DayNumber]">
 				<fa-icon [icon]="['fas', 'list-alt']"></fa-icon>
 			</a>
 		</span>
@@ -17,10 +17,10 @@
 		[ngStyle]="{ 'visibility': item.Visible ? 'visible' : 'hidden' }">
 			<span class="todo-text">{{ ItemDisplayText(item) }}</span>
 			<div>
-				<button class="todo-delete-btn" (click)="OnDelete(item)">
+				<a class="todo-action-btn" [routerLink]="[DayNumber, 'edit', item.Id]">
 					<fa-icon [icon]="['fas', 'edit']"></fa-icon>
-				</button>
-				<button class="todo-delete-btn" (click)="OnEdit(item)">
+				</a>
+				<button class="todo-action-btn" (click)="OnDelete(item.Id)">
 					<fa-icon [icon]="['fas', 'times']"></fa-icon>
 				</button>
 			</div>

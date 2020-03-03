@@ -3,9 +3,10 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { mergeMap, map, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 
-import { TodoService } from 'app/to-dos/services/todo-service.service';
+import { TodoService } from 'app/to-dos/services/todo.service';
 
 import * as fromTodoActions from '@actions/todo';
+import { ToDoItem } from '@todo-models';
 
 @Injectable()
 export class TodoEffect {
@@ -14,32 +15,14 @@ export class TodoEffect {
 		private todoService : TodoService,
 	) { }
 
-	public LoadTodosMonth$ = createEffect(() => this.actions$.pipe(
-		ofType(fromTodoActions.LoadTodosMonth),
+	public LoadTodosAll$ = createEffect(() => this.actions$.pipe(
+		ofType(fromTodoActions.LoadTodosAll),
 		mergeMap(() => {
-			return this.todoService.GetMonthTodos().pipe(
-				map(todos => fromTodoActions.LoadTodosMonthSuccess({ items : todos })),
-				catchError(err => of(fromTodoActions.LoadTodosMonthFail({ err })))
-			);
-		})
-	));
-
-	public LoadTodosDay$ = createEffect(() => this.actions$.pipe(
-		ofType(fromTodoActions.LoadTodosDay),
-		mergeMap(() => {
-			return this.todoService.GetDayTodos().pipe(
-				map(todos => fromTodoActions.LoadTodosDaySuccess({ items : todos })),
-				catchError(err => of(fromTodoActions.LoadTodosDayFail({ err })))
-			);
-		})
-	));
-
-	public LoadTodo$ = createEffect(() => this.actions$.pipe(
-		ofType(fromTodoActions.LoadTodo),
-		mergeMap((action) => {
-			return this.todoService.GetById(action.id).pipe(
-				map(todo => fromTodoActions.LoadTodoSuccess({ item : todo })),
-				catchError(err => of(fromTodoActions.LoadTodoFail({ err })))
+			return this.todoService.GetAll().pipe(
+				map((items : ToDoItem[]) => {
+					return fromTodoActions.LoadTodosAllSuccess({items});
+				}),
+				catchError(err => of(fromTodoActions.CreateTodoFail({ err })))
 			);
 		})
 	));
@@ -54,11 +37,20 @@ export class TodoEffect {
 		})
 	));
 
+	public LoadOptions$ = createEffect(() => this.actions$.pipe(
+		ofType(fromTodoActions.LoadImportanceOptions),
+		mergeMap(() => {
+			return of(this.todoService.GetImportanceOptions()).pipe(
+				map(options => fromTodoActions.LoadImportanceOptionsSuccess({ options })),
+			);
+		})
+	));
+
 	public UpdateTodo$ = createEffect(() => this.actions$.pipe(
 		ofType(fromTodoActions.UpdateTodo),
 		mergeMap((action) => {
-			return this.todoService.CreateTodo(action.item).pipe(
-				map(updatedItem => fromTodoActions.UpdateTodoSuccess({ id: action.id, updatedItem : action.item })),
+			return this.todoService.Update(action.id, action.item).pipe(
+				map(() => fromTodoActions.LoadTodosAll()),
 				catchError(err => of(fromTodoActions.UpdateTodoFail({ err })))
 			);
 		})
@@ -68,7 +60,7 @@ export class TodoEffect {
 		ofType(fromTodoActions.DeleteTodo),
 		mergeMap((action) => {
 			return this.todoService.DeleteTodo(action.id).pipe(
-				map(() => fromTodoActions.DeleteTodoSuccess({ id : action.id })),
+				map(() => fromTodoActions.DeleteTodoSuccess({ id: action.id })),
 				catchError(err => of(fromTodoActions.DeleteTodoFail({ err })))
 			);
 		})

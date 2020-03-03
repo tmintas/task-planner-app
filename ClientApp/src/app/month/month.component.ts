@@ -44,7 +44,6 @@ export class MonthComponent implements OnInit {
 	}
 
 	public ngOnInit() : void {
-
 		this.route.params.pipe(
 			map((prms : Params) => {
 				if (!prms || !prms.month || !prms.year) { return; }
@@ -53,9 +52,11 @@ export class MonthComponent implements OnInit {
 				this.year = +prms.year;
 
 				this.store.dispatch(fromCalendarActions.LoadMonthDays({ month : this.month, year : this.year }));
-				this.store.dispatch(fromTodoActions.LoadTodosMonth());
 			})
 		).subscribe();
+
+		this.store.dispatch(fromTodoActions.LoadImportanceOptions());
+		this.store.dispatch(fromTodoActions.LoadTodosAll());
 
 		this.CurrentDays$ = this.store.select(fromCalendarSelectors.currentMonthDays);
 		this.PreviousDays$ = this.store.select(fromCalendarSelectors.previousMonthDays);
