@@ -41,7 +41,7 @@ export class EditTodoItemComponent implements OnInit, OnDestroy {
 
 	public ngOnInit() : void {
 		this.store.pipe(
-			select(fromRouterSelectors.getDateParamsFromRoute),
+			select(fromRouterSelectors.getDateParams),
 			map(({ year, month, day }) => this.patchDate(year, month, day))
 		).subscribe();
 
@@ -99,6 +99,8 @@ export class EditTodoItemComponent implements OnInit, OnDestroy {
 
 		if (this.isAddMode) { this.store.dispatch(CreateTodo({ item })); }
 		else 				{ this.store.dispatch(UpdateTodo({ id : this.itemId, item : item })); }
+
+		// this.store.dispatch(fromRouterActions.go({ path : ['../../'], extras : { relativeTo : this.route }}));
 	}
 
 	public HasError(controlName : string) : boolean {

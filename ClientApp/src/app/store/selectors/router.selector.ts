@@ -1,17 +1,18 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { CustomRouterState } from 'app/shared/utils/custom-router-serializer';
 import { RouterReducerState } from '@ngrx/router-store';
+import * as fromRouterState from '@states/router';
 
 export type CustomRouterReducerState = RouterReducerState<CustomRouterState>;
 
-export const selectFeature = createFeatureSelector<CustomRouterReducerState>('router');
+export const selectFeature = createFeatureSelector<CustomRouterReducerState>(fromRouterState.ROUTER_FEATURE_KEY);
 
 export const selectState = createSelector(
 	selectFeature,
 	(state : CustomRouterReducerState) => state.state
 )
 
-export const getDateParamsFromRoute = createSelector(
+export const getDateParams = createSelector(
     selectState,
     (state) => { 
         return { 

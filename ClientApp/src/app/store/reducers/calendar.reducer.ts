@@ -20,14 +20,7 @@ const calendarReducer = createReducer(
 				loading : false
 			};
 		}
-	),
-	// on(fromTodoActions.LoadTodosDay,
-	// 	(state : CalendarState, payload : { selectedDay : number }) => {
-	// 		return { ...state,
-	// 			selectedDay : payload.selectedDay
-	// 		};
-	// 	}
-	// ),
+	)
 );
 
 // tslint:disable-next-line: typedef

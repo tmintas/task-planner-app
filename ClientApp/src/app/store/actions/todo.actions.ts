@@ -41,7 +41,7 @@ export const CreateTodoSuccess = createAction(TodoActionTypes.CREATE_TODO_SUCCES
 export const CreateTodoFail = createAction(TodoActionTypes.CREATE_TODO_FAIL , props<{ err : any }>());
 
 export const UpdateTodo = createAction(TodoActionTypes.UPDATE_TODO, props<{ id : number, item : ToDoItem}>());
-export const UpdateTodoSuccess = createAction(TodoActionTypes.UPDATE_TODO_SUCCESS, props<{ updatedItem : ToDoItem }>());
+export const UpdateTodoSuccess = createAction(TodoActionTypes.UPDATE_TODO_SUCCESS, props<{ item : ToDoItem }>());
 export const UpdateTodoFail = createAction(TodoActionTypes.UPDATE_TODO_FAIL, props<{ err : any }>());
 
 export const DeleteTodo = createAction(TodoActionTypes.DELETE_TODO, props<{ id : number }>());

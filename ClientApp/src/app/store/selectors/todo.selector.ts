@@ -1,9 +1,10 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import ToDoState, { TODO_FEATURE_KEY } from '@states/todo';
 import { CustomRouterReducerState } from './router.selector';
+import * as fromRouterState from '@states/router';
 
 export const selectFeature = createFeatureSelector<ToDoState>(TODO_FEATURE_KEY);
-export const selectRouteFeature = createFeatureSelector<CustomRouterReducerState>('router');
+export const selectRouteFeature = createFeatureSelector<CustomRouterReducerState>(fromRouterState.ROUTER_FEATURE_KEY);
 
 export const selectAll = createSelector(
 	selectFeature,

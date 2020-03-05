@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
 import { map } from 'rxjs/operators';
 
+import * as fromRouterSelectors from '@selectors/router';
 import * as fromDateFunctions from '@shared-functions/date';
 import { Store } from '@ngrx/store';
 import * as fromCalendarSelectors from '@selectors/calendar';
@@ -21,7 +21,7 @@ import { Day } from '@month-models';
 })
 export class MonthComponent implements OnInit {
 
-	constructor(private route : ActivatedRoute, private store : Store<AppState>) {	}
+	constructor(private store : Store<AppState>) {	}
 
 	private month : number;
 	private year : number;
@@ -44,12 +44,12 @@ export class MonthComponent implements OnInit {
 	}
 
 	public ngOnInit() : void {
-		this.route.params.pipe(
-			map((prms : Params) => {
+		this.store.select(fromRouterSelectors.getDateParams).pipe(
+			map((prms : { day : number, month : number, year : number }) => {
 				if (!prms || !prms.month || !prms.year) { return; }
 
-				this.month = +prms.month;
-				this.year = +prms.year;
+				this.month = prms.month;
+				this.year = prms.year;
 
 				this.store.dispatch(fromCalendarActions.LoadMonthDays({ month : this.month, year : this.year }));
 			})

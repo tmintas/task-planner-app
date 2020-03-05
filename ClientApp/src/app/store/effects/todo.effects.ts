@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { mergeMap, map, catchError } from 'rxjs/operators';
+import { mergeMap, map, catchError, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 import { TodoService } from 'app/to-dos/services/todo.service';
 
+import * as fromRouterActions from '@actions/router';
 import * as fromTodoActions from '@actions/todo';
 import { ToDoItem } from '@todo-models';
 
@@ -36,22 +37,31 @@ export class TodoEffect {
 			);
 		})
 	));
+	
+	public UpdateTodo$ = createEffect(() => this.actions$.pipe(
+		ofType(fromTodoActions.UpdateTodo),
+		mergeMap((action) => {
+			return this.todoService.Update(action.id, action.item).pipe(
+				map(() => fromTodoActions.UpdateTodoSuccess({ item : action.item })),
+				catchError(err => of(fromTodoActions.UpdateTodoFail({ err })))
+			);
+		})
+	));
+
+	public NavigateOnCreateOrUpdateSuccess$ = createEffect(() => this.actions$.pipe(
+		ofType(fromTodoActions.CreateTodoSuccess, fromTodoActions.UpdateTodoSuccess),
+		switchMap((action) => { 
+			return of(
+				fromRouterActions.go({ path : [ 'calendar', action.item.Date.year, action.item.Date.month, action.item.Date.day ]}),
+				fromTodoActions.LoadTodosAll())
+		})
+	));
 
 	public LoadOptions$ = createEffect(() => this.actions$.pipe(
 		ofType(fromTodoActions.LoadImportanceOptions),
 		mergeMap(() => {
 			return of(this.todoService.GetImportanceOptions()).pipe(
 				map(options => fromTodoActions.LoadImportanceOptionsSuccess({ options })),
-			);
-		})
-	));
-
-	public UpdateTodo$ = createEffect(() => this.actions$.pipe(
-		ofType(fromTodoActions.UpdateTodo),
-		mergeMap((action) => {
-			return this.todoService.Update(action.id, action.item).pipe(
-				map(() => fromTodoActions.LoadTodosAll()),
-				catchError(err => of(fromTodoActions.UpdateTodoFail({ err })))
 			);
 		})
 	));
