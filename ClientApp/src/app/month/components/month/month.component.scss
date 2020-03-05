@@ -1,7 +1,7 @@
 @import 'variables';
 
 .month {
-    border: $turquoise 8px solid;
+    border: rgb(28, 163, 204) 8px solid;
     border-radius: 6px;
     display: flex;
     flex-direction: row;
@@ -19,7 +19,7 @@
         box-sizing: border-box;
 
         > .title {
-            background-color: $turquoise;
+            background-color: rgb(28, 163, 204);
             margin: 20px 0;
             padding: 15px 3px;;
             align-content: center;
@@ -94,7 +94,7 @@
                 }
 
                 > .not-current {
-                    background-color: #c0e4de;
+                    background-color: rgb(215, 224, 226);
                 }
             }
         }
