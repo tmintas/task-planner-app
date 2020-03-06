@@ -37,7 +37,7 @@ export class TodoEffect {
 			);
 		})
 	));
-	
+
 	public UpdateTodo$ = createEffect(() => this.actions$.pipe(
 		ofType(fromTodoActions.UpdateTodo),
 		mergeMap((action) => {
@@ -67,7 +67,7 @@ export class TodoEffect {
 	));
 
 	public DeleteTodo$ = createEffect(() => this.actions$.pipe(
-		ofType(fromTodoActions.DeleteTodo),
+		ofType(fromTodoActions.DeleteTodoStart),
 		mergeMap((action) => {
 			return this.todoService.DeleteTodo(action.id).pipe(
 				map(() => fromTodoActions.DeleteTodoSuccess({ id: action.id })),

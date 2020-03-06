@@ -20,8 +20,46 @@ const calendarReducer = createReducer(
 				loading : false
 			};
 		}
+	),
+	on(
+		fromCalendarActions.selectDayToAdd, 
+		(state : CalendarState, payload : { day : number }) => {
+			return {
+				...state,
+				mode : fromCalendarState.CalendarModes.AddTodo,
+				selectedDay : payload.day
+			}
+		}
+	),
+	on(
+		fromCalendarActions.selectItemForEdit, 
+		(state : CalendarState, payload : { itemId : number }) => {
+			return {
+				...state,
+				selectedItemId : payload.itemId
+			}
+		}
+	),
+	on(
+		fromCalendarActions.goNextMonth, 
+		(state : CalendarState) => {
+			return {
+				...state,
+				selectedMonth : state.selectedMonth + 1
+			}
+		}
+	),
+	on(
+		fromCalendarActions.goPreviousMonth, 
+		(state : CalendarState) => {
+			return {
+				...state,
+				selectedMonth : state.selectedMonth - 1
+			}
+		}
 	)
 );
+
 
 // tslint:disable-next-line: typedef
 export function CalendarReducer(

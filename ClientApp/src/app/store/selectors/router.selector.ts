@@ -23,6 +23,16 @@ export const getDateParams = createSelector(
     }
 )
 
+export const getYearAndMonth = createSelector(
+    selectState,
+    (state) => { 
+        return { 
+            year : +state.params['year'],
+            month : +state.params['month'],
+        }
+    }
+)
+
 export const getSelectedDay = createSelector(
     selectState,
     (state) => +state.params['day']

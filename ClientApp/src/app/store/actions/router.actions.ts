@@ -2,6 +2,7 @@ import { createAction, props } from '@ngrx/store';
 import { NavigationExtras } from '@angular/router';
 
 export const enum TodoActionTypes {
+
 	GO = '[Router] Go',
 	BACK = '[Router] Back',
 	FORWARD = '[Router] Forward',

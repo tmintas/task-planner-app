@@ -9,6 +9,8 @@ import { StoreModule } from '@ngrx/store';
 
 import { CALENDAR_FEATURE_KEY } from '@states/calendar';
 import * as fromCalendarReducers from '@reducers/calendar';
+import { EffectsModule } from '@ngrx/effects';
+import { CalendarEffects } from 'app/store/effects/calendar.effects';
 
 @NgModule({
 	declarations: [
@@ -17,6 +19,7 @@ import * as fromCalendarReducers from '@reducers/calendar';
 	],
 	imports: [
 		StoreModule.forFeature(CALENDAR_FEATURE_KEY, fromCalendarReducers.CalendarReducer),
+		EffectsModule.forFeature([CalendarEffects]),
 		CalendarRoutingModule,
 		SharedModule,
 		ToDosModule

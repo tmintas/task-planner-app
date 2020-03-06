@@ -4,22 +4,6 @@
       "date": {
         "year": 2019,
         "month": 1,
-        "day": 10
-      },
-      "time": {
-        "hour": 2,
-        "minute": 4,
-        "second": 0
-      },
-      "name": "sdfa34535",
-      "description": "asdfa",
-      "importance": 1,
-      "id": 3
-    },
-    {
-      "date": {
-        "year": 2019,
-        "month": 1,
         "day": 3
       },
       "time": {
@@ -42,7 +26,7 @@
         "hour": 1,
         "minute": 6
       },
-      "name": "aaaadddwwd",
+      "name": "2",
       "description": "gsgsgs",
       "importance": 2,
       "id": 5
@@ -200,38 +184,6 @@
       "description": null,
       "importance": 1,
       "id": 16
-    },
-    {
-      "date": {
-        "year": 2019,
-        "month": 1,
-        "day": 3
-      },
-      "time": {
-        "hour": 1,
-        "minute": 1,
-        "second": 0
-      },
-      "name": "af",
-      "description": "afs",
-      "importance": 1,
-      "id": 17
-    },
-    {
-      "date": {
-        "year": 2019,
-        "month": 1,
-        "day": 3
-      },
-      "time": {
-        "hour": 1,
-        "minute": 1,
-        "second": 0
-      },
-      "name": "fasdf",
-      "description": null,
-      "importance": 1,
-      "id": 18
     },
     {
       "date": {

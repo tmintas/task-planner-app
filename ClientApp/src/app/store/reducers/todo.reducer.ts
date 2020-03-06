@@ -81,7 +81,7 @@ const toDoReducer = createReducer(
 	),
 	// delete
 	on(
-		fromTodoActions.DeleteTodo,
+		fromTodoActions.DeleteTodoStart,
 		(state : ToDoState)  => {
 			return { ...state,
 				itemsLoading: true,

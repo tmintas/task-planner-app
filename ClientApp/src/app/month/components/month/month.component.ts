@@ -1,7 +1,6 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
-import { map } from 'rxjs/operators';
+import { map, withLatestFrom } from 'rxjs/operators';
 
-import * as fromRouterSelectors from '@selectors/router';
 import * as fromDateFunctions from '@shared-functions/date';
 import { Store } from '@ngrx/store';
 import * as fromCalendarSelectors from '@selectors/calendar';
@@ -30,6 +29,9 @@ export class MonthComponent implements OnInit {
 	public PreviousDays$ : Observable<Day[]>;
 	public NextDays$ : Observable<Day[]>;
 	public IsLoading$ : Observable<boolean>;
+	public Month$ : Observable<number> = this.store.select(fromCalendarSelectors.selectedMonth);
+	public Year$ : Observable<number> = this.store.select(fromCalendarSelectors.selectedYear);
+	public MonthName$ : Observable<string> = this.store.select(fromCalendarSelectors.selectedMonthName);
 
 	public get Month() : number {
 		return this.month;
@@ -44,14 +46,14 @@ export class MonthComponent implements OnInit {
 	}
 
 	public ngOnInit() : void {
-		this.store.select(fromRouterSelectors.getDateParams).pipe(
-			map((prms : { day : number, month : number, year : number }) => {
-				if (!prms || !prms.month || !prms.year) { return; }
-
-				this.month = prms.month;
-				this.year = prms.year;
-
-				this.store.dispatch(fromCalendarActions.LoadMonthDays({ month : this.month, year : this.year }));
+		this.store.select(fromCalendarSelectors.selectedMonth).pipe(
+			withLatestFrom(this.store.select(fromCalendarSelectors.selectedYear)),
+			map(([month, year]) => {
+				console.log('month');
+				console.log(month);
+				console.log(year);
+				
+				this.store.dispatch(fromCalendarActions.LoadMonthDays({ month, year }));
 			})
 		).subscribe();
 
@@ -62,6 +64,14 @@ export class MonthComponent implements OnInit {
 		this.PreviousDays$ = this.store.select(fromCalendarSelectors.previousMonthDays);
 		this.NextDays$ = this.store.select(fromCalendarSelectors.nextMonthDays);
 		this.IsLoading$ = this.store.select(fromTodoSelectors.itemsLoading);
+	}
+
+	public GoPreviousMonth() : void {
+		this.store.dispatch(fromCalendarActions.goPreviousMonth());
+	}
+
+	public GoNextMonth() : void {
+		this.store.dispatch(fromCalendarActions.goNextMonth());
 	}
 
 	public TodosByDay(dayIndex : number, month : number) : Observable<ToDoItem[]> {

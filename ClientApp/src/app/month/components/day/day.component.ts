@@ -1,8 +1,9 @@
 import { Component, Input, ViewEncapsulation, OnChanges, SimpleChanges, ViewChild, ElementRef } from '@angular/core';
 import { Store } from '@ngrx/store';
+import * as fromCalendarActions from '@actions/calendar';
+import * as fromTodoActions from '@actions/todo';
 
 import { Importance } from 'app/to-dos/enums/importance.enum';
-import { DeleteTodo } from '@actions/todo';
 import { ToDoItem } from '@todo-models';
 import ToDoState from '@states/todo';
 
@@ -42,6 +43,14 @@ export class DayComponent implements OnChanges {
 		return item.Importance == Importance.Low
 	}
 
+	public OnEditClick(itemId : number) : void {
+		this.store.dispatch(fromCalendarActions.selectItemForEdit({ itemId }));
+	}
+
+	public OnDaySelectedToAdd() : void {
+		this.store.dispatch(fromCalendarActions.selectDayToAdd({ day : this.DayNumber }));
+	}
+
 	ngOnChanges(changes: SimpleChanges) : void {
 		// hide new todo item if overflowing the Day container
 		const todoElements =  this.elRef.nativeElement.querySelectorAll(".todo-item");
@@ -56,8 +65,8 @@ export class DayComponent implements OnChanges {
 		}
 	}
 
-	public OnDelete(id : number) : void {
-		this.store.dispatch(DeleteTodo({ id }));
+	public OnDeleteClick(id : number) : void {
+		this.store.dispatch(fromTodoActions.DeleteTodoStart({ id }));
 	}
 
 	public ItemDisplayText(item : ToDoItem) : string {
