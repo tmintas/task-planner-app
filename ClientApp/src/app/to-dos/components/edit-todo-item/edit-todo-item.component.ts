@@ -1,14 +1,14 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
-import { map, takeUntil, filter } from 'rxjs/operators';
+import { takeUntil, switchMapTo } from 'rxjs/operators';
 import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
 import { Store, select } from '@ngrx/store';
 import * as fromTodoSelectors from '@selectors/todo';
 import * as fromRouterSelectors from '@selectors/router';
 
 import { Importance } from '@todo-enums';
-import { CreateTodo, UpdateTodo } from '@actions/todo';
+import { SubmitTodo } from '@actions/todo';
 import { ToDoItem } from '@todo-models';
 import { DropdownOption } from 'app/shared/models/dropdown-option.model';
 import { Observable, Subject } from 'rxjs';
@@ -20,10 +20,8 @@ import AppState from '@states/app';
 	styleUrls: ['./edit-todo-item.component.scss']
 })
 export class EditTodoItemComponent implements OnInit, OnDestroy {
-	private itemId : number;
 	private dftImportance : Importance = Importance.Low;
 	private destroy$ : Subject<boolean> = new Subject<boolean>();
-	private isAddMode : boolean;
 
 	public ToDoForm : FormGroup;
 
@@ -41,22 +39,17 @@ export class EditTodoItemComponent implements OnInit, OnDestroy {
 
 	public ngOnInit() : void {
 		this.store.pipe(
-			select(fromRouterSelectors.getDateParams),
-			map(({ year, month, day }) => this.patchDate(year, month, day))
-		).subscribe();
-
-		this.store.pipe(
 			select(fromTodoSelectors.getSelectedTodo),
-			map(item => { 
-				this.isAddMode = item == null;
-				return item;
-			}),
-			filter(item => item != null),
-			map((item : ToDoItem) => 
-			{
-				this.itemId = item.Id;
-				this.patchFromItem(item);
-			}),
+			switchMapTo(
+				this.store.pipe(select(fromRouterSelectors.getDateParams)),
+				(selectedItem, date) => {
+					if (selectedItem) {
+						this.patchFromItem(selectedItem);
+					} else {
+						this.patchDate(date.year, date.month, date.day)
+					}
+				}
+			),
 			takeUntil(this.destroy$)
 		).subscribe();
 	}
@@ -97,8 +90,7 @@ export class EditTodoItemComponent implements OnInit, OnDestroy {
 			Importance : +this.ToDoForm.get('Importance').value,
 		}
 
-		if (this.isAddMode) { this.store.dispatch(CreateTodo({ item })); }
-		else 				{ this.store.dispatch(UpdateTodo({ id : this.itemId, item : item })); }
+		this.store.dispatch(SubmitTodo({ item }));
 	}
 
 	public HasError(controlName : string) : boolean {

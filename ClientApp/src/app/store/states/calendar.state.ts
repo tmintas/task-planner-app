@@ -1,5 +1,4 @@
 import { Day } from '@month-models';
-import { ToDoItem } from '@todo-models';
 
 export const CALENDAR_FEATURE_KEY = 'calendar';
 

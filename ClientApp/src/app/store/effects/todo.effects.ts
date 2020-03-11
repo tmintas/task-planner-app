@@ -1,19 +1,23 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { mergeMap, map, catchError, switchMap } from 'rxjs/operators';
+import { mergeMap, map, catchError, switchMap, withLatestFrom, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 import { TodoService } from 'app/to-dos/services/todo.service';
 
 import * as fromRouterActions from '@actions/router';
 import * as fromTodoActions from '@actions/todo';
+import * as fromTodoSelectors from '@selectors/todo';
 import { ToDoItem } from '@todo-models';
+import { Store } from '@ngrx/store';
+import AppState from '@states/app';
 
 @Injectable()
 export class TodoEffect {
 	constructor(
 		private actions$ : Actions,
 		private todoService : TodoService,
+		private store : Store<AppState>
 	) { }
 
 	public LoadTodosAll$ = createEffect(() => this.actions$.pipe(
@@ -73,6 +77,18 @@ export class TodoEffect {
 				map(() => fromTodoActions.DeleteTodoSuccess({ id: action.id })),
 				catchError(err => of(fromTodoActions.DeleteTodoFail({ err })))
 			);
+		})
+	));
+
+	public SubmitTodo$ = createEffect(() => this.actions$.pipe(
+		ofType(fromTodoActions.SubmitTodo),
+		withLatestFrom(this.store.select(fromTodoSelectors.getSelectedTodoId)),
+		map(([action, selectedItemId]) => {
+			if (selectedItemId === 0) {
+				return fromTodoActions.CreateTodo({ item : action.item });
+			} else {
+				return fromTodoActions.UpdateTodo({ id : selectedItemId, item : action.item });
+			}
 		})
 	));
 }

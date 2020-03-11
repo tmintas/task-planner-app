@@ -17,6 +17,15 @@ export const getSelectedTodo = createSelector(
 	(todos, customRoute) => todos.find(i => { return i.Id === +customRoute.state.params['itemId']; })
 );
 	
+export const getSelectedTodoId = createSelector(
+    selectAll, 
+    selectRouteFeature,
+	(todos, customRoute) => {
+		const todo = todos.find(i => { return i.Id === +customRoute.state.params['itemId']; });
+		return todo != null ? todo.Id : 0;
+	}
+);
+
 export const selectTodosByMonthAndDay = createSelector(
 	selectFeature,
 	(state : ToDoState, props : { month : number, day : number }) => {

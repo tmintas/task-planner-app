@@ -16,7 +16,7 @@ export class CalendarEffects {
 
     public NavigateAfterDaySelected$ = createEffect(() => this.actions$.pipe(
         ofType(fromCalendarActions.selectDayToAdd),
-        withLatestFrom(this.store$.select(fromCalendarSelectors.feauteSelector)),
+        withLatestFrom(this.store$.select(fromCalendarSelectors.featureSelector)),
         tap(([payload, calendarState]) => {
             this.store$.dispatch(fromRouterActions.go({ path : [
                 'calendar', 
@@ -31,10 +31,8 @@ export class CalendarEffects {
 
     public NavigateAfterItemSelectedForEdit$ = createEffect(() => this.actions$.pipe(
         ofType(fromCalendarActions.selectItemForEdit),
-        withLatestFrom(this.store$.select(fromCalendarSelectors.feauteSelector)),
+        withLatestFrom(this.store$.select(fromCalendarSelectors.featureSelector)),
         tap(([payload, calendarState]) => { 
-            console.log('eff');
-            
             this.store$.dispatch(fromRouterActions.go({ path : [
                 'calendar', 
                 calendarState.selectedYear, 
@@ -43,6 +41,18 @@ export class CalendarEffects {
                 'edit',
                 payload.itemId
             ]}))
+        })
+    ), { dispatch : false });
+
+    public NavigateAfterMonthChanged$ = createEffect(() => this.actions$.pipe(
+        ofType(fromCalendarActions.goNextMonth, fromCalendarActions.goPreviousMonth),
+        withLatestFrom(this.store$.select(fromCalendarSelectors.featureSelector)),
+        tap(([payload, calendarState]) => {
+            this.store$.dispatch(fromRouterActions.go({ path : [
+                'calendar', 
+                calendarState.selectedYear, 
+                calendarState.selectedMonth
+            ] }))
         })
     ), { dispatch : false });
 }
