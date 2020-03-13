@@ -9,7 +9,7 @@ import * as fromRouterSelectors from '@selectors/router';
 
 import { Importance } from '@todo-enums';
 import { SubmitTodo } from '@actions/todo';
-import { ToDoItem } from '@todo-models';
+import { Todo } from '@todo-models';
 import { DropdownOption } from 'app/shared/models/dropdown-option.model';
 import { Observable, Subject } from 'rxjs';
 import AppState from '@states/app';
@@ -64,7 +64,7 @@ export class EditTodoItemComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	private patchFromItem(item : ToDoItem) : void {
+	private patchFromItem(item : Todo) : void {
 		const date = new NgbDate(item.Date.year, item.Date.month, item.Date.day);
 		const time = { hour : item.Time.hour, minute : item.Time.minute };
 
@@ -82,7 +82,7 @@ export class EditTodoItemComponent implements OnInit, OnDestroy {
 		
 		if (this.ToDoForm.invalid) { return; }
 		
-		const item : ToDoItem = {
+		const item : Todo = {
 			Name : this.ToDoForm.get('Name').value,
 			Description : this.ToDoForm.get('Description').value,
 			Date : this.ToDoForm.get('Date').value,

@@ -3,15 +3,14 @@ import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 
 import * as fromCalendarSelectors from '@selectors/calendar';
-import * as fromRouterSelectors from '@selectors/router';
 import * as fromTodoSelectors from '@selectors/todo';
 import * as fromTodoActions from '@actions/todo';
 import * as fromCalendarActions from '@actions/calendar';
-import { ToDoItem } from 'app/to-dos/models/to-do-item.model';
 import { Observable } from 'rxjs';
 import AppState from '@states/app';
 import { Day } from '@month-models';
-import { mergeMapTo } from 'rxjs/operators';
+import { mergeMapTo, map } from 'rxjs/operators';
+import { Todo } from '@todo-models';
 
 @Component({
 	selector: 'app-month',
@@ -52,7 +51,7 @@ export class MonthComponent implements OnInit {
 		this.store.dispatch(fromCalendarActions.goNextMonth());
 	}
 
-	public TodosByDay(dayIndex : number, month : number) : Observable<ToDoItem[]> {
-		return this.store.select(fromTodoSelectors.selectTodosByMonthAndDay, { month: month ,day : dayIndex });
+	public TodosByDay(dayIndex : number, month : number) : Observable<Todo[]> {
+		return this.store.select(fromTodoSelectors.selectTodosByMonthAndDay, { month: month , day : dayIndex });
 	}
 }

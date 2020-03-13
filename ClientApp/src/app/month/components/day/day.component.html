@@ -17,10 +17,10 @@
 		[ngStyle]="{ 'visibility': item.Visible ? 'visible' : 'hidden' }">
 			<span class="todo-text">{{ ItemDisplayText(item) }}</span>
 			<div>
-				<a class="todo-action-btn" (click)="OnEditClick(item.Id)">
+				<a class="todo-action-btn" (click)="OnEditClick(item.id)">
 					<fa-icon [icon]="['fas', 'edit']"></fa-icon>
 				</a>
-				<button class="todo-action-btn" (click)="OnDeleteClick(item.Id)">
+				<button class="todo-action-btn" (click)="OnDeleteClick(item.id)">
 					<fa-icon [icon]="['fas', 'times']"></fa-icon>
 				</button>
 			</div>

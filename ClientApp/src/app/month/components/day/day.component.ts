@@ -4,8 +4,8 @@ import * as fromCalendarActions from '@actions/calendar';
 import * as fromTodoActions from '@actions/todo';
 
 import { Importance } from 'app/to-dos/enums/importance.enum';
-import { ToDoItem } from '@todo-models';
-import ToDoState from '@states/todo';
+import { Todo } from '@todo-models';
+import { TodosState } from '@reducers/todo';
 
 @Component({
 	selector: 'app-day',
@@ -18,33 +18,35 @@ export class DayComponent implements OnChanges {
 	@Input()
 	public DayNumber : number;
 	@Input()
-	public Items : ToDoItem[];
+	public Items : Todo[];
 
 	@ViewChild("dayRef", { static: true })
 	public DayRef: ViewChild;
 
+	// TODO outsource to state
 	public get NotVisibleCount() : number {
 		if (!this.Items) return 0; 
 		 
 		return this.Items.filter(el => !el.Visible).length;
 	}
 
-	constructor(private store : Store<ToDoState>, private elRef: ElementRef) { }
+	constructor(private store : Store<TodosState>, private elRef: ElementRef) { }
 
-	public IsItemHighImportant(item : ToDoItem) : boolean {
+	// TODO outsource to directive
+	public IsItemHighImportant(item : Todo) : boolean {
 		return item.Importance == Importance.High
 	}
 
-	public IsItemMidmportant(item : ToDoItem) : boolean {
+	public IsItemMidmportant(item : Todo) : boolean {
 		return item.Importance == Importance.Middle
 	}
 
-	public IsItemLowImportant(item : ToDoItem) : boolean {
+	public IsItemLowImportant(item : Todo) : boolean {
 		return item.Importance == Importance.Low
 	}
 
 	public OnEditClick(itemId : number) : void {
-		this.store.dispatch(fromCalendarActions.selectItemForEdit({ itemId }));
+		this.store.dispatch(fromTodoActions.SelectItemForEdit({ itemId }));
 	}
 
 	public OnDaySelectedToAdd() : void {
@@ -69,7 +71,7 @@ export class DayComponent implements OnChanges {
 		this.store.dispatch(fromTodoActions.DeleteTodoStart({ id }));
 	}
 
-	public ItemDisplayText(item : ToDoItem) : string {
+	public ItemDisplayText(item : Todo) : string {
 		// TODO use pipe for that
 		if (!item) return '';
 		if (!item.Time || !item.Time.hour) return item.Name;

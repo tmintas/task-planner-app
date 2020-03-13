@@ -11,7 +11,7 @@ export const enum CalendarActionTypes {
 
 export const LoadMonthDays = createAction(CalendarActionTypes.LOAD_TODOS_MONTH_DAYS, props<{ month : number, year : number }>());
 export const selectDayToAdd = createAction(CalendarActionTypes.SELECT_DAY_ADD, props<{ day : number }>());
-export const selectItemForEdit = createAction(CalendarActionTypes.SELECT_ITEM_FOR_EDIT, props<{ itemId : number }>());
+
 export const goNextMonth = createAction(CalendarActionTypes.MOVE_NEXT_MONTH);
 export const goPreviousMonth = createAction(CalendarActionTypes.MOVE_PREVIOUS_MONTH);
 

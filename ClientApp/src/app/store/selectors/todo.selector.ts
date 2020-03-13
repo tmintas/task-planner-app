@@ -1,35 +1,47 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import ToDoState, { TODO_FEATURE_KEY } from '@states/todo';
+import { TODO_FEATURE_KEY } from '@states/todo';
 import { CustomRouterReducerState } from './router.selector';
 import * as fromRouterState from '@states/router';
+import { adapter, TodosState } from '@reducers/todo';
+import { Todo } from '@todo-models';
 
-export const selectFeature = createFeatureSelector<ToDoState>(TODO_FEATURE_KEY);
+export const selectFeature = createFeatureSelector<TodosState>(TODO_FEATURE_KEY);
 export const selectRouteFeature = createFeatureSelector<CustomRouterReducerState>(fromRouterState.ROUTER_FEATURE_KEY);
-
-export const selectAll = createSelector(
+const {
+	selectIds,
+	selectEntities,
+	selectAll,
+	selectTotal,
+} = adapter.getSelectors();
+  
+export const selectTodoIds = selectIds; 
+export const selectTodoEntities = selectEntities;
+export const selectAllTodos = createSelector(
 	selectFeature,
-	(state : ToDoState) => state.items
-)
+	selectAll
+  );
+
+export const selectTodoTotal = selectTotal;
 
 export const getSelectedTodo = createSelector(
-    selectAll, 
+    selectAllTodos, 
     selectRouteFeature,
-	(todos, customRoute) => todos.find(i => { return i.Id === +customRoute.state.params['itemId']; })
+	(todos, customRoute) => todos.find(i => { return i.id === +customRoute.state.params['itemId']; })
 );
 	
 export const getSelectedTodoId = createSelector(
-    selectAll, 
+    selectAllTodos, 
     selectRouteFeature,
 	(todos, customRoute) => {
-		const todo = todos.find(i => { return i.Id === +customRoute.state.params['itemId']; });
-		return todo != null ? todo.Id : 0;
+		const todo = todos.find(i => { return i.id === +customRoute.state.params['itemId']; });
+		return todo != null ? todo.id : 0;
 	}
 );
 
 export const selectTodosByMonthAndDay = createSelector(
-	selectFeature,
-	(state : ToDoState, props : { month : number, day : number }) => {
-		return state.items
+	selectAllTodos,
+	(state : Todo[], props : { month : number, day : number }) => {
+		return state
 			.filter(i => i.Date && i.Date.month === props.month && i.Date.day === props.day)
 			.sort((next, prev) => {
 				// TODO add moving todos without time to the end
@@ -41,16 +53,16 @@ export const selectTodosByMonthAndDay = createSelector(
 );
 
 export const selectById = createSelector(
-	selectFeature,
-	(state : ToDoState, props : { id : number }) => state.items.find(i => i.Id === props.id)
+	selectAllTodos,
+	(items : Todo[], props : { id : number }) => items.find(i => i.id === props.id)
 );
 
 export const itemsLoading = createSelector(
 	selectFeature,
-	(state : ToDoState) => state.itemsLoading
+	(state : TodosState) => state.itemsLoading
 );
 
 export const selectImportanceOptions = createSelector(
 	selectFeature,
-	(state : ToDoState) => state.imprtanceOptions
+	(state : TodosState) => state.importanceOptions
 );

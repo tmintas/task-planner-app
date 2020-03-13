@@ -32,15 +32,6 @@ const calendarReducer = createReducer(
 		}
 	),
 	on(
-		fromCalendarActions.selectItemForEdit, 
-		(state : CalendarState, payload : { itemId : number }) => {
-			return {
-				...state,
-				selectedItemId : payload.itemId
-			}
-		}
-	),
-	on(
 		fromCalendarActions.goNextMonth, 
 		(state : CalendarState) => {
 			return {

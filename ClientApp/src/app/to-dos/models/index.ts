@@ -1,1 +1,1 @@
-export * from './to-do-item.model';
+export * from './todo.model';

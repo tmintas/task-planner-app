@@ -1,4 +1,5 @@
 import * as fromCalendarActions from '@actions/calendar';
+import * as fromTodoActions from '@actions/todo';
 import * as fromRouterActions from '@actions/router';
 
 import { Injectable } from '@angular/core';
@@ -30,7 +31,7 @@ export class CalendarEffects {
     ), { dispatch : false });
 
     public NavigateAfterItemSelectedForEdit$ = createEffect(() => this.actions$.pipe(
-        ofType(fromCalendarActions.selectItemForEdit),
+        ofType(fromTodoActions.SelectItemForEdit),
         withLatestFrom(this.store$.select(fromCalendarSelectors.featureSelector)),
         tap(([payload, calendarState]) => { 
             this.store$.dispatch(fromRouterActions.go({ path : [
@@ -40,7 +41,7 @@ export class CalendarEffects {
                 calendarState.selectedDay,
                 'edit',
                 payload.itemId
-            ]}))
+            ]}))                
         })
     ), { dispatch : false });
 
