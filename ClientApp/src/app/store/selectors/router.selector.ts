@@ -9,7 +9,10 @@ export const selectFeature = createFeatureSelector<CustomRouterReducerState>(fro
 
 export const selectState = createSelector(
 	selectFeature,
-	(state : CustomRouterReducerState) => state.state
+	(state : CustomRouterReducerState) => {
+         if (state) return state.state;
+         else return null;
+    }
 )
 
 export const getDateParams = createSelector(
@@ -19,16 +22,6 @@ export const getDateParams = createSelector(
             year : +state.params['year'],
             month : +state.params['month'],
             day : +state.params['day']
-        }
-    }
-)
-
-export const getYearAndMonth = createSelector(
-    selectState,
-    (state) => { 
-        return { 
-            year : +state.params['year'],
-            month : +state.params['month'],
         }
     }
 )

@@ -12,10 +12,13 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CalendarModule } from './month/calendar.module';
 import { SharedModule } from './shared/shared.module';
+import { NotificationService } from './shared/services/notification.service';
+import { NotificatorComponent } from './shared/components/notificator/notificator.component';
 
 @NgModule({
 	declarations: [
-		AppComponent
+		AppComponent,
+		NotificatorComponent
 	],
 	imports: [
 		StoreModule.forRoot([]),
@@ -29,7 +32,7 @@ import { SharedModule } from './shared/shared.module';
 		FormsModule,
 		HttpClientModule
 	],
-	providers: [DatePipe],
+	providers: [DatePipe, NotificationService],
 	bootstrap: [AppComponent]
 })
 export class AppModule { }

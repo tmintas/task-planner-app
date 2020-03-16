@@ -9,7 +9,7 @@ import * as fromCalendarActions from '@actions/calendar';
 import { Observable } from 'rxjs';
 import AppState from '@states/app';
 import { Day } from '@month-models';
-import { mergeMapTo, map } from 'rxjs/operators';
+import { mergeMapTo } from 'rxjs/operators';
 import { Todo } from '@todo-models';
 
 @Component({

@@ -7,6 +7,7 @@
     "paths": {
       "@shared-functions/*": ["app/shared/functions/*.functions.ts"],
       "@month-models": ["app/month/models/index.ts"],
+      "@shared-models": ["app/shared/models/index.ts"],
       "@todo-enums": ["app/to-dos/enums/index.ts"],
       "@todo-models": ["app/to-dos/models/index.ts"],
       "@actions/*": ["app/store/actions/*.actions.ts"],
