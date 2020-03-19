@@ -1,7 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-// import * as fromTodoSelectors from '@selectors/todo';
-// import * as fromRouterSelectos from '@selectors/router';
+import * as fromTodoSelectors from '@selectors/todo';
+import * as fromRouterSelectos from '@selectors/router';
+import * as fromCalendarSelectos from '@selectors/calendar';
 
+import { Observable } from 'rxjs';
+import { select, Store } from '@ngrx/store';
+import { switchMap } from 'rxjs/operators';
+import AppState from '@states/app';
+import { Todo } from '@todo-models';
 
 @Component({
 	selector: 'app-day-todo-list',
@@ -10,20 +16,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DayTodoListComponent implements OnInit {
 
-	// public Todos$ : Observable<TodosState>;
+	public Todos$ : Observable<Todo[]>;
+	public SelectedDay$ : Observable<number> = this.store.pipe(select(fromRouterSelectos.getSelectedDay));
 
-	constructor() { }
+	constructor(private store : Store<AppState>) { }
 
 	public ngOnInit() : void {
-		// this.Todos$ = this.store.pipe(
-		// 	// select(fromRouterSelectos.getDateParams),
-		// 	// switchMap((prms : { day : number, month : number, year : number }) => 
-		// 	// 	this.store.select(fromTodoSelectors.selectTodosByMonthAndDay,
-		// 	// 	{
-		// 	// 		month : prms.month,
-		// 	// 		day : prms.day
-		// 	// 	})
-		// 	// )
-		// );
+		this.Todos$ = this.store.pipe(
+			select(fromRouterSelectos.getDateParams),
+			switchMap((prms : { day : number, month : number, year : number }) => 
+				this.store.select(fromTodoSelectors.selectTodosByMonthAndDay, { month : prms.month, day : prms.day })
+			)
+		);
 	}
 }

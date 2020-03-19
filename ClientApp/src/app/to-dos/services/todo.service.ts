@@ -26,7 +26,7 @@ export class TodoService {
 	}
 
 	public CreateTodo(item : Todo) : Observable<Todo> {
-		return this.http.post<TodoItemDto>('http://localhost:3000/Toddos', Todo.MapToDto(item), httpOptions).pipe(
+		return this.http.post<TodoItemDto>('http://localhost:3000/Todos', Todo.MapToDto(item), httpOptions).pipe(
 			map((itemDto) => {
 				item.id = itemDto.id; 
 				return item;
@@ -35,13 +35,13 @@ export class TodoService {
 	}
 
 	public DeleteTodo(id : number) : Observable<{}> {
-		const url = `http://localhost:3000/Todoss/${id}`;
+		const url = `http://localhost:3000/Todos/${id}`;
 
 		return this.http.delete(url);
 	}
 
 	public Update(id : number, changes : any) : Observable<Todo> {
-		const url = `http://localhost:3000/Toddos/${id}`;
+		const url = `http://localhost:3000/Todos/${id}`;
 
 		return this.http.put<TodoItemDto>(url, Todo.MapToDto(changes), httpOptions).pipe(
 			map(dto => Todo.GetFromDto(dto))

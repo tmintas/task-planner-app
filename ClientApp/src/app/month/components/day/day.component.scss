@@ -20,11 +20,13 @@
 
         > .day-actions {
 
-            > a {
+            > a, button {
                 margin-left: 3px;
                 cursor: pointer;
                 color: $blue;
-
+                background: transparent;
+                border: none;
+                outline: none;
                 :hover {
                     color: darken($blue, 10%);
                 }

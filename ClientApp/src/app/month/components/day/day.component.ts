@@ -32,25 +32,16 @@ export class DayComponent implements OnChanges {
 
 	constructor(private store : Store<TodosState>, private elRef: ElementRef) { }
 
-	// TODO outsource to directive
-	public IsItemHighImportant(item : Todo) : boolean {
-		return item.Importance == Importance.High
-	}
-
-	public IsItemMidmportant(item : Todo) : boolean {
-		return item.Importance == Importance.Middle
-	}
-
-	public IsItemLowImportant(item : Todo) : boolean {
-		return item.Importance == Importance.Low
-	}
-
 	public OnEditClick(itemId : number) : void {
 		this.store.dispatch(fromTodoActions.SelectItemForEdit({ itemId }));
 	}
 
 	public OnDaySelectedToAdd() : void {
 		this.store.dispatch(fromCalendarActions.selectDayToAdd({ day : this.DayNumber }));
+	}
+
+	public OnDaySelectedToView() : void {
+		this.store.dispatch(fromCalendarActions.selectDayToView({ day : this.DayNumber }));
 	}
 
 	ngOnChanges(changes: SimpleChanges) : void {

@@ -23,7 +23,7 @@ export class CalendarEffects {
                 'calendar', 
                 calendarState.selectedYear, 
                 calendarState.selectedMonth, 
-                calendarState.selectedDay,
+                payload.day,
                 'edit',
                 0
             ] }))
@@ -38,10 +38,23 @@ export class CalendarEffects {
                 'calendar', 
                 calendarState.selectedYear, 
                 calendarState.selectedMonth, 
-                calendarState.selectedDay,
+                calendarState.selectedDayToView,
                 'edit',
                 payload.itemId
             ]}))                
+        })
+    ), { dispatch : false });
+
+    public NavigateAfterDayForViewChanged$ = createEffect(() => this.actions$.pipe(
+        ofType(fromCalendarActions.selectDayToView),
+        withLatestFrom(this.store$.select(fromCalendarSelectors.featureSelector)),
+        tap(([payload, calendarState]) => {
+            this.store$.dispatch(fromRouterActions.go({ path : [
+                'calendar', 
+                calendarState.selectedYear, 
+                calendarState.selectedMonth,
+                payload.day
+            ] }));            
         })
     ), { dispatch : false });
 

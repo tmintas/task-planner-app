@@ -1,10 +1,13 @@
 <div class="day-todo-list">
-    <div class="item card" *ngFor="let todo of Todos$ | async" coloredImportance [importance]="todo.Importance">
-        <h5 class="card-header">{{ todo.Name }}</h5>
-        <div class="card-body">
-            <h5 class="card-title"> {{ todo.Time | displayTime }} </h5>
-            <p class="card-text"> {{ todo.Description }} </p>
+    <h1>{{ SelectedDay$ | async }}</h1>
+    <ng-template #noItems><p class="no-items-text">No items to view</p></ng-template>
+    <div class="item-cards-container" *ngIf="(Todos$ | async) && (Todos$ | async).length > 0; else noItems">
+        <div class="item card" *ngFor="let todo of (Todos$ | async)" coloredImportance [importance]="todo.Importance">
+            <h5 class="card-header"> What: {{ todo.Name }}</h5>
+            <div class="card-body">
+                <h5 class="card-title"> Due date: {{ todo.Time | displayTime }} </h5>
+                <p class="card-text"> Description: {{ todo.Description }} </p>
+            </div>
         </div>
-      </div>
-
+    </div>
 </div>

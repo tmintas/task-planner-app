@@ -1,17 +1,20 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { mergeMap, map, catchError, withLatestFrom, tap } from 'rxjs/operators';
+import { mergeMap, map, catchError, withLatestFrom, tap, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { TodoService } from 'app/to-dos/services/todo.service';
-import * as fromRouterSelectors from '@selectors/router';
 
+import * as fromRouterSelectors from '@selectors/router';
+import * as fromRouterActions from '@actions/router';
 import * as fromTodoActions from '@actions/todo';
 import * as fromTodoSelectors from '@selectors/todo';
-import { Todo } from '@todo-models';
-import { Store } from '@ngrx/store';
 import AppState from '@states/app';
 import { Update } from '@ngrx/entity';
+import { Store } from '@ngrx/store';
+
 import { NotificationService } from 'app/shared/services/notification.service';
+import { TodoService } from 'app/to-dos/services/todo.service';
+
+import { Todo } from '@todo-models';
 import { GetMonthName } from '@shared-functions/date';
 
 @Injectable()
@@ -62,13 +65,20 @@ export class TodoEffect {
 		})
 	));
 
-	// public NavigateOnCreateOrUpdateSuccess$ = createEffect(() => this.actions$.pipe(
-	// 	ofType(fromTodoActions.CreateTodoSuccess, fromTodoActions.UpdateTodoSuccess),
-	// 	withLatestFrom(this.store.select(fromCalendarSelectors.featureSelector)),
-	// 	switchMap([payload, state]) => { 
-	// 		return of(fromRouterActions.go({ path : [ 'calendar', state.selectedYear, state.selectedDau ]}))
-	// 	})
-	// ));
+	public NavigateOnCreateSuccess$ = createEffect(() => this.actions$.pipe(
+		ofType(fromTodoActions.CreateTodoSuccess),
+		switchMap((payload) => { 
+			return of(fromRouterActions.go({ path : [ 'calendar', payload.item.Date.year, payload.item.Date.month, payload.item.Date.day ]}))
+		})
+	));
+
+	public NavigateOnUpdateSuccess$ = createEffect(() => this.actions$.pipe(
+		ofType(fromTodoActions.UpdateTodoSuccess),
+		switchMap((payload : { item : Update<Todo> }) => { 
+			const itemDate = payload.item.changes.Date;
+			return of(fromRouterActions.go({ path : [ 'calendar', itemDate.year, itemDate.month, itemDate.day ]}))
+		})
+	));
 
 	public LoadOptions$ = createEffect(() => this.actions$.pipe(
 		ofType(fromTodoActions.LoadImportanceOptions),

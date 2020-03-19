@@ -11,12 +11,14 @@ library.add(fas, far);
 import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
 import { ImportanceBgDirective } from 'app/to-dos/directives/importance-bg.directive';
 import { DisplayTimePipe } from './pipes/display-time.pipe';
+import { IfHasItemsDirective } from './directives/has-items.directive';
 
 @NgModule({
 	declarations: [
 		LoadingSpinnerComponent,
 		ImportanceBgDirective,
 		DisplayTimePipe,
+		IfHasItemsDirective
 	],
 	imports: [
 		CommonModule,
@@ -26,7 +28,8 @@ import { DisplayTimePipe } from './pipes/display-time.pipe';
 		FontAwesomeModule,
 		LoadingSpinnerComponent,
 		ImportanceBgDirective,
-		DisplayTimePipe
+		IfHasItemsDirective,
+		DisplayTimePipe,
 	]
 })
 export class SharedModule { }

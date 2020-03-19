@@ -18,7 +18,7 @@ import { NotificatorComponent } from './shared/components/notificator/notificato
 @NgModule({
 	declarations: [
 		AppComponent,
-		NotificatorComponent
+		NotificatorComponent,
 	],
 	imports: [
 		StoreModule.forRoot([]),
@@ -30,7 +30,7 @@ import { NotificatorComponent } from './shared/components/notificator/notificato
 		CalendarModule,
 		NgbModule,
 		FormsModule,
-		HttpClientModule
+		HttpClientModule,
 	],
 	providers: [DatePipe, NotificationService],
 	bootstrap: [AppComponent]
