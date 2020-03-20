@@ -68,7 +68,7 @@ export class TodoEffect {
 	public NavigateOnCreateSuccess$ = createEffect(() => this.actions$.pipe(
 		ofType(fromTodoActions.CreateTodoSuccess),
 		switchMap((payload) => { 
-			return of(fromRouterActions.go({ path : [ 'calendar', payload.item.Date.year, payload.item.Date.month, payload.item.Date.day ]}))
+			return of(fromRouterActions.go({ path : [ 'calendar', payload.item.Date.getFullYear(), payload.item.Date.getMonth(), payload.item.Date.getDate() ]}))
 		})
 	));
 
@@ -76,7 +76,7 @@ export class TodoEffect {
 		ofType(fromTodoActions.UpdateTodoSuccess),
 		switchMap((payload : { item : Update<Todo> }) => { 
 			const itemDate = payload.item.changes.Date;
-			return of(fromRouterActions.go({ path : [ 'calendar', itemDate.year, itemDate.month, itemDate.day ]}))
+			return of(fromRouterActions.go({ path : [ 'calendar', itemDate.getFullYear(), itemDate.getMonth(), itemDate.getDate() ]}))
 		})
 	));
 

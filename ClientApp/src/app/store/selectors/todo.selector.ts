@@ -42,12 +42,12 @@ export const selectTodosByMonthAndDay = createSelector(
 	selectAllTodos,
 	(state : Todo[], props : { month : number, day : number }) => {
 		return state
-			.filter(i => i.Date && i.Date.month === props.month && i.Date.day === props.day)
+			.filter(i => i.Date && i.Date.getMonth() + 1 === props.month && i.Date.getDate() === props.day)
 			.sort((next, prev) => {
 				// TODO add moving todos without time to the end
-				if (!prev.Time || !next.Time) { return 1; }
+				if (!prev.Date || !next.Date) { return 1; }
 				// if (prev.Type === ItemType.UndefiniteTime) { return -1; }
-				return next.Time.hour - prev.Time.hour;
+				return next.Date.getHours() - prev.Date.getHours();
 			});
 	}
 );

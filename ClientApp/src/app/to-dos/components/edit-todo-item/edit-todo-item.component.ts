@@ -2,17 +2,17 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
 import { takeUntil, switchMapTo } from 'rxjs/operators';
-import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDate, NgbDateStruct, NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
 import { Store, select } from '@ngrx/store';
 import * as fromTodoSelectors from '@selectors/todo';
 import * as fromRouterSelectors from '@selectors/router';
 
 import { Importance } from '@todo-enums';
-import { SubmitTodo } from '@actions/todo';
 import { Todo } from '@todo-models';
 import { DropdownOption } from 'app/shared/models/dropdown-option.model';
 import { Observable, Subject } from 'rxjs';
 import AppState from '@states/app';
+import { SubmitTodo } from '@actions/todo';
 
 @Component({
 	selector: 'app-edit-todo-item',
@@ -65,8 +65,8 @@ export class EditTodoItemComponent implements OnInit, OnDestroy {
 	}
 
 	private patchFromItem(item : Todo) : void {
-		const date = new NgbDate(item.Date.year, item.Date.month, item.Date.day);
-		const time = { hour : item.Time.hour, minute : item.Time.minute };
+		const date = new NgbDate(item.Date.getFullYear(), item.Date.getMonth() + 1, item.Date.getDate());
+		const time = { hour : item.Date.getHours(), minute : item.Date.getMinutes() };
 
 		this.ToDoForm.patchValue({
 			Date : date,
@@ -82,11 +82,14 @@ export class EditTodoItemComponent implements OnInit, OnDestroy {
 		
 		if (this.ToDoForm.invalid) { return; }
 		
+		const ngbDate : NgbDateStruct = this.ToDoForm.get('Date').value;
+		const ngbTime : NgbTimeStruct = this.ToDoForm.get('Time').value;
+		const date : Date = new Date(ngbDate.year, ngbDate.month - 1, ngbDate.day, ngbTime.hour, ngbTime.minute);
+		
 		const item : Todo = {
 			Name : this.ToDoForm.get('Name').value,
 			Description : this.ToDoForm.get('Description').value,
-			Date : this.ToDoForm.get('Date').value,
-			Time : this.ToDoForm.get('Time').value,
+			Date : date,
 			Importance : +this.ToDoForm.get('Importance').value,
 		}
 

@@ -16,6 +16,6 @@ namespace Domain.Requests
 
         [Required]
         [Range(0,100)]
-        public Enums.ImportanceType ImportanceTypeId { get; set; }
+        public Enums.ImportanceType Importance { get; set; }
     }
 }

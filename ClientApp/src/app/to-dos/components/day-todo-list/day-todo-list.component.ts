@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import * as fromTodoSelectors from '@selectors/todo';
 import * as fromRouterSelectos from '@selectors/router';
-import * as fromCalendarSelectos from '@selectors/calendar';
 
 import { Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';

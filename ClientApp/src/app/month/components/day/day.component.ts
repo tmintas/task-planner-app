@@ -3,7 +3,6 @@ import { Store } from '@ngrx/store';
 import * as fromCalendarActions from '@actions/calendar';
 import * as fromTodoActions from '@actions/todo';
 
-import { Importance } from 'app/to-dos/enums/importance.enum';
 import { Todo } from '@todo-models';
 import { TodosState } from '@reducers/todo';
 
@@ -43,6 +42,10 @@ export class DayComponent implements OnChanges {
 	public OnDaySelectedToView() : void {
 		this.store.dispatch(fromCalendarActions.selectDayToView({ day : this.DayNumber }));
 	}
+	
+	public OnDeleteClick(id : number) : void {
+		this.store.dispatch(fromTodoActions.DeleteTodoStart({ id }));
+	}
 
 	ngOnChanges(changes: SimpleChanges) : void {
 		// hide new todo item if overflowing the Day container
@@ -56,18 +59,5 @@ export class DayComponent implements OnChanges {
 		if (lastBottomX > containerBottomCord - 20) {
 			changes.Items.currentValue[changes.Items.currentValue.length - 1].Visible = false;
 		}
-	}
-
-	public OnDeleteClick(id : number) : void {
-		this.store.dispatch(fromTodoActions.DeleteTodoStart({ id }));
-	}
-
-	public ItemDisplayText(item : Todo) : string {
-		// TODO use pipe for that
-		if (!item) return '';
-		if (!item.Time || !item.Time.hour) return item.Name;
-
-		const minuteText = item.Time.minute < 10 ? `0${item.Time.minute}` : `${item.Time.minute}`;
-		return `${item.Name} [${item.Time.hour}:${minuteText}]`;
 	}
 }

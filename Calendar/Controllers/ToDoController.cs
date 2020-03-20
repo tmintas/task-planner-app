@@ -6,10 +6,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Web.Repositories.Contracts;
+using Microsoft.AspNetCore.Cors;
 
 namespace Web.Controllers
 {
-    [Route("api/ToDo")]
+    [Route("api/Todo")]
     [ApiController]
     public class ToDoController : ControllerBase
     {
@@ -20,7 +21,7 @@ namespace Web.Controllers
             _todoRepository = todoRepository;
         }
 
-        // GET: api/ToDoItems
+        // GET: api/Todo
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ToDoItem>>> GetAllTodos()
         {
@@ -29,7 +30,7 @@ namespace Web.Controllers
             return Ok(items);
         }
 
-        // GET: api/ToDoItems/5
+        // GET: api/Todo/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ToDoItem>> GetToDoItem(int id)
         {
@@ -40,7 +41,7 @@ namespace Web.Controllers
             return Ok(item);
         }
 
-        // GET: api/ToDoItems/5
+        // GET: api/Todo/5
         [HttpPost]
         public async Task<ActionResult<ToDoItem>> PostToDoItem([FromBody] ToDoItemUpdateDto itemUpdateDto)
         {
@@ -55,7 +56,7 @@ namespace Web.Controllers
             }
 
             var availbleImportances = new[] { ImportanceType.High, ImportanceType.Middle, ImportanceType.Low };
-            if (!availbleImportances.Any(i => i == itemUpdateDto.ImportanceTypeId))
+            if (!availbleImportances.Any(i => i == itemUpdateDto.Importance))
             {
                 return BadRequest("Wrong importance type");
             }
@@ -63,7 +64,7 @@ namespace Web.Controllers
             var newItem = new ToDoItem();
             newItem.Date = itemUpdateDto.Date;
             newItem.Description = itemUpdateDto.Description;
-            newItem.ImportanceTypeId = itemUpdateDto.ImportanceTypeId;
+            newItem.ImportanceTypeId = itemUpdateDto.Importance;
             newItem.Name = itemUpdateDto.Name;
 
             await _todoRepository.AddAsync(newItem);
@@ -71,7 +72,7 @@ namespace Web.Controllers
             return CreatedAtAction("PostToDoItem", new { id = newItem.Id }, itemUpdateDto);
         }
 
-        //PUT: api/ToDoItems/5
+        //PUT: api/Todo/5
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateToDoItem(int id, [FromBody] ToDoItemUpdateDto itemUpdateDto)
         {
@@ -81,7 +82,7 @@ namespace Web.Controllers
             }
 
             var availbleImportances = new[] { ImportanceType.High, ImportanceType.Middle, ImportanceType.Low };
-            if (!availbleImportances.Any(i => i == itemUpdateDto.ImportanceTypeId))
+            if (!availbleImportances.Any(i => i == itemUpdateDto.Importance))
             {
                 return BadRequest("Wrong importance type");
             }
@@ -94,7 +95,7 @@ namespace Web.Controllers
 
             itemToUpdate.Date = itemUpdateDto.Date;
             itemToUpdate.Description = itemUpdateDto.Description;
-            itemToUpdate.ImportanceTypeId = itemUpdateDto.ImportanceTypeId;
+            itemToUpdate.ImportanceTypeId = itemUpdateDto.Importance;
             itemToUpdate.Name = itemUpdateDto.Name;
 
             await _todoRepository.UpdateAsync(itemToUpdate);
@@ -103,7 +104,7 @@ namespace Web.Controllers
         }
 
 
-        // DELETE: api/ToDoItems/5
+        // DELETE: api/Todo/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<ToDoItem>> DeleteToDoItem(int id)
         {

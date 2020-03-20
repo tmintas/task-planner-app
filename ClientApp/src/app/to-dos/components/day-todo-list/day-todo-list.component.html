@@ -5,7 +5,7 @@
         <div class="item card" *ngFor="let todo of (Todos$ | async)" coloredImportance [importance]="todo.Importance">
             <h5 class="card-header"> What: {{ todo.Name }}</h5>
             <div class="card-body">
-                <h5 class="card-title"> Due date: {{ todo.Time | displayTime }} </h5>
+                <h5 class="card-title"> Due date: {{ todo.Date | displayTime }} </h5>
                 <p class="card-text"> Description: {{ todo.Description }} </p>
             </div>
         </div>

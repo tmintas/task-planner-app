@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { NotificationService } from 'app/shared/services/notification.service';
 import { Notification } from 'app/shared/models/notification.model';
 
@@ -7,16 +7,11 @@ import { Notification } from 'app/shared/models/notification.model';
     templateUrl: './notificator.component.html',
     styleUrls: ['./notificator.component.scss']
 })
-export class NotificatorComponent implements OnInit {
+export class NotificatorComponent {
 
     public ShowDescription : boolean = false;
 
     constructor(private ns: NotificationService) { }
-
-    ngOnInit() {
-        console.log(this.ns.Notifications);
-
-    }
 
     public OnNotificationClick(ntf : Notification) : void {
         this.ns.RemoveNotification(ntf);

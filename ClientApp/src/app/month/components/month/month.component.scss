@@ -5,6 +5,7 @@
     border-radius: 6px;
     display: flex;
     flex-direction: row;
+    font-family: 'Josefin Sans', sans-serif;
 
     // to get rid of right-hand scroll bar
     height: 101%;
@@ -27,7 +28,7 @@
             flex: 0 1 50px;
 
             > .month-title {
-                font-size: 30px;
+                font-size: 35px;
                 margin-bottom: 10px;
                 display: flex;
                 flex-direction: row;
@@ -62,7 +63,7 @@
         > .week-days-bar {
             padding: 0 1%;
             background-color: $gray;
-            font-size: 22px;
+            font-size: 28px;
             height: 45px;
     
             > .week-day {
