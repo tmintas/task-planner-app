@@ -4,32 +4,28 @@ import { Todo } from '@todo-models';
 import { Update } from '@ngrx/entity';
 
 export const enum TodoActionTypes {
-	LOAD_TODOS_ALL = '[Todo] LoadAll',
-	LOAD_TODOS_ALL_SUCCESS = '[Todo] LoadAllSuccess',
-	LOAD_TODOS_ALL_FAIL = '[Todo] LoadAllFail',
-	LOAD_TODO = '[Todo] Load Todo',
-	LOAD_TODO_SUCCESS = '[Todo] LoadTodoSuccess',
-	LOAD_TODO_FAIL = '[Todo] LLoadTodoFail',
-	DELETE_TODO_START = '[Todo] Delete Todo Start',
-	DELETE_TODO_SUCCESS = '[Todo] Delete Todo Success',
-	DELETE_TODO_FAIL = '[Todo] Delete Todo Fail',
-	SELECT_ITEM_FOR_EDIT = '[Todo] Select Item for Edit',
-	SUBMIT_TODO = '[Todo] Submit Todo',
-	CREATE_TODO = '[Todo] Create Todo',
-	CREATE_TODO_SUCCESS = '[Todo] Create Todo Success',
-	CREATE_TODO_FAIL = '[Todo] CreateTodoFail',
-	UPDATE_TODO_SUCCESS = '[Todo] Update Todo Success',
-	UPDATE_TODO_FAIL = '[Todo] Update Todo Fail',
-	UPDATE_TODO = '[Todo] Update Todo',
-	LOAD_IMPORTANCE = '[Todo] LoadImportance',
-	LOAD_IMPORTANCE_SUCCESS = '[Todo] LoadImportanceSuccess',
-	SHOW_ALERT = "[Todo] Show Alert"
+	LOAD_TODOS_ALL_START = '[Month Component] Load All Todos Start',
+	LOAD_TODOS_ALL_SUCCESS = '[Todo Effect Action] Load All Todos Success',
+	LOAD_TODOS_ALL_FAIL = '[Todo Effect Action] LoadAllFail',
+	DELETE_TODO_START = '[Todo Effect Action] Delete Todo Start',
+	DELETE_TODO_SUCCESS = '[Todo Effect Action] Delete Todo Success',
+	DELETE_TODO_FAIL = '[Todo Effect Action] Delete Todo Fail',
+	SELECT_ITEM_FOR_EDIT = '[Calendar User Action] Select Item for Edit',
+	SUBMIT_TODO = '[Calendar User Action] Submit Todo',
+	CREATE_TODO = '[Todo Effect Action] Create Todo',
+	CREATE_TODO_SUCCESS = '[Todo Effect Action] Create Todo Success',
+	CREATE_TODO_FAIL = '[Todo Effect Action] CreateTodoFail',
+	UPDATE_TODO_SUCCESS = '[Todo Effect Action] Update Todo Success',
+	UPDATE_TODO_FAIL = '[Todo Effect Action] Update Todo Fail',
+	UPDATE_TODO = '[Todo Effect Action] Update Todo',
+	LOAD_IMPORTANCE_START = '[Month Component] Load Importance Options Start',
+	LOAD_IMPORTANCE_SUCCESS = '[Todo Effect Action] Load Importance Options Success',
 }
 
-export const LoadImportanceOptions = createAction(TodoActionTypes.LOAD_IMPORTANCE);
+export const LoadImportanceOptions = createAction(TodoActionTypes.LOAD_IMPORTANCE_START);
 export const LoadImportanceOptionsSuccess = createAction(TodoActionTypes.LOAD_IMPORTANCE_SUCCESS, props<{ options : DropdownOption[] }>());
 
-export const LoadTodosAll = createAction(TodoActionTypes.LOAD_TODOS_ALL);
+export const LoadTodosAll = createAction(TodoActionTypes.LOAD_TODOS_ALL_START);
 export const LoadTodosAllSuccess = createAction(TodoActionTypes.LOAD_TODOS_ALL_SUCCESS, props<{items : Todo[]}>());
 export const LoadTodosAllFail = createAction(TodoActionTypes.LOAD_TODOS_ALL_FAIL, props<{ err : any }>());
 

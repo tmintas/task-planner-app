@@ -30,3 +30,17 @@ export const getSelectedDay = createSelector(
     selectState,
     (state) => +state.params['day']
 )
+
+export const selectedMonthAndYear = createSelector(
+    selectState,
+    (state) => { 
+        if (!state) return { 
+            month : 1, 
+            year : 2019 
+        }
+        return { 
+            month : +state.params['month'], 
+            year : +state.params['year'] 
+        }
+    }
+)

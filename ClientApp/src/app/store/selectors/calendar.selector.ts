@@ -1,9 +1,11 @@
 import { createSelector, createFeatureSelector } from '@ngrx/store';
-import { CALENDAR_FEATURE_KEY } from '@states/calendar';
-import CalendarState from '@states/calendar';
+import CalendarState, { CALENDAR_FEATURE_KEY } from '@states/calendar';
 import * as fromDateFunctions from '@shared-functions/date';
+import * as fromRouterState from '@states/router';
+import { CustomRouterReducerState } from './router.selector';
 
 export const featureSelector = createFeatureSelector<CalendarState>(CALENDAR_FEATURE_KEY);
+export const selectRouteFeature = createFeatureSelector<CustomRouterReducerState>(fromRouterState.ROUTER_FEATURE_KEY);
 
 export const currentMonthDays = createSelector(
 	featureSelector,
@@ -21,8 +23,15 @@ export const nextMonthDays = createSelector(
 );
 
 export const selectedMonth = createSelector(
+	selectRouteFeature,
+	customRoute => +customRoute.state.params['month']
+);
+
+export const selectedMonthAndYear = createSelector(
 	featureSelector,
-	(state : CalendarState) => state.selectedMonth
+	state => {  
+		return { month : state.selectedMonth, year : state.selectedYear } 
+	}
 );
 
 export const selectedYear = createSelector(

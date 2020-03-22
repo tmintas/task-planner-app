@@ -1,7 +1,6 @@
 import { Component, Input, ViewEncapsulation, OnChanges, SimpleChanges, ViewChild, ElementRef } from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as fromCalendarActions from '@actions/calendar';
-import * as fromTodoActions from '@actions/todo';
 
 import { Todo } from '@todo-models';
 import { TodosState } from '@reducers/todo';
@@ -31,8 +30,8 @@ export class DayComponent implements OnChanges {
 
 	constructor(private store : Store<TodosState>, private elRef: ElementRef) { }
 
-	public OnEditClick(itemId : number) : void {
-		this.store.dispatch(fromTodoActions.SelectItemForEdit({ itemId }));
+	public OnEditClick(item : Todo) : void {
+		this.store.dispatch(fromCalendarActions.SelectItemForEdit({ item }));
 	}
 
 	public OnDaySelectedToAdd() : void {
@@ -44,7 +43,7 @@ export class DayComponent implements OnChanges {
 	}
 	
 	public OnDeleteClick(id : number) : void {
-		this.store.dispatch(fromTodoActions.DeleteTodoStart({ id }));
+		this.store.dispatch(fromCalendarActions.DeleteTodoClick({ id }));
 	}
 
 	ngOnChanges(changes: SimpleChanges) : void {
