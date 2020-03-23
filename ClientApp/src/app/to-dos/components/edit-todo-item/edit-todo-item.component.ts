@@ -84,10 +84,14 @@ export class EditTodoItemComponent implements OnInit, OnDestroy {
 		
 		const ngbDate : NgbDateStruct = this.ToDoForm.get('Date').value;
 		const ngbTime : NgbTimeStruct = this.ToDoForm.get('Time').value;
-		const date : Date = new Date(ngbDate.year, ngbDate.month - 1, ngbDate.day, ngbTime.hour, ngbTime.minute);
+		const hour = ngbTime == null ? 0 : ngbTime.hour;
+		const minute = ngbTime == null ? 0 : ngbTime.minute;
+
+		const date : Date = new Date(ngbDate.year, ngbDate.month - 1, ngbDate.day, hour, minute);
 		
 		const item : Todo = {
 			Name : this.ToDoForm.get('Name').value,
+			HasTime : ngbTime != null,
 			Description : this.ToDoForm.get('Description').value,
 			Date : date,
 			Importance : +this.ToDoForm.get('Importance').value,

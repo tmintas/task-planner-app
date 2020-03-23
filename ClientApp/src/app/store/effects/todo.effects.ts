@@ -48,7 +48,6 @@ export class TodoEffect {
 
 	public UpdateTodo$ = createEffect(() => this.actions$.pipe(
 		ofType(fromTodoActions.UpdateTodo),
-
 		mergeMap((action) => {
 			
 			return this.todoService.Update(+action.item.id, action.item.changes).pipe(

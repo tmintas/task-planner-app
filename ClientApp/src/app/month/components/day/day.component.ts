@@ -1,9 +1,10 @@
 import { Component, Input, ViewEncapsulation, OnChanges, SimpleChanges, ViewChild, ElementRef } from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as fromCalendarActions from '@actions/calendar';
+import * as fromTodoActions from '@actions/todo';
 
 import { Todo } from '@todo-models';
-import { TodosState } from '@reducers/todo';
+import { TodosState } from '@states/todo';
 
 @Component({
 	selector: 'app-day',
@@ -35,15 +36,15 @@ export class DayComponent implements OnChanges {
 	}
 
 	public OnDaySelectedToAdd() : void {
-		this.store.dispatch(fromCalendarActions.selectDayToAdd({ day : this.DayNumber }));
+		this.store.dispatch(fromCalendarActions.SelectDayToAdd({ day : this.DayNumber }));
 	}
 
 	public OnDaySelectedToView() : void {
-		this.store.dispatch(fromCalendarActions.selectDayToView({ day : this.DayNumber }));
+		this.store.dispatch(fromCalendarActions.SelectDayToView({ day : this.DayNumber }));
 	}
 	
 	public OnDeleteClick(id : number) : void {
-		this.store.dispatch(fromCalendarActions.DeleteTodoClick({ id }));
+		this.store.dispatch(fromTodoActions.DeleteTodoStart({ id }));
 	}
 
 	ngOnChanges(changes: SimpleChanges) : void {

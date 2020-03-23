@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20200302134019_init")]
-    partial class init
+    [Migration("20200323065415_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -66,6 +66,9 @@ namespace Infrastructure.Migrations
                         .HasColumnType("nvarchar(30)")
                         .HasMaxLength(30);
 
+                    b.Property<bool>("HasTime")
+                        .HasColumnType("bit");
+
                     b.Property<int>("ImportanceTypeId")
                         .HasColumnType("int");
 
@@ -76,8 +79,6 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ImportanceTypeId");
-
                     b.ToTable("ToDoItems");
 
                     b.HasData(
@@ -85,19 +86,20 @@ namespace Infrastructure.Migrations
                         {
                             Id = 1,
                             Date = new DateTime(2019, 5, 1, 13, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "testdbdesc",
+                            Description = "ddddd",
+                            HasTime = true,
                             ImportanceTypeId = 3,
-                            Name = "testdbname"
+                            Name = "test1"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Date = new DateTime(2019, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "aaaaa",
+                            HasTime = false,
+                            ImportanceTypeId = 3,
+                            Name = "test2"
                         });
-                });
-
-            modelBuilder.Entity("Domain.ToDoItem", b =>
-                {
-                    b.HasOne("Domain.Entities.ImportanceType", "ImportanceType")
-                        .WithMany()
-                        .HasForeignKey("ImportanceTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

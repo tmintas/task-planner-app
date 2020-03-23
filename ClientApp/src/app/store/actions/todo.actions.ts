@@ -41,5 +41,4 @@ export const DeleteTodoStart = createAction(TodoActionTypes.DELETE_TODO_START , 
 export const DeleteTodoSuccess = createAction(TodoActionTypes.DELETE_TODO_SUCCESS , props<{ id : number }>());
 export const DeleteTodoFail = createAction(TodoActionTypes.DELETE_TODO_FAIL , props<{ err : any }>());
 
-export const SelectItemForEdit = createAction(TodoActionTypes.SELECT_ITEM_FOR_EDIT, props<{ itemId : number }>());
 export const SubmitTodo = createAction(TodoActionTypes.SUBMIT_TODO , props<{ item : Todo }>());

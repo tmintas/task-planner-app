@@ -14,7 +14,7 @@ const calendarReducer = createReducer(
 			nextMonthDays : fromDateFunctions.GetNextMonthFirstDays(payload.year, payload.month).map(i => new Day(i)),
 		};
 	}),
-	on(fromCalendarActions.selectDayToAdd, (state : CalendarState, payload : { day : number }) => {
+	on(fromCalendarActions.SelectDayToAdd, (state : CalendarState, payload : { day : number }) => {
 		return {
 			...state,
 			mode : fromCalendarState.CalendarModes.AddTodo,
@@ -40,7 +40,7 @@ const calendarReducer = createReducer(
 			selectedMonth : state.selectedMonth - 1
 		}
 	}),
-	on(fromCalendarActions.selectDayToView, (state : CalendarState, payload : { day : number }) => {
+	on(fromCalendarActions.SelectDayToView, (state : CalendarState, payload : { day : number }) => {
 		return {
 			...state,
 			selectedDayToView : payload.day

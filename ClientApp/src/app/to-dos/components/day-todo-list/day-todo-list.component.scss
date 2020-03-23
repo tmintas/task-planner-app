@@ -17,5 +17,18 @@
     .item {
         margin: 10px 5px;
     }
+    
+    .todo-action-btn {
+        background: transparent;
+        border: transparent;
+        margin-left: 2px;
+        border-radius: 5px;
+        padding: 0 3px;
+    }
+
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+    }
 }
 

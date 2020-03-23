@@ -3,7 +3,6 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Todo } from '@todo-models';
-import { TodoItemDto } from '../models/to-do-item-dto.model';
 import { DropdownOption } from 'app/shared/models/dropdown-option.model';
 import { Importance } from '../enums/importance.enum';
 
@@ -27,17 +26,24 @@ export class TodoService {
 					d.Date = new Date(d.Date);
 					d.Visible = true;
 				});
-
+				
 				return todos;
 			}
 		));
 	}
 
 	public CreateTodo(item : Todo) : Observable<Todo> {
-		return this.http.post<TodoItemDto>(this.apiEndpoint, item, httpOptions).pipe(
-			map((itemDto) => {
-				item.id = itemDto.id; 
+		console.log('service create start.. item is');
+		console.log(item);
+		
+		
+		return this.http.post<Todo>(this.apiEndpoint, item, httpOptions).pipe(
+			map((item : Todo) => {
+				item.Date = new Date(item.Date);
+				console.log('service create map.. itemdto returned...');
+				console.log(item);
 				return item;
+
 			})
 		);
 	}
@@ -48,10 +54,10 @@ export class TodoService {
 		return this.http.delete(url);
 	}
 
-	public Update(id : number, changes : any) : Observable<Todo> {
+	public Update(id : number, changes : any) : Observable<{}> {
 		const url = `${this.apiEndpoint}/${id}`;
 
-		return this.http.put<TodoItemDto>(url, changes, httpOptions);
+		return this.http.put(url, changes, httpOptions);
 	}
 
 	public GetImportanceOptions() : DropdownOption[] {

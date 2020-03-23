@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import * as fromTodoSelectors from '@selectors/todo';
 import * as fromRouterSelectos from '@selectors/router';
+import * as fromCalendarActions from '@actions/calendar';
+import * as fromTodoActions from '@actions/todo';
 
 import { Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
@@ -27,5 +29,13 @@ export class DayTodoListComponent implements OnInit {
 				this.store.select(fromTodoSelectors.selectTodosByMonthAndDay, { month : prms.month, day : prms.day })
 			)
 		);
+	}
+
+	public OnEditClick(item : Todo) : void {
+		this.store.dispatch(fromCalendarActions.SelectItemForEdit({ item }));
+	}
+
+	public OnDeleteClick(id : number) : void {
+		this.store.dispatch(fromTodoActions.DeleteTodoStart({ id }));
 	}
 }

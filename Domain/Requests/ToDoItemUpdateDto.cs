@@ -7,6 +7,8 @@ namespace Domain.Requests
     {
         public DateTime Date { get; set; }
 
+        public bool HasTime { get; set; }
+
         [Required]
         [StringLength(15, ErrorMessage = "Name cannot be longer that 3 chars")]
         public string Name { get; set; }

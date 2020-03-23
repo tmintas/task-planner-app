@@ -50,10 +50,20 @@ namespace Domain.Extensions
                 new ToDoItem
                 {
                     Id = 1,
-                    Name = "testdbname",
-                    Description = "testdbdesc",
+                    Name = "test1",
+                    Description = "ddddd",
                     ImportanceTypeId = Enums.ImportanceType.High,
-                    Date = new DateTime(2019, 5, 1, 13, 0, 0)
+                    Date = new DateTime(2019, 5, 1, 13, 0, 0),
+                    HasTime = true
+                },
+                new ToDoItem
+                {
+                    Id = 2,
+                    Name = "test2",
+                    Description = "aaaaa",
+                    ImportanceTypeId = Enums.ImportanceType.High,
+                    Date = new DateTime(2019, 5, 1, 0, 0, 0),
+                    HasTime = false
                 });
         }
     }

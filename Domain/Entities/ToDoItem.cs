@@ -8,6 +8,8 @@ namespace Domain
     {
         public DateTime Date { get; set; }
 
+        public bool HasTime { get; set; }
+
         public string Name { get; set; }
 
         public string Description { get; set; }

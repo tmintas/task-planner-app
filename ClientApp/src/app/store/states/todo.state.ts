@@ -1,24 +1,33 @@
+import { Todo } from '@todo-models';
+import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
+import { DropdownOption } from '@shared-models';
+
 export const TODO_FEATURE_KEY = 'todo';
 
-// export default class ToDoState {
-// 	public items : ToDoItem[];
-// 	public imprtanceOptions : DropdownOption[];
+function sortByDate(prev : Todo, next : Todo) {
+	if (!prev.HasTime || !next.HasTime) return 1;
+	return prev.Date > next.Date ? 1 : 0;
+}
 
-// 	public itemsLoading : boolean;
-// 	public itemsLoaded : boolean;
-
-// 	public error : any;
-// }
-
-// export const TODO_INITIAL_STATE : ToDoState = {
-// 	items : [ ],
-// 	imprtanceOptions : [],
-// 	itemsLoaded : false,
-// 	itemsLoading : false,
-// 	error : null
-// };
+export const adapter : EntityAdapter<Todo> = createEntityAdapter<Todo>({
+	sortComparer : sortByDate
+});
 
 
+export interface TodosState extends EntityState<Todo> {
+	importanceOptions : DropdownOption[];
+	itemsLoading : boolean;
+	itemsLoaded : boolean;
+	selectedItem : Todo;
+	error : any;
+}
 
+export const initialTodosState : TodosState = adapter.getInitialState({
+	importanceOptions : [],
+	itemsLoading : false,
+	itemsLoaded : false,
+	selectedItem : null,
+	error : null
+});
 
 

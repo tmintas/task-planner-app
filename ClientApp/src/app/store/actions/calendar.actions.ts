@@ -11,7 +11,6 @@ export const enum CalendarActionTypes {
     SELECT_ITEM_FOR_EDIT = '[Calendar User Action] Select Item for Edit',
     MOVE_NEXT_MONTH = '[Calendar User Action] Move to Next Month',
     MOVE_PREVIOUS_MONTH = '[Calendar User Action] Move to Previous Month',
-	DELETE_TODO_CLICK = '[Calendar User Action] Delete Todo Start',
 	SUBMIT_TODO_CLICK = '[Calendar User Action] Submit Todo',
 
     // actions called in effects 
@@ -20,13 +19,12 @@ export const enum CalendarActionTypes {
 }
 
 export const InitMonthToView = createAction(CalendarActionTypes.SELECT_MONTH_TO_VIEW, props<{ month : number, year : number }>());
-export const selectDayToView = createAction(CalendarActionTypes.SELECT_DAY_TO_VIEW, props<{ day : number }>());
+export const SelectDayToView = createAction(CalendarActionTypes.SELECT_DAY_TO_VIEW, props<{ day : number }>());
 export const SelectItemForEdit = createAction(CalendarActionTypes.SELECT_ITEM_FOR_EDIT, props<{ item : Todo }>());
 export const GoNextMonth = createAction(CalendarActionTypes.MOVE_NEXT_MONTH);
 export const GoPreviousMonth = createAction(CalendarActionTypes.MOVE_PREVIOUS_MONTH);
-export const DeleteTodoClick = createAction(CalendarActionTypes.DELETE_TODO_CLICK, props<{ id : number }>());
 export const SubmitTodo = createAction(CalendarActionTypes.SUBMIT_TODO_CLICK , props<{ item : Todo }>());
 
 export const InitFromUrl = createAction(CalendarActionTypes.INIT_FROM_URL);
 export const LoadMonthDays = createAction(CalendarActionTypes.LOAD_MONTH_DAYS, props<{ month : number, year : number }>());
-export const selectDayToAdd = createAction(CalendarActionTypes.SELECT_DAY_TO_ADD_ITEM, props<{ day : number }>());
+export const SelectDayToAdd = createAction(CalendarActionTypes.SELECT_DAY_TO_ADD_ITEM, props<{ day : number }>());

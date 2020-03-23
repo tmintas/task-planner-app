@@ -2,25 +2,8 @@ import { Action, createReducer, on } from '@ngrx/store';
 import * as fromTodoActions from '@actions/todo';
 import { Todo } from 'app/to-dos/models/todo.model';
 import { DropdownOption } from 'app/shared/models/dropdown-option.model';
-import { EntityAdapter, createEntityAdapter, EntityState, Update } from '@ngrx/entity';
-
-export const adapter : EntityAdapter<Todo> = createEntityAdapter<Todo>();
-
-export interface TodosState extends EntityState<Todo> {
-	importanceOptions : DropdownOption[];
-	itemsLoading : boolean;
-	itemsLoaded : boolean;
-	selectedItem : Todo;
-	error : any;
-}
-
-export const initialTodosState : TodosState = adapter.getInitialState({
-	importanceOptions : [],
-	itemsLoading : false,
-	itemsLoaded : false,
-	selectedItem : null,
-	error : null
-});
+import { Update } from '@ngrx/entity';
+import { initialTodosState, TodosState, adapter } from '@states/todo';
 
 const toDoReducer = createReducer(
 	initialTodosState,
@@ -43,11 +26,6 @@ const toDoReducer = createReducer(
 			itemsLoading: false,
 			itemsLoaded: true,
 			error : payload.err
-		};
-	}),
-	on(fromTodoActions.SelectItemForEdit, (state : TodosState, payload : { itemId : number }) => {
-		return { ...state,
-			selectedItem : state.entities[payload.itemId]
 		};
 	}),
 	// create

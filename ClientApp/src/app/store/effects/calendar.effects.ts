@@ -16,7 +16,7 @@ export class CalendarEffects {
         private store$ : Store<AppState>) {}
 
     public NavigateAfterDaySelected$ = createEffect(() => this.actions$.pipe(
-        ofType(fromCalendarActions.selectDayToAdd),
+        ofType(fromCalendarActions.SelectDayToAdd),
         withLatestFrom(this.store$.select(fromCalendarSelectors.featureSelector)),
         tap(([payload, calendarState]) => {
             this.store$.dispatch(fromRouterActions.go({ path : [
@@ -46,7 +46,7 @@ export class CalendarEffects {
     ), { dispatch : false });
 
     public NavigateAfterDayForViewChanged$ = createEffect(() => this.actions$.pipe(
-        ofType(fromCalendarActions.selectDayToView),
+        ofType(fromCalendarActions.SelectDayToView),
         withLatestFrom(this.store$.select(fromCalendarSelectors.featureSelector)),
         tap(([payload, calendarState]) => {
             this.store$.dispatch(fromRouterActions.go({ path : [
@@ -73,10 +73,11 @@ export class CalendarEffects {
     public InitFromUrl$ = createEffect(() => this.actions$.pipe(
         ofType(fromCalendarActions.InitFromUrl),
         withLatestFrom(this.store$.select(fromRouterSelectors.selectedMonthAndYear)),
-        map(([, date]) => {
-            console.log('init effect');
-            
-            console.log(date.month);
+        map(([payload, date]) => {
+            if (date == null) {
+                const now = new Date();
+                return fromCalendarActions.InitMonthToView({ month : now.getMonth() , year: now.getFullYear() });
+            }
             
             return fromCalendarActions.InitMonthToView({ month : date.month, year: date.year });
         })

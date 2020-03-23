@@ -3,9 +3,19 @@
     <ng-template #noItems><p class="no-items-text">No items to view</p></ng-template>
     <div class="item-cards-container" *ngIf="(Todos$ | async) && (Todos$ | async).length > 0; else noItems">
         <div class="item card" *ngFor="let todo of (Todos$ | async)" coloredImportance [importance]="todo.Importance">
-            <h5 class="card-header"> What: {{ todo.Name }}</h5>
+            <h5 class="card-header"> 
+                <p> What: {{ todo.Name }} </p>
+                <span>
+                    <a class="todo-action-btn" (click)="OnEditClick(todo)">
+                        <fa-icon [icon]="['fas', 'edit']"></fa-icon>
+                    </a>
+                    <button class="todo-action-btn" (click)="OnDeleteClick(todo.id)">
+                        <fa-icon [icon]="['fas', 'times']"></fa-icon>
+                    </button>
+                </span>
+            </h5>
             <div class="card-body">
-                <h5 class="card-title"> Due date: {{ todo.Date | displayTime }} </h5>
+                <h5 class="card-title"> Due date: {{ todo | displayTime }} </h5>
                 <p class="card-text"> Description: {{ todo.Description }} </p>
             </div>
         </div>

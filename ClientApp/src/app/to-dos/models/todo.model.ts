@@ -3,6 +3,7 @@ import { EntityBase } from '@shared-models';
 
 export class Todo extends EntityBase {
 	public Date : Date;
+	public HasTime : boolean;
 	public Name : string;
 	public Description : string;
 	public Importance : Importance;

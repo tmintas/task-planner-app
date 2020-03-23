@@ -44,7 +44,7 @@ export const selectedMonthName = createSelector(
 	(state : CalendarState) => fromDateFunctions.GetMonthName(state.selectedMonth)
 );
 
-export const selectDayToView = createSelector(
+export const SelectDayToView = createSelector(
 	featureSelector,
 	(state : CalendarState) => state.selectedDayToView
 );

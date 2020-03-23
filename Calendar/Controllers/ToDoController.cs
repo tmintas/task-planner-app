@@ -62,14 +62,15 @@ namespace Web.Controllers
             }
 
             var newItem = new ToDoItem();
-            newItem.Date = itemUpdateDto.Date;
+            newItem.Date = itemUpdateDto.Date.ToLocalTime();
             newItem.Description = itemUpdateDto.Description;
             newItem.ImportanceTypeId = itemUpdateDto.Importance;
             newItem.Name = itemUpdateDto.Name;
+            newItem.HasTime = itemUpdateDto.HasTime;
 
             await _todoRepository.AddAsync(newItem);
 
-            return CreatedAtAction("PostToDoItem", new { id = newItem.Id }, itemUpdateDto);
+            return CreatedAtAction("PostToDoItem", newItem);
         }
 
         //PUT: api/Todo/5
@@ -93,7 +94,7 @@ namespace Web.Controllers
                 return NotFound($"Item with id {id} was not found in the database");
             }
 
-            itemToUpdate.Date = itemUpdateDto.Date;
+            itemToUpdate.Date = itemUpdateDto.Date.ToLocalTime();
             itemToUpdate.Description = itemUpdateDto.Description;
             itemToUpdate.ImportanceTypeId = itemUpdateDto.Importance;
             itemToUpdate.Name = itemUpdateDto.Name;

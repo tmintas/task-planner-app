@@ -9,8 +9,8 @@ export enum CalendarModes {
 }
 
 export const CALENDAR_INITIAL_STATE = {
-	selectedMonth: null,
-	selectedYear: null,
+	selectedMonth: 1,
+	selectedYear: 2019,
 	selectedDayToView: null,
 	mode : CalendarModes.Start,
 
