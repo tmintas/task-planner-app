@@ -1,0 +1,56 @@
+@import 'variables';
+
+.edit-todo-item {
+    overflow: auto;
+    
+    .form-group {
+        margin-right: 8px;
+        margin-bottom: 25px;
+        position: relative;
+
+        .error-label {
+            color: $invalid-color;
+        }
+
+        .error-hint {
+            position: absolute;
+            top: 75px;
+            font-size: 70%;
+            color: $invalid-color;
+        }
+    }
+
+    .importance-container {
+        width: 100% !important;
+        display: flex !important;
+        flex-direction: row;
+        justify-content: space-between;
+
+    }
+
+    legend {
+        padding-left: 0;
+    }
+
+    .form-check-input {
+        width: 20px;
+        height: 20px;
+    }
+
+    .flex-item {
+        display: flex;
+        align-items: center;
+    }
+
+   .custom-label::before {
+        background-color: blue;
+    }
+
+    button.calendar, button.calendar:active {
+        width: 2.75rem;
+        background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAcCAYAAAAEN20fAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAOxAAADsQBlSsOGwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAEUSURBVEiJ7ZQxToVAEIY/YCHGxN6XGOIpnpaEsBSeQC9ArZbm9TZ6ADyBNzAhQGGl8Riv4BLAWAgmkpBYkH1b8FWT2WK/zJ8ZJ4qiI6XUI3ANnGKWBnht2/ZBDRK3hgVGNsCd7/ui+JkEIrKtqurLpEWaphd933+IyI3LEIdpCYCiKD6HcuOa/nwOa0ScJEnk0BJg0UTUWJRl6RxCYEzEmomsIlPU3IPW+grIAbquy+q6fluy/28RIBeRMwDXdXMgXLj/B2uimRXpui4D9sBeRLKl+1N+L+t6RwbWrZliTTTr1oxYtzVWiTQAcRxvTX+eJMnlUDaO1vpZRO5NS0x48sIwfPc87xg4B04MCzQi8hIEwe4bl1DnFMCN2zsAAAAASUVORK5CYII=') !important;
+        background-repeat: no-repeat;
+        background-size: 23px;
+        background-position: center;
+      }
+}

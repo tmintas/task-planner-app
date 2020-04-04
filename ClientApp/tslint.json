@@ -1,0 +1,8 @@
+{
+  "rulesDirectory": [
+    "codelyzer"
+  ],
+  "rules": {
+  
+  }
+}
