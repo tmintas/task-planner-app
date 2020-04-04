@@ -5,7 +5,7 @@ import { EditTodoItemComponent } from 'app/to-dos/components/edit-todo-item/edit
 import { DayTodoListComponent } from 'app/to-dos/components/day-todo-list/day-todo-list.component';
 
 const now = new Date();
-const currentMonth = now.getMonth();
+const currentMonth = now.getMonth() + 1;
 const currentYear = now.getFullYear();
 
 const routes: Routes = [

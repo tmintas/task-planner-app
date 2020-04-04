@@ -55,10 +55,11 @@
             padding-left: 7px;
             border-radius: 5px;
             margin-bottom: 3px;
-            white-space: nowrap;
-
+            align-items: center;
+                
             .todo-text {
-                white-space: nowrap;
+                white-space: break-spaces;
+                width: 150px;
             }
 
             .todo-action-btn {

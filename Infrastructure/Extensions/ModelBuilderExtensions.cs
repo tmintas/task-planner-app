@@ -6,25 +6,6 @@ namespace Domain.Extensions
 {
     public static class ModelBuilderExtensions
     {
-        public static void ConfigureProperties(this ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<ImportanceType>(it =>
-            {
-                it.Property(p => p.Name)
-                    .HasMaxLength(200);
-            });
-
-            modelBuilder.Entity<ToDoItem>(it =>
-            {
-                it.Property(p => p.Name)
-                    .HasMaxLength(15)
-                    .IsRequired();
-
-                it.Property(p => p.Description)
-                    .HasMaxLength(30);
-            });
-        }
-
         public static void Seed(this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ImportanceType>().HasData(new[]
@@ -46,25 +27,48 @@ namespace Domain.Extensions
                 }
             });
 
+            var now = DateTime.Now;
+            var currentYear = now.Year;
+            var currentMonth = now.Month;
+
             modelBuilder.Entity<ToDoItem>().HasData(
                 new ToDoItem
                 {
                     Id = 1,
-                    Name = "test1",
-                    Description = "ddddd",
+                    Name = "Go to walk",
+                    Description = "Go somewhere",
                     ImportanceTypeId = Enums.ImportanceType.High,
-                    Date = new DateTime(2019, 5, 1, 13, 0, 0),
+                    Date = new DateTime(currentYear, currentMonth, 5, 18, 0, 0),
                     HasTime = true
                 },
                 new ToDoItem
                 {
                     Id = 2,
-                    Name = "test2",
-                    Description = "aaaaa",
-                    ImportanceTypeId = Enums.ImportanceType.High,
-                    Date = new DateTime(2019, 5, 1, 0, 0, 0),
+                    Name = "Wash my cat",
+                    Description = "I should wash him carefully",
+                    ImportanceTypeId = Enums.ImportanceType.Middle,
+                    Date = new DateTime(currentYear, currentMonth, 6, 13, 0, 0),
+                    HasTime = true
+                },
+                new ToDoItem
+                {
+                    Id = 3,
+                    Name = "Go to grocery shop",
+                    Description = "Bread, milk, ice cream",
+                    ImportanceTypeId = Enums.ImportanceType.Middle,
+                    Date = new DateTime(currentYear, currentMonth, 6, 11, 0, 0),
+                    HasTime = true
+                },
+                new ToDoItem
+                {
+                    Id = 4,
+                    Name = "Undefinite action",
+                    Description = "I don't even know",
+                    ImportanceTypeId = Enums.ImportanceType.Low,
+                    Date = new DateTime(currentYear, currentMonth, 6, 0, 0, 0),
                     HasTime = false
-                });
+                }
+            );
         }
     }
 }

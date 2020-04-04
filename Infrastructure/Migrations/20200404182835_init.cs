@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Infrastructure.Migrations
 {
-    public partial class Init : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,7 +12,7 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false),
-                    Name = table.Column<string>(maxLength: 200, nullable: true)
+                    Name = table.Column<string>(maxLength: 20, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -27,8 +27,8 @@ namespace Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Date = table.Column<DateTime>(nullable: false),
                     HasTime = table.Column<bool>(nullable: false),
-                    Name = table.Column<string>(maxLength: 15, nullable: false),
-                    Description = table.Column<string>(maxLength: 30, nullable: true),
+                    Name = table.Column<string>(maxLength: 20, nullable: true),
+                    Description = table.Column<string>(maxLength: 50, nullable: true),
                     ImportanceTypeId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -51,8 +51,10 @@ namespace Infrastructure.Migrations
                 columns: new[] { "Id", "Date", "Description", "HasTime", "ImportanceTypeId", "Name" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2019, 5, 1, 13, 0, 0, 0, DateTimeKind.Unspecified), "ddddd", true, 3, "test1" },
-                    { 2, new DateTime(2019, 5, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "aaaaa", false, 3, "test2" }
+                    { 1, new DateTime(2020, 4, 5, 18, 0, 0, 0, DateTimeKind.Unspecified), "Go somewhere", true, 3, "Go to walk" },
+                    { 2, new DateTime(2020, 4, 6, 13, 0, 0, 0, DateTimeKind.Unspecified), "I should wash him carefully", true, 2, "Wash my cat" },
+                    { 3, new DateTime(2020, 4, 6, 11, 0, 0, 0, DateTimeKind.Unspecified), "Bread, milk, ice cream", true, 2, "Go to grocery shop" },
+                    { 4, new DateTime(2020, 4, 6, 0, 0, 0, 0, DateTimeKind.Unspecified), "I don't even know", false, 1, "Undefinite action" }
                 });
         }
 

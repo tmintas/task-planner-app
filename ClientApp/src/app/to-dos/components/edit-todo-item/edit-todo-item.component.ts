@@ -31,8 +31,8 @@ export class EditTodoItemComponent implements OnInit, OnDestroy {
 		this.ToDoForm = this.fb.group({
 			Date : [null, Validators.required],
 			Time: [null],
-			Name: [null, [Validators.required, Validators.maxLength(10)]],
-			Description: [null],
+			Name: [null, [Validators.required, Validators.maxLength(20)]],
+			Description: [Validators.maxLength(20)],
 			Importance: [null]
 		});
 	}
