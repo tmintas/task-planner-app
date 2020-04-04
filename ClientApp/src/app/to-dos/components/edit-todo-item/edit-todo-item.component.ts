@@ -1,18 +1,18 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
-import { map, takeUntil, filter } from 'rxjs/operators';
-import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
+import { takeUntil, switchMapTo } from 'rxjs/operators';
+import { NgbDate, NgbDateStruct, NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
 import { Store, select } from '@ngrx/store';
 import * as fromTodoSelectors from '@selectors/todo';
 import * as fromRouterSelectors from '@selectors/router';
 
 import { Importance } from '@todo-enums';
-import { CreateTodo, UpdateTodo } from '@actions/todo';
-import { ToDoItem } from '@todo-models';
+import { Todo } from '@todo-models';
 import { DropdownOption } from 'app/shared/models/dropdown-option.model';
 import { Observable, Subject } from 'rxjs';
 import AppState from '@states/app';
+import { SubmitTodo } from '@actions/todo';
 
 @Component({
 	selector: 'app-edit-todo-item',
@@ -20,10 +20,8 @@ import AppState from '@states/app';
 	styleUrls: ['./edit-todo-item.component.scss']
 })
 export class EditTodoItemComponent implements OnInit, OnDestroy {
-	private itemId : number;
 	private dftImportance : Importance = Importance.Low;
 	private destroy$ : Subject<boolean> = new Subject<boolean>();
-	private isAddMode : boolean;
 
 	public ToDoForm : FormGroup;
 
@@ -33,30 +31,25 @@ export class EditTodoItemComponent implements OnInit, OnDestroy {
 		this.ToDoForm = this.fb.group({
 			Date : [null, Validators.required],
 			Time: [null],
-			Name: [null, [Validators.required, Validators.maxLength(10)]],
-			Description: [null],
+			Name: [null, [Validators.required, Validators.maxLength(20)]],
+			Description: [Validators.maxLength(20)],
 			Importance: [null]
 		});
 	}
 
 	public ngOnInit() : void {
 		this.store.pipe(
-			select(fromRouterSelectors.getDateParamsFromRoute),
-			map(({ year, month, day }) => this.patchDate(year, month, day))
-		).subscribe();
-
-		this.store.pipe(
 			select(fromTodoSelectors.getSelectedTodo),
-			map(item => { 
-				this.isAddMode = item == null;
-				return item;
-			}),
-			filter(item => item != null),
-			map((item : ToDoItem) => 
-			{
-				this.itemId = item.Id;
-				this.patchFromItem(item);
-			}),
+			switchMapTo(
+				this.store.pipe(select(fromRouterSelectors.getDateParams)),
+				(selectedItem, date) => {
+					if (selectedItem) {
+						this.patchFromItem(selectedItem);
+					} else {
+						this.patchDate(date.year, date.month, date.day)
+					}
+				}
+			),
 			takeUntil(this.destroy$)
 		).subscribe();
 	}
@@ -71,9 +64,9 @@ export class EditTodoItemComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	private patchFromItem(item : ToDoItem) : void {
-		const date = new NgbDate(item.Date.year, item.Date.month, item.Date.day);
-		const time = { hour : item.Time.hour, minute : item.Time.minute };
+	private patchFromItem(item : Todo) : void {
+		const date = new NgbDate(item.Date.getFullYear(), item.Date.getMonth() + 1, item.Date.getDate());
+		const time = { hour : item.Date.getHours(), minute : item.Date.getMinutes() };
 
 		this.ToDoForm.patchValue({
 			Date : date,
@@ -89,16 +82,22 @@ export class EditTodoItemComponent implements OnInit, OnDestroy {
 		
 		if (this.ToDoForm.invalid) { return; }
 		
-		const item : ToDoItem = {
+		const ngbDate : NgbDateStruct = this.ToDoForm.get('Date').value;
+		const ngbTime : NgbTimeStruct = this.ToDoForm.get('Time').value;
+		const hour = ngbTime == null ? 0 : ngbTime.hour;
+		const minute = ngbTime == null ? 0 : ngbTime.minute;
+
+		const date : Date = new Date(ngbDate.year, ngbDate.month - 1, ngbDate.day, hour, minute);
+		
+		const item : Todo = {
 			Name : this.ToDoForm.get('Name').value,
+			HasTime : ngbTime != null,
 			Description : this.ToDoForm.get('Description').value,
-			Date : this.ToDoForm.get('Date').value,
-			Time : this.ToDoForm.get('Time').value,
+			Date : date,
 			Importance : +this.ToDoForm.get('Importance').value,
 		}
 
-		if (this.isAddMode) { this.store.dispatch(CreateTodo({ item })); }
-		else 				{ this.store.dispatch(UpdateTodo({ id : this.itemId, item : item })); }
+		this.store.dispatch(SubmitTodo({ item }));
 	}
 
 	public HasError(controlName : string) : boolean {

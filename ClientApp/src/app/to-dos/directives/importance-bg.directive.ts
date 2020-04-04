@@ -16,7 +16,7 @@ export class ImportanceBgDirective implements OnInit {
         
         switch (this.Importance) {
             case Importance.High:
-                color = "#ee7474";
+                color = "#FF9900";
                 break;
             case Importance.Middle:
                 color = "#eedd47";

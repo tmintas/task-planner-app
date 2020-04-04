@@ -1,10 +1,11 @@
 @import 'variables';
 
 .month {
-    border: $turquoise 8px solid;
+    border: rgb(28, 163, 204) 8px solid;
     border-radius: 6px;
     display: flex;
     flex-direction: row;
+    font-family: 'Josefin Sans', sans-serif;
 
     // to get rid of right-hand scroll bar
     height: 101%;
@@ -19,7 +20,7 @@
         box-sizing: border-box;
 
         > .title {
-            background-color: $turquoise;
+            background-color: rgb(28, 163, 204);
             margin: 20px 0;
             padding: 15px 3px;;
             align-content: center;
@@ -27,7 +28,7 @@
             flex: 0 1 50px;
 
             > .month-title {
-                font-size: 30px;
+                font-size: 35px;
                 margin-bottom: 10px;
                 display: flex;
                 flex-direction: row;
@@ -62,7 +63,7 @@
         > .week-days-bar {
             padding: 0 1%;
             background-color: $gray;
-            font-size: 22px;
+            font-size: 28px;
             height: 45px;
     
             > .week-day {
@@ -94,7 +95,7 @@
                 }
 
                 > .not-current {
-                    background-color: #c0e4de;
+                    background-color: rgb(215, 224, 226);
                 }
             }
         }

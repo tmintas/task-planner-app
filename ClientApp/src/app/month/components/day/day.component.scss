@@ -11,20 +11,22 @@
     flex-direction: column;
 
     > .day-header {
-        margin: 2px 5px 2px 5px;
+        margin: 6px 5px 2px 5px;
         height: 26px;
         display: flex;
         justify-content: space-between;
-        font-size: 18px;
+        font-size: 25px;
         align-items: center;
 
         > .day-actions {
 
-            > a {
+            > a, button {
                 margin-left: 3px;
                 cursor: pointer;
                 color: $blue;
-
+                background: transparent;
+                border: none;
+                outline: none;
                 :hover {
                     color: darken($blue, 10%);
                 }
@@ -53,10 +55,11 @@
             padding-left: 7px;
             border-radius: 5px;
             margin-bottom: 3px;
-            white-space: nowrap;
-
+            align-items: center;
+                
             .todo-text {
-                white-space: nowrap;
+                white-space: break-spaces;
+                width: 150px;
             }
 
             .todo-action-btn {

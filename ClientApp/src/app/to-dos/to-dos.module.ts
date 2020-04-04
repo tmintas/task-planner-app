@@ -7,8 +7,8 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { TodoEffect } from 'app/store/effects/todo.effects';
 
-import * as fromTodoState from '../store/states/todo.state';
-import * as fromTodoReducer from '../store/reducers/todo.reducer';
+import * as fromTodoState from '@states/todo';
+import * as fromTodoReducer from '@reducers/todo';
 
 import { EditTodoItemComponent } from './components/edit-todo-item/edit-todo-item.component';
 import { DayTodoListComponent } from './components/day-todo-list/day-todo-list.component';

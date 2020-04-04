@@ -4,23 +4,23 @@
 			{{ DayNumber }}
 		</span> 
 		<span class="day-actions">
-			<a [routerLink]="[DayNumber, 'edit', 0]">
+			<button (click)="OnDaySelectedToAdd()">
 				<fa-icon [icon]="['fas', 'plus-circle']"></fa-icon>
-			</a>
-			<a [routerLink]="[DayNumber]">
+			</button>
+			<button (click)="OnDaySelectedToView()">
 				<fa-icon [icon]="['fas', 'list-alt']"></fa-icon>
-			</a>
+			</button>
 		</span>
 	</div>
 	<div class="item-list">
 		<div *ngFor="let item of Items" class="todo-item" coloredImportance [importance]="item.Importance" 
 		[ngStyle]="{ 'visibility': item.Visible ? 'visible' : 'hidden' }">
-			<span class="todo-text">{{ ItemDisplayText(item) }}</span>
+			<span class="todo-text">{{ item.Name }} {{ item | displayTime }}</span>
 			<div>
-				<a class="todo-action-btn" [routerLink]="[DayNumber, 'edit', item.Id]">
+				<a class="todo-action-btn" (click)="OnEditClick(item)">
 					<fa-icon [icon]="['fas', 'edit']"></fa-icon>
 				</a>
-				<button class="todo-action-btn" (click)="OnDelete(item.Id)">
+				<button class="todo-action-btn" (click)="OnDeleteClick(item.id)">
 					<fa-icon [icon]="['fas', 'times']"></fa-icon>
 				</button>
 			</div>

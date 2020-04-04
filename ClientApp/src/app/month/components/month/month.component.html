@@ -2,16 +2,16 @@
 	<div class="notes-area">
 		<div class="title badge ">
 			<div class="month-title">
-				<a [routerLink]="['../', month - 1]">
+				<a (click)="GoPreviousMonth()">
 					<fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
 				</a>
-				<span>{{ MonthName }}</span>
-				<a [routerLink]="['../', month + 1]">
+				<span>{{ MonthName$ | async }}</span>
+				<a (click)="GoNextMonth()">
 					<fa-icon [icon]="['fas', 'chevron-right']"></fa-icon>
 				</a>
 			</div>
 			<div class="year-title">
-				{{ Year }}
+				{{ Year$ | async }}
 			</div>
 		</div>
 		<div class="notes">
@@ -33,13 +33,13 @@
 		<div class="day-list">
 			<div class="bordered-flex">
 				<div class="day-flex-item not-current" *ngFor="let day of PreviousDays$ | async">
-					<app-day [DayNumber]="day.Index"  [Items]="TodosByDay(day.Index, Month - 1) | async"></app-day>
+					<app-day [DayNumber]="day.Index"  [Items]="TodosByDay(day.Index, (Month$ | async) - 1) | async"></app-day>
 				</div>
 				<div class="day-flex-item" *ngFor="let day of CurrentDays$ | async; let i = index">
-					<app-day [DayNumber]="day.Index"  [Items]="TodosByDay(day.Index, Month) | async"></app-day>
+					<app-day [DayNumber]="day.Index"  [Items]="TodosByDay(day.Index, (Month$ | async)) | async"></app-day>
 				</div>
 				<div class="day-flex-item not-current" *ngFor="let day of NextDays$ | async; let i = index">
-					<app-day [DayNumber]="day.Index" [Items]="TodosByDay(day.Index, Month + 1) | async"></app-day>
+					<app-day [DayNumber]="day.Index" [Items]="TodosByDay(day.Index, (Month$ | async) + 1) | async"></app-day>
 				</div>
 			</div>
 		</div>

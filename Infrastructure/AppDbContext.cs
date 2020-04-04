@@ -14,7 +14,6 @@ namespace Infrastructure
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ConfigureProperties();
             modelBuilder.Seed();
         }
     }

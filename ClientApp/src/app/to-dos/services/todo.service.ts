@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { take, map, catchError } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { ToDoItem } from '@todo-models';
-import { TodoItemDto } from '../models/to-do-item-dto.model';
+import { Todo } from '@todo-models';
 import { DropdownOption } from 'app/shared/models/dropdown-option.model';
 import { Importance } from '../enums/importance.enum';
 
@@ -15,39 +14,50 @@ const httpOptions = {
 	providedIn: 'root'
 })
 export class TodoService {
+	private apiEndpoint : string = 'https://localhost:44378/api/Todo';
 
 	constructor(private http : HttpClient) {}
 
-	public GetAll() : Observable<ToDoItem[]> {
-		// TODO get viewmodels instead of dtos
-		return this.http.get<TodoItemDto[]>('http://localhost:3000/todos').pipe(
-			map(dtos => dtos.map(dto => ToDoItem.GetFromDto(dto)),
-			take(1),
+	public GetAll() : Observable<Todo[]> {
+		// Todo get viewmodels instead of dtos
+		return this.http.get<Todo[]>(this.apiEndpoint).pipe(
+			map(todos => {
+				todos.map(d => {
+					d.Date = new Date(d.Date);
+					d.Visible = true;
+				});
+				
+				return todos;
+			}
 		));
 	}
 
-	public CreateTodo(item : ToDoItem) : Observable<ToDoItem> {
-		return this.http.post<TodoItemDto>('http://localhost:3000/todos', ToDoItem.MapToDto(item), httpOptions).pipe(
-			map((itemDto) => {
-				item.Id = itemDto.id; 
+	public CreateTodo(item : Todo) : Observable<Todo> {
+		console.log('service create start.. item is');
+		console.log(item);
+		
+		
+		return this.http.post<Todo>(this.apiEndpoint, item, httpOptions).pipe(
+			map((item : Todo) => {
+				item.Date = new Date(item.Date);
+				console.log('service create map.. itemdto returned...');
+				console.log(item);
 				return item;
-			}),
-			catchError((err) => of(err))
+
+			})
 		);
 	}
 
 	public DeleteTodo(id : number) : Observable<{}> {
-		const url = `http://localhost:3000/todos/${id}`;
+		const url = `${this.apiEndpoint}/${id}`;
 
 		return this.http.delete(url);
 	}
 
-	public Update(id : number, updateModel : ToDoItem) : Observable<ToDoItem> {
-		const url = `http://localhost:3000/todos/${id}`;
+	public Update(id : number, changes : any) : Observable<{}> {
+		const url = `${this.apiEndpoint}/${id}`;
 
-		return this.http.put<TodoItemDto>(url, ToDoItem.MapToDto(updateModel), httpOptions).pipe(
-			map(dto => ToDoItem.GetFromDto(dto))
-		);
+		return this.http.put(url, changes, httpOptions);
 	}
 
 	public GetImportanceOptions() : DropdownOption[] {

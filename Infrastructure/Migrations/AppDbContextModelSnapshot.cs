@@ -25,8 +25,8 @@ namespace Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasColumnType("nvarchar(20)")
+                        .HasMaxLength(20);
 
                     b.HasKey("Id");
 
@@ -61,20 +61,20 @@ namespace Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(30)")
-                        .HasMaxLength(30);
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
+                    b.Property<bool>("HasTime")
+                        .HasColumnType("bit");
 
                     b.Property<int>("ImportanceTypeId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(15)")
-                        .HasMaxLength(15);
+                        .HasColumnType("nvarchar(20)")
+                        .HasMaxLength(20);
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ImportanceTypeId");
 
                     b.ToTable("ToDoItems");
 
@@ -82,20 +82,39 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            Date = new DateTime(2019, 5, 1, 13, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "testdbdesc",
+                            Date = new DateTime(2020, 4, 5, 18, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Go somewhere",
+                            HasTime = true,
                             ImportanceTypeId = 3,
-                            Name = "testdbname"
+                            Name = "Go to walk"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Date = new DateTime(2020, 4, 6, 13, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "I should wash him carefully",
+                            HasTime = true,
+                            ImportanceTypeId = 2,
+                            Name = "Wash my cat"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Date = new DateTime(2020, 4, 6, 11, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Bread, milk, ice cream",
+                            HasTime = true,
+                            ImportanceTypeId = 2,
+                            Name = "Go to grocery shop"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Date = new DateTime(2020, 4, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "I don't even know",
+                            HasTime = false,
+                            ImportanceTypeId = 1,
+                            Name = "Undefinite action"
                         });
-                });
-
-            modelBuilder.Entity("Domain.ToDoItem", b =>
-                {
-                    b.HasOne("Domain.Entities.ImportanceType", "ImportanceType")
-                        .WithMany()
-                        .HasForeignKey("ImportanceTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

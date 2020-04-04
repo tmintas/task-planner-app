@@ -1,6 +1,9 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { Router, Event, NavigationStart, NavigationEnd, NavigationCancel, NavigationError } from '@angular/router';
+import { NotificationService } from './shared/services/notification.service';
+import AppState from '@states/app';
+import { Store, select } from '@ngrx/store';
 import { map } from 'rxjs/operators';
+import * as fromRouterSelectors from '@selectors/router';
 
 @Component({
 	selector: 'app-root',
@@ -9,18 +12,10 @@ import { map } from 'rxjs/operators';
 	encapsulation: ViewEncapsulation.None
 })
 export class AppComponent {
-	public IsLoading : boolean = true;
-
-	constructor(private router: Router) {
-		this.router.events.pipe(
-			map((re : Event) => {
-				if (re instanceof NavigationStart) {
-					this.IsLoading = true;
-				}
-				if (re instanceof NavigationEnd || re instanceof NavigationCancel || re instanceof NavigationError) {
-					this.IsLoading = false
-				}
-			})
+	constructor(private notificationService : NotificationService, private store : Store<AppState>) {
+		this.store.pipe(
+			select(fromRouterSelectors.selectState),
+			map(() => this.notificationService.RemoveAllNotifications())
 		).subscribe();
 	}
 }
