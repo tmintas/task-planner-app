@@ -4,6 +4,9 @@ project.lock.json
 .DS_Store
 *.pyc
 
+#bundles
+Calendar/wwwroot
+
 # db
 ClientApp/db.json
 

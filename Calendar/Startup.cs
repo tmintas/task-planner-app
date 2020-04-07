@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.IO;
 using Web.Repositories;
 using Web.Repositories.Contracts;
 
@@ -46,12 +47,25 @@ namespace Calendar
                 endpoints.MapControllers();
             });
 
-            // to debug migrations
-            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
-            optionsBuilder.UseSqlServer(Configuration.GetConnectionString("DevConnection"));
+            app.Use(async (context, next) =>
+            {
+                await next();
 
-            var context = new AppDbContext(optionsBuilder.Options);
-            context.Database.Migrate();
+                if (!Path.HasExtension(context.Request.Path) || context.Response.StatusCode == 404)
+                {
+                    context.Request.Path = "/index.html";
+                    await next();
+                }
+            });
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+
+            // to debug migrations
+            //var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
+            //optionsBuilder.UseSqlServer(Configuration.GetConnectionString("DevConnection"));
+
+            //var context = new AppDbContext(optionsBuilder.Options);
+            //context.Database.Migrate();
         }
     }
 }
