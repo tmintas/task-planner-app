@@ -127,12 +127,12 @@ export class TodoEffect {
 
 	public ShowAlertAfterUpdateFail$ = createEffect(() => this.actions$.pipe(
 		ofType(fromTodoActions.UpdateTodoFail),
-		tap((payload) => this.notificationService.AddError(`Error while updating an item`, payload.err.message))
+		tap((payload) => this.notificationService.AddError(`Error while updating an item`, payload.err.error.Name))
 	), { dispatch : false });
 
 	public ShowAlertAfterCreateFail$ = createEffect(() => this.actions$.pipe(
 		ofType(fromTodoActions.CreateTodoFail),
-		tap((payload) => this.notificationService.AddError(`Error while creating an item`, payload.err.message))
+		tap((payload) => this.notificationService.AddError(`Error while creating an item`, payload.err.error.Name))
 	), { dispatch : false });
 
 
