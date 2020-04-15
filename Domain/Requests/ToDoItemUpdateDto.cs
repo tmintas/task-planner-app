@@ -9,15 +9,14 @@ namespace Domain.Requests
 
         public bool HasTime { get; set; }
 
-        [Required]
-        [StringLength(15, ErrorMessage = "Name cannot be longer that 3 chars")]
+        [Required(ErrorMessage = "Name is required")]
+        [StringLength(40, ErrorMessage = "Name cannot be longer that 40 chars")]
         public string Name { get; set; }
 
-        [StringLength(30, ErrorMessage = "Description cannot be longer that 30 chars")]
+        [StringLength(100, ErrorMessage = "Description cannot be longer that 100 chars")]
         public string Description { get; set; }
 
-        [Required]
-        [Range(0,100)]
+        [Required(ErrorMessage = "Importance is required")]
         public Enums.ImportanceType Importance { get; set; }
     }
 }

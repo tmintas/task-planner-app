@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Infrastructure.Migrations
 {
-    public partial class init : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -27,8 +27,8 @@ namespace Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Date = table.Column<DateTime>(nullable: false),
                     HasTime = table.Column<bool>(nullable: false),
-                    Name = table.Column<string>(maxLength: 20, nullable: true),
-                    Description = table.Column<string>(maxLength: 50, nullable: true),
+                    Name = table.Column<string>(maxLength: 40, nullable: true),
+                    Description = table.Column<string>(maxLength: 100, nullable: true),
                     ImportanceTypeId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>

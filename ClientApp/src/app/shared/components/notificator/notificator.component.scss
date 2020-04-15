@@ -17,13 +17,22 @@
 
         }
 
-        .description {
-            padding: 0 30px;
+        fa-icon {
+            display: inline-block;
+            transition: transform 0.2s;
+            margin-left: 5px;
+            
+            &.expanded {
+                transform: rotate(180deg);
+            }
+
+            &.collapsed {
+                transform: rotate(0);
+            }
         }
 
-        .toggler {
-            cursor: pointer;
-            margin-left: 15px;            
+        .content {
+            padding: 0 30px;
         }
 
         .close-btn {

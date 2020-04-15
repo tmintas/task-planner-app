@@ -6,6 +6,9 @@ import * as fromCalendarSelectors from '@selectors/calendar';
 import * as fromTodoSelectors from '@selectors/todo';
 import * as fromTodoActions from '@actions/todo';
 import * as fromCalendarActions from '@actions/calendar';
+// import * as fromRouterActions from '@actions/router';
+// import * as fromRouterState from '@states/router';
+
 import { Observable } from 'rxjs';
 import AppState from '@states/app';
 import { Day } from '@month-models';
@@ -33,6 +36,8 @@ export class MonthComponent implements OnInit {
 		this.store.dispatch(fromCalendarActions.InitFromUrl());
 		this.store.dispatch(fromTodoActions.LoadImportanceOptions());
 		this.store.dispatch(fromTodoActions.LoadTodosAll());
+
+
 	}
 
 	public GoPreviousMonth() : void {

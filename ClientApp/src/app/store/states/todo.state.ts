@@ -1,6 +1,7 @@
 import { Todo } from '@todo-models';
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import { DropdownOption } from '@shared-models';
+import { HandledError } from 'app/shared/models/handled-error.model';
 
 export const TODO_FEATURE_KEY = 'todo';
 
@@ -19,7 +20,7 @@ export interface TodosState extends EntityState<Todo> {
 	itemsLoading : boolean;
 	itemsLoaded : boolean;
 	selectedItem : Todo;
-	error : any;
+	error : HandledError;
 }
 
 export const initialTodosState : TodosState = adapter.getInitialState({

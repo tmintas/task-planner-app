@@ -36,9 +36,9 @@ export class CalendarEffects {
         tap(([payload, calendarState]) => { 
             this.store$.dispatch(fromRouterActions.go({ path : [
                 'calendar', 
-                calendarState.selectedYear, 
-                calendarState.selectedMonth, 
-                payload.item.Date.getDay(),
+                payload.item.Date.getFullYear(), 
+                payload.item.Date.getMonth() + 1, 
+                payload.item.Date.getDate(),
                 'edit',
                 payload.item.id
             ]}))                
