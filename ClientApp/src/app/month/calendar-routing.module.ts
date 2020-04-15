@@ -4,19 +4,15 @@ import { MonthComponent } from './components/month/month.component';
 import { EditTodoItemComponent } from 'app/to-dos/components/edit-todo-item/edit-todo-item.component';
 import { DayTodoListComponent } from 'app/to-dos/components/day-todo-list/day-todo-list.component';
 
-const now = new Date();
-const currentMonth = now.getMonth() + 1;
-const currentYear = now.getFullYear();
-
 const routes: Routes = [
 	{
 		path: '',
 		pathMatch: 'full',
-		redirectTo: `${currentYear}/${currentMonth}`
+		redirectTo: `2020/4`
 	},
 	{
 		path: ':year',
-		redirectTo : `:year/${currentMonth}`,
+		redirectTo : `:year/4`,
 		pathMatch: 'full'
 	},
 	{

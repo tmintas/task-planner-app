@@ -4,6 +4,9 @@ project.lock.json
 .DS_Store
 *.pyc
 
+#publish profiles
+Calendar/Properties
+
 #bundles
 Calendar/wwwroot
 

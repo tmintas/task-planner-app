@@ -7,6 +7,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { DatePipe } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -26,6 +27,7 @@ import { NotificatorComponent } from './shared/components/notificator/notificato
 		StoreDevtoolsModule.instrument({}),
 		SharedModule,
 		BrowserModule,
+		BrowserAnimationsModule,
 		AppRoutingModule,
 		CalendarModule,
 		NgbModule,

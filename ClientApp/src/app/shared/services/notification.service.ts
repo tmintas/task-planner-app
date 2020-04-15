@@ -13,12 +13,12 @@ export class NotificationService {
         this.notifier = new Notifier();
     }
 
-    public AddInfo(message : string, description : string) : void {
-        this.notifier.Notifications.push(new Notification(message, NotificationType.Info, description));
+    public AddInfo(title : string, description : string) : void {
+        this.notifier.Notifications.push(new Notification(title, NotificationType.Info, description));
     }
 
-    public AddError(message : string, description : string) : void {
-        this.notifier.Notifications.push(new Notification(message, NotificationType.Error, description));
+    public AddError(title : string, content? : string) : void {
+        this.notifier.Notifications.push(new Notification(title, NotificationType.Error, content));
     }
 
     public RemoveNotification(notification : Notification) {

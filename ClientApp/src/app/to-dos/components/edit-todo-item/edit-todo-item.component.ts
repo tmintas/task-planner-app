@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup, Validators } from '@angular/forms';
+import { FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
 import { takeUntil, switchMapTo } from 'rxjs/operators';
 import { NgbDate, NgbDateStruct, NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
@@ -24,6 +24,7 @@ export class EditTodoItemComponent implements OnInit, OnDestroy {
 	private destroy$ : Subject<boolean> = new Subject<boolean>();
 
 	public ToDoForm : FormGroup;
+	public get Controls() : { [ key : string ] : AbstractControl } { return this.ToDoForm.controls }
 
 	public ImportanceOptions$ : Observable<DropdownOption[]> = this.store.select(fromTodoSelectors.selectImportanceOptions);
 

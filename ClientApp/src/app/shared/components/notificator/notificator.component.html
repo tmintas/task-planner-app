@@ -1,18 +1,20 @@
 <div class="notificator">
-    <div *ngFor="let ntf of ns.Notifications" class="notification">
+    <div *ngFor="let ntf of Notifications" class="notification" [@inOutAnimation]>
         <div class="short-info">
             <fa-icon [icon]="['fas', 'exclamation-triangle']"></fa-icon>
             <span>
-                {{ ntf.Message }}
-                <fa-icon class="toggler" [icon]="['fas', 'chevron-down']" (click)="ToggleDescription()"></fa-icon>
-            </span> 
+                {{ ntf.Title }}
+                <fa-icon 
+                    [icon]="['fas', 'chevron-down']"  
+                    [ngClass]="{'collapsed' : ntf.Collapsed, 'expanded' : !ntf.Collapsed }"
+                    (click)="ntf.Collapsed = !ntf.Collapsed">
+                </fa-icon>
+            </span>
             <button class="close-btn" (click)="OnNotificationClick(ntf)">
                 <fa-icon [icon]="['fas', 'times']"></fa-icon>
             </button>
         </div>
 
-        <div class="description" *ngIf="ShowDescription">
-            {{ ntf.Description }}
-        </div>
+        <div class="content" *ngIf="!ntf.Collapsed" [innerHTML]="ntf.Content | safe"></div>
     </div>
 </div>

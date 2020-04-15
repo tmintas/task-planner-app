@@ -4,14 +4,14 @@ export enum NotificationType {
 }
 
 export class Notification {
-
-    public Message: string;
-    public Description: string;
+    public Title: string;
+    public Content: string;
     public Type: NotificationType;
+    public Collapsed : boolean = true;
 
-    constructor(message: string, type: NotificationType | null, description : string) {
-        this.Message = message;
+    constructor(title: string, type: NotificationType | null, content : string) {
+        this.Title = title;
         this.Type = type;
-        this.Description = description;
+        this.Content = content;
     }
 }

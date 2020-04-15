@@ -18,10 +18,12 @@ export const selectState = createSelector(
 export const getDateParams = createSelector(
     selectState,
     (state) => { 
+        if (!state || !state.params) { return null}
+
         return { 
-            year : +state.params['year'],
-            month : +state.params['month'],
-            day : +state.params['day']
+            year : state.params['year'],
+            month : state.params['month'],
+            day : state.params['day'] 
         }
     }
 )
