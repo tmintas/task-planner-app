@@ -110,7 +110,6 @@ namespace Web.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<ToDoItem>> DeleteToDoItem(int id)
         {
-            throw new Exception("test");
             var toDoItem = await _todoRepository.GetByIdAsync(id);
                 
             if (toDoItem == null)

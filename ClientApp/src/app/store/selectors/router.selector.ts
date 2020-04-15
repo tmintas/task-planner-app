@@ -21,9 +21,9 @@ export const getDateParams = createSelector(
         if (!state || !state.params) { return null}
 
         return { 
-            year : state.params['year'],
-            month : state.params['month'],
-            day : state.params['day'] 
+            year : +state.params['year'],
+            month : +state.params['month'],
+            day : +state.params['day'] 
         }
     }
 )
