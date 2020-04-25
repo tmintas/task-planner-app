@@ -23,6 +23,7 @@ export const enum TodoActionTypes {
 	TOGGLE_DONE = '[Calendar User Action] Toggle done'
 }
 
+export const test = 5;
 export const LoadImportanceOptions = createAction(TodoActionTypes.LOAD_IMPORTANCE_START);
 export const LoadImportanceOptionsSuccess = createAction(TodoActionTypes.LOAD_IMPORTANCE_SUCCESS, props<{ options : DropdownOption[] }>());
 
