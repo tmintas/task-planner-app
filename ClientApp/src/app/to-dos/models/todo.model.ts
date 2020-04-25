@@ -7,6 +7,7 @@ export class Todo extends EntityBase {
 	public Name : string;
 	public Description : string;
 	public Importance : Importance;
+	public IsDone : boolean = false;
 
 	public Visible? = true;
 }

@@ -95,7 +95,15 @@ const toDoReducer = createReducer(
 			error : payload.err,
 			itemsLoaded: true,
 			itemsLoading: false,
-		};
+		};	
+	}),
+	on(fromTodoActions.ToggleDone, (state : TodosState, payload : { id : string }) => {
+		const update : Update<Todo> = {
+			id : payload.id,
+			changes : { IsDone : !state.entities[payload.id].IsDone }
+		}
+
+		return adapter.updateOne(update, state);
 	})
 );
 

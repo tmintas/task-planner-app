@@ -49,6 +49,7 @@
         > .todo-item {
             font-weight: 500;
             display: flex;
+            flex-direction: row;
             justify-content: space-between;
             font-size: 13px;
             padding: 3px;
@@ -56,18 +57,37 @@
             border-radius: 5px;
             margin-bottom: 3px;
             align-items: center;
-                
-            .todo-text {
-                white-space: break-spaces;
-                width: 150px;
-            }
+             
+            .short-name {
+                flex-grow: 1;
 
-            .todo-action-btn {
-                background: transparent;
-                border: transparent;
-                margin-left: 2px;
-                border-radius: 5px;
-                padding: 0 3px;
+                .done-toggler{
+                    margin-top: 3px;
+                    margin-right: 5px;
+                    background: transparent;
+                    border: none;
+                    outline: none;
+                    padding: 0;
+                    height: 18px;
+                }
+    
+                .todo-text {
+                    white-space: break-spaces;
+                    width: 130px;
+                }
+            }
+            
+            .actions {
+                flex-basis: 40px;                
+                flex-shrink: 0;
+                
+                .todo-action-btn {
+                    background: transparent;
+                    border: transparent;
+                    margin-left: 2px;
+                    border-radius: 5px;
+                    padding: 0 3px;
+                }
             }
         }
     }

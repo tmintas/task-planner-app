@@ -20,6 +20,7 @@ export const enum TodoActionTypes {
 	UPDATE_TODO = '[Todo Effect Action] Update Todo',
 	LOAD_IMPORTANCE_START = '[Month Component] Load Importance Options Start',
 	LOAD_IMPORTANCE_SUCCESS = '[Todo Effect Action] Load Importance Options Success',
+	TOGGLE_DONE = '[Calendar User Action] Toggle done'
 }
 
 export const LoadImportanceOptions = createAction(TodoActionTypes.LOAD_IMPORTANCE_START);
@@ -42,3 +43,4 @@ export const DeleteTodoSuccess = createAction(TodoActionTypes.DELETE_TODO_SUCCES
 export const DeleteTodoFail = createAction(TodoActionTypes.DELETE_TODO_FAIL , props<{ err : any }>());
 
 export const SubmitTodo = createAction(TodoActionTypes.SUBMIT_TODO , props<{ item : Todo }>());
+export const ToggleDone = createAction(TodoActionTypes.TOGGLE_DONE, props<{ id : string }>());

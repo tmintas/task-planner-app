@@ -22,6 +22,10 @@ export class DayComponent implements OnChanges {
 	@ViewChild("dayRef", { static: true })
 	public DayRef: ViewChild;
 
+	public ToggleIcon(isDone : boolean) : string[] {
+		return isDone ? ['fas', 'check-circle'] : ['far', 'circle'];
+	}
+
 	// TODO outsource to state
 	public get NotVisibleCount() : number {
 		if (!this.Items) return 0; 
@@ -33,6 +37,10 @@ export class DayComponent implements OnChanges {
 
 	public OnEditClick(item : Todo) : void {
 		this.store.dispatch(fromCalendarActions.SelectItemForEdit({ item }));
+	}
+
+	public ToggleDone(id : string) {
+		this.store.dispatch(fromTodoActions.ToggleDone({ id }))
 	}
 
 	public OnDaySelectedToAdd() : void {
