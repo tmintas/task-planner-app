@@ -105,6 +105,21 @@ namespace Web.Controllers
             return NoContent();
         }
 
+        //PUT: api/toggle-done/5
+        [HttpPut("toggle-done/{id}")]
+        public async Task<IActionResult> ToggleDone(int id)
+        {
+            var todo = await _todoRepository.GetByIdAsync(id);
+            if (todo == null)
+            {
+                return NotFound($"Item with id {id} was not found in the database");
+            }
+
+            todo.IsDone = !todo.IsDone;
+            await _todoRepository.UpdateAsync(todo);
+
+            return NoContent();
+        }
 
         // DELETE: api/Todo/5
         [HttpDelete("{id}")]

@@ -113,6 +113,14 @@ export class TodoEffect {
 		})
 	));
 
+	public ToggleDone = createEffect(() => this.actions$.pipe(
+		ofType(fromTodoActions.ToggleDone),
+		mergeMap((payload) => this.todoService.ToggleDone(payload.id).pipe(
+			map(() => fromTodoActions.ToggleDoneSuccess()),
+			catchError((err) => of(fromTodoActions.ToggleDoneFail({ err  }))
+		)))
+	));
+
 	public ShowAlertAfterFail$ = createEffect(() => this.actions$.pipe(
 		ofType(
 			fromTodoActions.LoadTodosAllFail, 

@@ -15,14 +15,10 @@
 	<div class="item-list">
 		<div *ngFor="let item of Items" 
 			class="todo-item" 
-			coloredImportance 
-			[importance]="item.Importance" 
-			[ngStyle]="{ 'visibility': item.Visible ? 'visible' : 'hidden' }"
-			>
+			appColoredTodo [todo]="item" 
+			[ngClass]="{ 'done' : item.IsDone, 'hidden' : item.Visible }">
 			<div class="short-name">
-				<button class="done-toggler" 
-					(click)="ToggleDone(item.id)" 
-					>
+				<button class="done-toggler" (click)="ToggleDone(item.id)">
 					<fa-icon [icon]="ToggleIcon(item.IsDone)"></fa-icon>
 				</button>
 				<span class="todo-text">{{ item.Name }} {{ item | displayTime }}</span>

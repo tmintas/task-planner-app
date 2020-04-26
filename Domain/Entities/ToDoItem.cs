@@ -1,7 +1,6 @@
 ﻿using Domain.Models;
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace Domain
@@ -12,6 +11,7 @@ namespace Domain
 
         public bool HasTime { get; set; }
 
+        [Required]
         [MaxLength(40)]
         public string Name { get; set; }
 
@@ -20,5 +20,8 @@ namespace Domain
 
         [JsonPropertyName("Importance")]
         public Enums.ImportanceType ImportanceTypeId { get; set; }
+
+        [Required]
+        public bool IsDone { get; set; }
     }
 }

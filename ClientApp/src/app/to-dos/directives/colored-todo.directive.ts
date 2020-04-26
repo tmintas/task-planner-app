@@ -1,20 +1,21 @@
 import { Directive, Renderer2, ElementRef, OnInit, Input } from '@angular/core';
 import { Importance } from '@todo-enums';
+import { Todo } from '../models/todo.model';
 
 @Directive({
-    selector: '[coloredImportance]'
+    selector: '[appColoredTodo]'
 })
-export class ImportanceBgDirective implements OnInit {
+export class ColoredTodoDirective implements OnInit {
 
-    @Input('importance')
-    public Importance : Importance;
+    @Input('todo')
+    public Todo : Todo;
 
     constructor(private renderer : Renderer2, private el : ElementRef) { }
 
     ngOnInit() : void {
         let color : string;
         
-        switch (this.Importance) {
+        switch (this.Todo.Importance) {
             case Importance.High:
                 color = "#FF9900";
                 break;
@@ -27,6 +28,10 @@ export class ImportanceBgDirective implements OnInit {
             default:
                 color = "transparent";
                 break;
+        }
+
+        if (this.Todo.IsDone) {
+            color = "#2ECC40";
         }
 
         this.renderer.setStyle(this.el.nativeElement, 'background-color', color);

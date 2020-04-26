@@ -57,7 +57,16 @@
             border-radius: 5px;
             margin-bottom: 3px;
             align-items: center;
-             
+            visibility: visible;
+            
+            &.hidden {
+                visibility: false;
+            }
+
+            &.done {
+                text-decoration: line-through; 
+            }
+
             .short-name {
                 flex-grow: 1;
 
@@ -80,7 +89,7 @@
             .actions {
                 flex-basis: 40px;                
                 flex-shrink: 0;
-                
+
                 .todo-action-btn {
                     background: transparent;
                     border: transparent;

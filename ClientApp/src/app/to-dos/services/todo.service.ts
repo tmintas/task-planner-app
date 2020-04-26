@@ -19,7 +19,7 @@ export class TodoService {
 
 	constructor(private http : HttpClient) {}
 
-	public GetAll() : Observable<any> {
+	public GetAll() : Observable<Todo[]> {
 		// Todo get viewmodels instead of dtos
 		return this.http.get<Todo[]>(this.apiEndpoint).pipe(
 			map(todos => {
@@ -61,5 +61,9 @@ export class TodoService {
 			{ Value : Importance.Middle, DisplayName : "Middle" },
 			{ Value : Importance.High, DisplayName : "High" }
 		]
+	}
+
+	public ToggleDone(id : string) : Observable<void> {
+		return this.http.put<void>(`${this.apiEndpoint}/toggle-done/${id}`, {}, httpOptions);
 	}
 }

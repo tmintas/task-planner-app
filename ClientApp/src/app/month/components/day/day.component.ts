@@ -5,6 +5,8 @@ import * as fromTodoActions from '@actions/todo';
 
 import { Todo } from '@todo-models';
 import { TodosState } from '@states/todo';
+import { Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-day',
@@ -13,6 +15,9 @@ import { TodosState } from '@states/todo';
 	encapsulation: ViewEncapsulation.None
 })
 export class DayComponent implements OnChanges {
+
+	private toggleClickSubj = new Subject<string>();
+	private toggleClick$ = this.toggleClickSubj.asObservable();
 
 	@Input()
 	public DayNumber : number;
@@ -33,14 +38,19 @@ export class DayComponent implements OnChanges {
 		return this.Items.filter(el => !el.Visible).length;
 	}
 
-	constructor(private store : Store<TodosState>, private elRef: ElementRef) { }
+	constructor(private store : Store<TodosState>, private elRef: ElementRef) {
+		this.toggleClick$.pipe(
+			// debounceTime(100),
+			map((id : string) => this.store.dispatch(fromTodoActions.ToggleDone({ id })))
+		).subscribe();
+	}
 
 	public OnEditClick(item : Todo) : void {
 		this.store.dispatch(fromCalendarActions.SelectItemForEdit({ item }));
 	}
 
 	public ToggleDone(id : string) {
-		this.store.dispatch(fromTodoActions.ToggleDone({ id }))
+		this.toggleClickSubj.next(id)
 	}
 
 	public OnDaySelectedToAdd() : void {
