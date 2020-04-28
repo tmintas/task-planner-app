@@ -1,4 +1,4 @@
-<div class="day" #dayRef>
+<div class="day">
 	<div class="day-header">
 		<span>
 			{{ DayNumber }}
@@ -13,7 +13,7 @@
 		</span>
 	</div>
 	<div class="item-list">
-		<div *ngFor="let item of Items" 
+		<div *ngFor="let item of VisibleItems" 
 			class="todo-item" 
 			appColoredTodo [todo]="item" 
 			[ngClass]="{ 'done' : item.IsDone, 'hidden' : item.Visible }">
@@ -21,10 +21,11 @@
 				<button class="done-toggler" (click)="ToggleDone(item.id)">
 					<fa-icon [icon]="ToggleIcon(item.IsDone)"></fa-icon>
 				</button>
-				<span class="todo-text">{{ item.Name }} {{ item | displayTime }}</span>
+				<span class="todo-text">{{ item.Name }}</span>
 			</div>
 
 			<div class="actions"> 
+				<span> {{ item | displayTime }}</span>
 				<a class="todo-action-btn" (click)="OnEditClick(item)">
 					<fa-icon [icon]="['fas', 'edit']"></fa-icon>
 				</a>
@@ -34,7 +35,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="more-container" *ngIf = "NotVisibleCount > 0">
-		<span> {{ NotVisibleCount }} more ... </span>
+	<div class="more-container" *ngIf="InvisibleItems.length > 0">
+		<span> {{ InvisibleItems.length }} more ... </span>
 	</div>
 </div>

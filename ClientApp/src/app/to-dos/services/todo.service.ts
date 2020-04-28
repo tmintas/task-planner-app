@@ -66,4 +66,5 @@ export class TodoService {
 	public ToggleDone(id : string) : Observable<void> {
 		return this.http.put<void>(`${this.apiEndpoint}/toggle-done/${id}`, {}, httpOptions);
 	}
+
 }

@@ -42,20 +42,19 @@
     }
 
     .item-list {
-        padding: 0 5px;
         overflow-y: hidden;
         flex-grow: 1;
+        display: flex;
+        flex-direction: column;
 
         > .todo-item {
             font-weight: 500;
             display: flex;
+            flex-basis: 27px;
             flex-direction: row;
             justify-content: space-between;
             font-size: 13px;
-            padding: 3px;
             padding-left: 7px;
-            border-radius: 5px;
-            margin-bottom: 3px;
             align-items: center;
             visibility: visible;
             
@@ -87,7 +86,6 @@
             }
             
             .actions {
-                flex-basis: 40px;                
                 flex-shrink: 0;
 
                 .todo-action-btn {
@@ -96,6 +94,7 @@
                     margin-left: 2px;
                     border-radius: 5px;
                     padding: 0 3px;
+                    cursor: pointer;
                 }
             }
         }

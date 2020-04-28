@@ -5,13 +5,13 @@ import { HandledError } from 'app/shared/models/handled-error.model';
 
 export const TODO_FEATURE_KEY = 'todo';
 
-function sortByDate(prev : Todo, next : Todo) {
+export const todoSortFunc = (prev : Todo, next : Todo) => {
 	if (!prev.HasTime || !next.HasTime) return 1;
-	return prev.Date > next.Date ? 1 : 0;
+	return (prev.IsDone && !next.IsDone) || (prev.Date > next.Date) ? 1 : 0;
 }
 
 export const adapter : EntityAdapter<Todo> = createEntityAdapter<Todo>({
-	sortComparer : sortByDate
+	sortComparer : todoSortFunc
 });
 
 

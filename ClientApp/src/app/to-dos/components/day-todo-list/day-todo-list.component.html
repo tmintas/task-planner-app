@@ -1,7 +1,7 @@
 <div class="day-todo-list">
     <h1>{{ SelectedDay$ | async }}</h1>
     <ng-template #noItems><p class="no-items-text">No items to view</p></ng-template>
-    <div class="item-cards-container" *ngIf="(Todos$ | async) && (Todos$ | async).length > 0; else noItems">
+    <!-- <div class="item-cards-container" *ngIf="(Todos$ | async) && (Todos$ | async).length > 0; else noItems">
         <div class="item card" 
             *ngFor="let todo of (Todos$ | async)" 
             appColoredTodo 
@@ -22,5 +22,5 @@
                 <p class="card-text"> Description: {{ todo.Description }} </p>
             </div>
         </div>
-    </div>
+    </div> -->
 </div>

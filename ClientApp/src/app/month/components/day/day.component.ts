@@ -1,4 +1,4 @@
-import { Component, Input, ViewEncapsulation, OnChanges, SimpleChanges, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as fromCalendarActions from '@actions/calendar';
 import * as fromTodoActions from '@actions/todo';
@@ -14,7 +14,7 @@ import { map } from 'rxjs/operators';
 	styleUrls: ['./day.component.scss'],
 	encapsulation: ViewEncapsulation.None
 })
-export class DayComponent implements OnChanges {
+export class DayComponent {
 
 	private toggleClickSubj = new Subject<string>();
 	private toggleClick$ = this.toggleClickSubj.asObservable();
@@ -24,25 +24,23 @@ export class DayComponent implements OnChanges {
 	@Input()
 	public Items : Todo[];
 
-	@ViewChild("dayRef", { static: true })
-	public DayRef: ViewChild;
-
-	public ToggleIcon(isDone : boolean) : string[] {
-		return isDone ? ['fas', 'check-circle'] : ['far', 'circle'];
+	public get VisibleItems() : Todo[] {
+		return this.Items.filter(i => i.Visible);
 	}
 
-	// TODO outsource to state
-	public get NotVisibleCount() : number {
-		if (!this.Items) return 0; 
-		 
-		return this.Items.filter(el => !el.Visible).length;
+	public get InvisibleItems() : Todo[] {
+		return this.Items.filter(i => !i.Visible);
 	}
-
-	constructor(private store : Store<TodosState>, private elRef: ElementRef) {
+	
+	constructor(private store : Store<TodosState>) {
 		this.toggleClick$.pipe(
 			// debounceTime(100),
 			map((id : string) => this.store.dispatch(fromTodoActions.ToggleDone({ id })))
 		).subscribe();
+	}
+
+	public ToggleIcon(isDone : boolean) : string[] {
+		return isDone ? ['fas', 'check-circle'] : ['far', 'circle'];
 	}
 
 	public OnEditClick(item : Todo) : void {
@@ -63,19 +61,5 @@ export class DayComponent implements OnChanges {
 	
 	public OnDeleteClick(id : number) : void {
 		this.store.dispatch(fromTodoActions.DeleteTodoStart({ id }));
-	}
-
-	ngOnChanges(changes: SimpleChanges) : void {
-		// hide new todo item if overflowing the Day container
-		const todoElements =  this.elRef.nativeElement.querySelectorAll(".todo-item");
-		
-		if (!todoElements || todoElements.length ===0 ) return;
-
-		const lastBottomX = todoElements[todoElements.length - 1].getBoundingClientRect().bottom;
-		const containerBottomCord = this.elRef.nativeElement.getBoundingClientRect().bottom;
-
-		if (lastBottomX > containerBottomCord - 20) {
-			changes.Items.currentValue[changes.Items.currentValue.length - 1].Visible = false;
-		}
 	}
 }

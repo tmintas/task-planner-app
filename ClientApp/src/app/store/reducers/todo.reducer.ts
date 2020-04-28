@@ -104,7 +104,10 @@ const toDoReducer = createReducer(
 		}
 
 		return adapter.updateOne(update, state);
-	})
+	}),
+	on(fromTodoActions.UpdateVisibility, 
+		(state : TodosState, payload : { items : Update<Todo>[] }) => adapter.updateMany(payload.items, state)
+	)
 );
 
 // tslint:disable-next-line: typedef
