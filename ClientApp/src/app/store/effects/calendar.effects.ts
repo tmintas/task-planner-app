@@ -19,11 +19,13 @@ export class CalendarEffects {
         ofType(fromCalendarActions.SelectDayToAdd),
         withLatestFrom(this.store$.select(fromCalendarSelectors.featureSelector)),
         tap(([payload, calendarState]) => {
+            console.log(payload.date);
+            
             this.store$.dispatch(fromRouterActions.go({ path : [
                 'calendar', 
-                calendarState.selectedYear, 
-                calendarState.selectedMonth, 
-                payload.day,
+                payload.date.getFullYear(),
+                payload.date.getMonth() + 1,
+                payload.date.getDate(),
                 'edit',
                 0
             ] }))
@@ -51,9 +53,9 @@ export class CalendarEffects {
         tap(([payload, calendarState]) => {
             this.store$.dispatch(fromRouterActions.go({ path : [
                 'calendar', 
-                calendarState.selectedYear, 
-                calendarState.selectedMonth,
-                payload.day
+                payload.date.getFullYear(), 
+                payload.date.getMonth() + 1, 
+                payload.date.getDate() ,
             ] }));            
         })
     ), { dispatch : false });
@@ -86,12 +88,11 @@ export class CalendarEffects {
     public InitMonthToView$ = createEffect(() => this.actions$.pipe(
         ofType(fromCalendarActions.InitMonthToView),
         withLatestFrom(this.store$.select(fromRouterSelectors.selectedMonthAndYear)),
-        map(([, date]) => {
-            console.log('init effect');
-            
-            console.log(date.month);
+        map(([date]) => {
+            console.log(date);
             
             return fromCalendarActions.LoadMonthDays({ month : date.month, year: date.year });
         })
     ), { dispatch : true });
+    
 }

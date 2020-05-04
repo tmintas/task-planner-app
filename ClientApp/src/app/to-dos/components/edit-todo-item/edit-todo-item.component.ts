@@ -6,6 +6,7 @@ import { NgbDate, NgbDateStruct, NgbTimeStruct } from '@ng-bootstrap/ng-bootstra
 import { Store, select } from '@ngrx/store';
 import * as fromTodoSelectors from '@selectors/todo';
 import * as fromRouterSelectors from '@selectors/router';
+import *  as fromCalendarSelectors from '@selectors/calendar';
 
 import { Importance } from '@todo-enums';
 import { Todo } from '@todo-models';
@@ -40,10 +41,14 @@ export class EditTodoItemComponent implements OnInit, OnDestroy {
 
 	public ngOnInit() : void {
 		this.store.pipe(
-			select(fromTodoSelectors.getSelectedTodo),
+			select(fromCalendarSelectors.selectedTodo),
 			switchMapTo(
 				this.store.pipe(select(fromRouterSelectors.getDateParams)),
 				(selectedItem, date) => {
+					console.log(selectedItem);
+					console.log(date);
+					
+					
 					if (selectedItem) {
 						this.patchFromItem(selectedItem);
 					} else {

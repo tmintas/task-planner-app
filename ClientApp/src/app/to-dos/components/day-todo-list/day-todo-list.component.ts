@@ -6,9 +6,9 @@ import * as fromTodoActions from '@actions/todo';
 
 import { Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
-import { switchMap } from 'rxjs/operators';
 import AppState from '@states/app';
 import { Todo } from '@todo-models';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-day-todo-list',
@@ -26,7 +26,7 @@ export class DayTodoListComponent implements OnInit {
 		this.Todos$ = this.store.pipe(
 			select(fromRouterSelectos.getDateParams),
 			switchMap((prms : { day : number, month : number, year : number }) => 
-				this.store.select(fromTodoSelectors.selectTodosByMonthAndDay, { month : prms.month, day : prms.day })
+				this.store.select(fromTodoSelectors.selectTodosByDate, { date : new Date(prms.year, prms.month -1, prms.day) })
 			)
 		);
 	}

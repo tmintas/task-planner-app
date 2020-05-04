@@ -23,15 +23,8 @@ export const nextMonthDays = createSelector(
 );
 
 export const selectedMonth = createSelector(
-	selectRouteFeature,
-	customRoute => +customRoute.state.params['month']
-);
-
-export const selectedMonthAndYear = createSelector(
 	featureSelector,
-	state => {  
-		return { month : state.selectedMonth, year : state.selectedYear } 
-	}
+	state => state.selectedMonth
 );
 
 export const selectedYear = createSelector(
@@ -44,7 +37,47 @@ export const selectedMonthName = createSelector(
 	(state : CalendarState) => fromDateFunctions.GetMonthName(state.selectedMonth)
 );
 
-export const SelectDayToView = createSelector(
+export const selectedCurrentDates = createSelector(
 	featureSelector,
-	(state : CalendarState) => state.selectedDayToView
+	(state : CalendarState) =>  {
+		return state.currentDates.map(ds => new Date(ds));
+	}
+)
+
+export const selectedPreviousDates = createSelector(
+	featureSelector,
+	(state : CalendarState) =>  {
+		return state.previousDates.map(ds => new Date(ds));
+	}
+)
+
+export const selectedNextDates = createSelector(
+	featureSelector,
+	(state : CalendarState) =>  {
+		return state.nextDates.map(ds => new Date(ds));
+	}
+)
+
+export const selectedMonthDaysWithNeighbors = createSelector(
+	selectedPreviousDates,
+	selectedCurrentDates,
+	selectedNextDates,
+	(prev, cur, next) => {
+		return ([ ...prev, ...cur, ...next ]).map(el => new Date(el));
+	}
+)
+
+export const selectedTodo = createSelector(
+    featureSelector, 
+	(state : CalendarState) => state.selectedItem
 );
+
+export const selectedDate = createSelector(
+	featureSelector,
+	state => state.selectedDate
+)
+
+export const selectedMode = createSelector(
+	featureSelector,
+	state => state.mode
+)

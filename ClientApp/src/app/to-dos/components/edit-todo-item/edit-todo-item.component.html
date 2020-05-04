@@ -34,7 +34,7 @@
                 formControlName="Name"
                 required>
             <small class="error-hint" *ngIf="Controls.Name.errors"> 
-                <small *ngIf="Controls.Name.errors.required">Name is required</small>
+                <small *ngIf="Controls.Name.touched && Controls.Name.errors.required">Name is required</small>
                 <small *ngIf="Controls.Name.errors.maxlength">Max 40 symbols</small>
             </small> 
         </div>

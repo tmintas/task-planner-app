@@ -6,13 +6,12 @@ import * as fromCalendarSelectors from '@selectors/calendar';
 import * as fromTodoSelectors from '@selectors/todo';
 import * as fromTodoActions from '@actions/todo';
 import * as fromCalendarActions from '@actions/calendar';
-// import * as fromRouterActions from '@actions/router';
-// import * as fromRouterState from '@states/router';
 
 import { Observable } from 'rxjs';
 import AppState from '@states/app';
 import { Day } from '@month-models';
 import { Todo } from '@todo-models';
+import { tap } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-month',
@@ -32,12 +31,16 @@ export class MonthComponent implements OnInit {
 	public Year$ : Observable<number> = this.store.select(fromCalendarSelectors.selectedYear);
 	public MonthName$ : Observable<string> = this.store.select(fromCalendarSelectors.selectedMonthName);
 
+	public CurrentDates$ : Observable<Date[]> = this.store.select(fromCalendarSelectors.selectedCurrentDates).pipe(tap(console.log));
+	public PreviousDates$ : Observable<Date[]> = this.store.select(fromCalendarSelectors.selectedPreviousDates);
+	public NextDates$ : Observable<Date[]> = this.store.select(fromCalendarSelectors.selectedNextDates);
+
+	public Dates$ : Observable<Date[]> = this.store.select(fromCalendarSelectors.selectedMonthDaysWithNeighbors);
+
 	public ngOnInit() : void {
 		this.store.dispatch(fromCalendarActions.InitFromUrl());
 		this.store.dispatch(fromTodoActions.LoadImportanceOptions());
 		this.store.dispatch(fromTodoActions.LoadTodosAll());
-
-
 	}
 
 	public GoPreviousMonth() : void {
@@ -48,7 +51,7 @@ export class MonthComponent implements OnInit {
 		this.store.dispatch(fromCalendarActions.GoNextMonth());
 	}
 
-	public TodosByDay(dayIndex : number, month : number) : Observable<Todo[]> {
-		return this.store.select(fromTodoSelectors.selectTodosByMonthAndDay, { month: month , day : dayIndex });
+	public TodosByDate$(date : Date) : Observable<Todo[]> {
+		return this.store.select(fromTodoSelectors.selectTodosByDate, { date });
 	}
 }

@@ -1,12 +1,14 @@
 import { Component, Input, ViewEncapsulation } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import * as fromCalendarActions from '@actions/calendar';
+import * as fromCalendarSelectors from '@selectors/calendar';
 import * as fromTodoActions from '@actions/todo';
 
 import { Todo } from '@todo-models';
 import { TodosState } from '@states/todo';
-import { Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Subject, Observable } from 'rxjs';
+import { map, withLatestFrom } from 'rxjs/operators';
+import { CalendarModes } from '@states/calendar';
 
 @Component({
 	selector: 'app-day',
@@ -15,14 +17,45 @@ import { map } from 'rxjs/operators';
 	encapsulation: ViewEncapsulation.None
 })
 export class DayComponent {
+	
+	constructor(private store : Store<TodosState>) {
+		this.toggleClickSubj.pipe(
+			// debounceTime(100),
+			map((id : string) => this.store.dispatch(fromTodoActions.ToggleDone({ id })))
+		).subscribe();
+	}
 
 	private toggleClickSubj = new Subject<string>();
-	private toggleClick$ = this.toggleClickSubj.asObservable();
+
+	public IsDayInMode$(mode : CalendarModes) : Observable<boolean> {
+		return this.store.pipe(
+			select(fromCalendarSelectors.selectedDate),
+			withLatestFrom(this.store.select(fromCalendarSelectors.selectedMode)),
+			map(([date, curMode]) => curMode === mode && this.Date && date && 
+				date.getMonth() === this.Date.getMonth() && date.getFullYear() === this.Date.getFullYear() && 
+				date.getDate() === this.Date.getDate())
+		);
+	}
+
+	public IsCurrentMonth$ : Observable<boolean> = this.store.pipe(
+		select(fromCalendarSelectors.selectedMonth),
+		map(m => this.Date.getMonth() + 1 === m)
+	)
+
+	public IsItemEditing$(id : number) : Observable<boolean> {
+		return this.store.select(fromCalendarSelectors.selectedTodo).pipe(
+			map(selectedTodo => selectedTodo && selectedTodo.id === id)
+		)
+	}
 
 	@Input()
-	public DayNumber : number;
+	public Date : Date;
 	@Input()
 	public Items : Todo[];
+
+	public get DayNumber() : number {
+		return this.Date ? this.Date.getDate() : 0
+	}
 
 	public get VisibleItems() : Todo[] {
 		return this.Items.filter(i => i.Visible);
@@ -32,13 +65,6 @@ export class DayComponent {
 		return this.Items.filter(i => !i.Visible);
 	}
 	
-	constructor(private store : Store<TodosState>) {
-		this.toggleClick$.pipe(
-			// debounceTime(100),
-			map((id : string) => this.store.dispatch(fromTodoActions.ToggleDone({ id })))
-		).subscribe();
-	}
-
 	public ToggleIcon(isDone : boolean) : string[] {
 		return isDone ? ['fas', 'check-circle'] : ['far', 'circle'];
 	}
@@ -52,11 +78,11 @@ export class DayComponent {
 	}
 
 	public OnDaySelectedToAdd() : void {
-		this.store.dispatch(fromCalendarActions.SelectDayToAdd({ day : this.DayNumber }));
+		this.store.dispatch(fromCalendarActions.SelectDayToAdd({ date : this.Date }));
 	}
 
 	public OnDaySelectedToView() : void {
-		this.store.dispatch(fromCalendarActions.SelectDayToView({ day : this.DayNumber }));
+		this.store.dispatch(fromCalendarActions.SelectDayToView({ date : this.Date }));
 	}
 	
 	public OnDeleteClick(id : number) : void {

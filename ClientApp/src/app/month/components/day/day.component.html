@@ -1,13 +1,17 @@
-<div class="day">
+<div class="day" [ngClass]="{'not-current-month' : !(IsCurrentMonth$ | async) }">
 	<div class="day-header">
 		<span>
 			{{ DayNumber }}
 		</span> 
 		<span class="day-actions">
-			<button (click)="OnDaySelectedToAdd()">
+			<button 
+				(click)="OnDaySelectedToAdd()"
+				[ngClass]="{ 'viewed' : IsDayInMode$(2) | async }">
 				<fa-icon [icon]="['fas', 'plus-circle']"></fa-icon>
 			</button>
-			<button (click)="OnDaySelectedToView()">
+			<button 
+				(click)="OnDaySelectedToView()"
+				[ngClass]="{ 'viewed' : IsDayInMode$(3) | async }">
 				<fa-icon [icon]="['fas', 'list-alt']"></fa-icon>
 			</button>
 		</span>
@@ -18,7 +22,10 @@
 			appColoredTodo [todo]="item" 
 			[ngClass]="{ 'done' : item.IsDone, 'hidden' : item.Visible }">
 			<div class="short-name">
-				<button class="done-toggler" (click)="ToggleDone(item.id)">
+				<button 
+					class="done-toggler" 
+					(click)="ToggleDone(item.id)"
+				>
 					<fa-icon [icon]="ToggleIcon(item.IsDone)"></fa-icon>
 				</button>
 				<span class="todo-text">{{ item.Name }}</span>
@@ -26,7 +33,11 @@
 
 			<div class="actions"> 
 				<span> {{ item | displayTime }}</span>
-				<a class="todo-action-btn" (click)="OnEditClick(item)">
+				<a 
+					class="todo-action-btn" 
+					(click)="OnEditClick(item)"
+					[ngStyle]="{ color : (IsItemEditing$(item.id) | async) ? 'gray' : 'black' }"
+				>
 					<fa-icon [icon]="['fas', 'edit']"></fa-icon>
 				</a>
 				<button class="todo-action-btn" (click)="OnDeleteClick(item.id)">
@@ -36,6 +47,7 @@
 		</div>
 	</div>
 	<div class="more-container" *ngIf="InvisibleItems.length > 0">
-		<span> {{ InvisibleItems.length }} more ... </span>
+		<button 
+			class="more-btn" (click)="OnDaySelectedToView()"> {{ InvisibleItems.length }} more ... </button>
 	</div>
 </div>

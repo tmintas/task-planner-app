@@ -2,10 +2,10 @@
 
 .month {
     border: rgb(28, 163, 204) 8px solid;
-    border-radius: 6px;
+    border-radius: 0;
     display: flex;
     flex-direction: row;
-    font-family: 'Josefin Sans', sans-serif;
+    font-family: 'Arial';
 
     // to get rid of right-hand scroll bar
     height: 101%;
@@ -56,7 +56,7 @@
     }
 
     .calendar-area {
-        border-radius: 3px;
+        border-radius: 0;
         flex-grow: 1;
         overflow-y: auto;
 
@@ -84,18 +84,14 @@
                 align-items: stretch;
                 // height: 790px;
                 border: 1px solid gray;
-                border-radius: 3px;
+                border-radius: 0;
 
                 > .day-flex-item {            
                     border: 1px solid gray;
                     border-style: solid;
-                    border-radius: 3px;
-                    box-sizing: border-box;
+                    border-radius: 0;
+                    // box-sizing: border-box;
                     height: 172px;
-                }
-
-                > .not-current {
-                    background-color: rgb(215, 224, 226);
                 }
             }
         }

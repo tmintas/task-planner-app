@@ -50,6 +50,6 @@ export const ToggleDone = createAction(TodoActionTypes.TOGGLE_DONE, props<{ id :
 export const ToggleDoneSuccess = createAction(TodoActionTypes.TOGGLE_DONE_SUCCESS);
 export const ToggleDoneFail = createAction(TodoActionTypes.TOGGLE_DONE_FAIL, props<{ err : any }>());
 
-export const UpdateVisibility = createAction(TodoActionTypes.UPDATE_TODOS_VISIBILITY, props<{ items : Update<Todo>[] }>())
+export const UpdateVisibility = createAction(TodoActionTypes.UPDATE_TODOS_VISIBILITY, props<{ date : Date, items : Update<Todo>[] }>())
 
 export const SubmitTodo = createAction(TodoActionTypes.SUBMIT_TODO , props<{ item : Todo }>());

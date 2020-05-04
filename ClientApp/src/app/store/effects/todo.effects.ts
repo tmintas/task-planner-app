@@ -5,7 +5,7 @@ import { of } from 'rxjs';
 
 import * as fromRouterActions from '@actions/router';
 import * as fromTodoActions from '@actions/todo';
-import * as fromTodoSelectors from '@selectors/todo';
+import * as fromCalendarSelectors from '@selectors/calendar';
 import AppState from '@states/app';
 import { Update } from '@ngrx/entity';
 import { Store } from '@ngrx/store';
@@ -99,13 +99,13 @@ export class TodoEffect {
 
 	public SubmitTodo$ = createEffect(() => this.actions$.pipe(
 		ofType(fromTodoActions.SubmitTodo),
-		withLatestFrom(this.store.select(fromTodoSelectors.getSelectedTodoId)),
-		map(([action, selectedItemId]) => {
-			if (selectedItemId === 0) {
+		withLatestFrom(this.store.select(fromCalendarSelectors.selectedTodo)),
+		map(([action, item]) => {
+			if (!item) {
 				return fromTodoActions.CreateTodo({ item : action.item });
 			} else {
 				const todoUpdate : Update<Todo> = {
-					id : selectedItemId,
+					id : item.id,
 					changes : action.item
 				}
 				return fromTodoActions.UpdateTodo({ item : todoUpdate });

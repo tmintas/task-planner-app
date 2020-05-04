@@ -3,7 +3,6 @@
 .day {
     width: 100%;
     height: 100%;
-    border-radius: 5px;
     position: relative;
     overflow: hidden;
 
@@ -27,7 +26,13 @@
                 background: transparent;
                 border: none;
                 outline: none;
+
                 :hover {
+                    color: darken($blue, 10%);
+                }
+
+                &.viewed {
+                    visibility: visible;
                     color: darken($blue, 10%);
                 }
             }
@@ -37,13 +42,13 @@
         }
     }
 
-    &:hover .day-actions {
+    &:hover .day-actions, .viewed {
         visibility: visible;
+        color: darken($blue, 10%);
     }
 
     .item-list {
         overflow-y: hidden;
-        flex-grow: 1;
         display: flex;
         flex-direction: column;
 
@@ -101,9 +106,32 @@
     }
 
     .more-container {
-        flex-basis: 20px;
+        flex-grow: 1;
         display: flex;
         justify-content: center;
+        fa-icon {
+            display: inline-block;
+            transition: transform 0.2s;
+            margin-left: 5px;
+            
+            &.expanded {
+                transform: rotate(180deg);
+            }
+
+            &.collapsed {
+                transform: rotate(0);
+            }
+        }
+
+        button.more-btn {
+            background: #ECECEC;
+            color: black;
+            outline: none;
+            border: none;
+        }
     } 
 }
 
+.not-current-month {
+    background-color: #ECECEC;
+}
