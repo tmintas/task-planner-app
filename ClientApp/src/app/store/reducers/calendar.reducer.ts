@@ -3,19 +3,12 @@ import { Action, createReducer, on } from '@ngrx/store';
 import CalendarState, * as fromCalendarState from '@states/calendar';
 import * as fromCalendarActions from '@actions/calendar';
 import * as fromDateFunctions from '@shared-functions/date';
-import { Day } from '@month-models';
 import { Todo } from '@todo-models';
 
 const calendarReducer = createReducer(
 	fromCalendarState.CALENDAR_INITIAL_STATE,
 	on(fromCalendarActions.LoadMonthDays, (state : CalendarState, payload : { month : number, year : number }) => {
-		console.log(payload.month);
-		
 		return { ...state,
-			previousMonthDays : fromDateFunctions.GetPreviousMonthLastDays(payload.year, payload.month).map(i => new Day(i)),
-			currentMonthDays : fromDateFunctions.GetCurrentMonthDays(payload.year, payload.month).map(i => new Day(i)),
-			nextMonthDays : fromDateFunctions.GetNextMonthFirstDays(payload.year, payload.month).map(i => new Day(i)),
-
 			currentDates : fromDateFunctions.GetMonthDates(payload.year, payload.month),
 			previousDates : fromDateFunctions.GetPreviousMonthLastDates(payload.year, payload.month),
 			nextDates : fromDateFunctions.GetNextMonthFirstDates(payload.year, payload.month)
@@ -65,6 +58,20 @@ const calendarReducer = createReducer(
 			currentDates : fromDateFunctions.GetMonthDates(newYear, newMonth),
 			previousDates : fromDateFunctions.GetPreviousMonthLastDates(newYear, newMonth),
 			nextDates : fromDateFunctions.GetNextMonthFirstDates(newYear, newMonth)
+		}
+	}),
+	on(fromCalendarActions.GoDefaultMonth, (state : CalendarState) => {
+		const month = fromCalendarState.CALENDAR_DEFAULT_MONTH;
+		const year = fromCalendarState.CALENDAR_DEFAULT_YEAR;
+
+		return {
+			...state,
+			selectedItem : null,
+			selectedMonth : month,
+			selectedYear: year,
+			currentDates : fromDateFunctions.GetMonthDates(year, month),
+			previousDates : fromDateFunctions.GetPreviousMonthLastDates(year, month),
+			nextDates : fromDateFunctions.GetNextMonthFirstDates(year, month)
 		}
 	}),
 	on(fromCalendarActions.SelectDayToView, (state : CalendarState, payload : { date : Date }) => {

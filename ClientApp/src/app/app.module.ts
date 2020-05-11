@@ -11,7 +11,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { CalendarModule } from './month/calendar.module';
+import { CalendarModule } from './calendar/calendar.module';
 import { SharedModule } from './shared/shared.module';
 import { NotificationService } from './shared/services/notification.service';
 import { NotificatorComponent } from './shared/components/notificator/notificator.component';

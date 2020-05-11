@@ -1,5 +1,15 @@
 <div class="month">
 	<div class="notes-area">
+		<div class="login-actions">
+			<fa-icon 
+				[icon]="['fas', 'sign-in-alt']" 
+				[routerLink]="['./', 'login']">
+			</fa-icon>
+			<fa-icon 
+				[icon]="['fas', 'user-plus']"
+				[routerLink]="['./', 'register']">
+			</fa-icon>
+		</div>
 		<div class="title badge ">
 			<div class="month-title">
 				<a (click)="GoPreviousMonth()">
@@ -40,18 +50,6 @@
 						[Items]="TodosByDate$(date) | async">
 					</app-day>
 				</div>
-				<!-- <div class="day-flex-item" *ngFor="let date of CurrentDates$ | async; let i = index">
-					<app-day 
-						[Date]="date"    
-						[Items]="TodosByDate$(date) | async">
-					</app-day>
-				</div>
-				<div class="day-flex-item" *ngFor="let date of NextDates$ | async; let i = index">
-					<app-day style=""
-						[Date]="date"    
-						[Items]="TodosByDate$(date) | async">
-					</app-day>
-				</div> -->
 			</div>
 		</div>
 	</div>

@@ -7,21 +7,6 @@ import { CustomRouterReducerState } from './router.selector';
 export const featureSelector = createFeatureSelector<CalendarState>(CALENDAR_FEATURE_KEY);
 export const selectRouteFeature = createFeatureSelector<CustomRouterReducerState>(fromRouterState.ROUTER_FEATURE_KEY);
 
-export const currentMonthDays = createSelector(
-	featureSelector,
-	(state : CalendarState) => state.currentMonthDays
-);
-
-export const previousMonthDays = createSelector(
-	featureSelector,
-	(state : CalendarState) => state.previousMonthDays
-);
-
-export const nextMonthDays = createSelector(
-	featureSelector,
-	(state : CalendarState) => state.nextMonthDays
-);
-
 export const selectedMonth = createSelector(
 	featureSelector,
 	state => state.selectedMonth

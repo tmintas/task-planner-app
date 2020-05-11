@@ -1,0 +1,32 @@
+@import 'variables';
+
+form {
+    padding-right: 5px;
+  
+    .form-group {
+        position: relative;
+        height: 80px;
+        font-size: 16px;
+    }
+
+    .error-hint {
+        font-size: 0.8em;
+    }
+
+    .error-hint > small {
+        color: $invalid-color;
+        position: absolute;
+        top: 75px;
+        color: $invalid-color;
+    }
+
+    label, .error-hint {
+        margin-left: 5px;
+    }
+
+    .btn-neutral {
+        background-color: $blue;
+    }
+}
+
+

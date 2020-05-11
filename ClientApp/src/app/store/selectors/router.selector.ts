@@ -36,13 +36,11 @@ export const getSelectedDay = createSelector(
 export const selectedMonthAndYear = createSelector(
     selectState,
     (state) => { 
-        if (!state) return { 
-            month : 1, 
-            year : 2019 
-        }
+        if (!state || (!state.params.month && !state.params.year)) return null;
+
         return { 
-            month : +state.params['month'], 
-            year : +state.params['year'] 
+            month : state.params.month ? +state.params['month'] : null, 
+            year : state.params.month ? +state.params['year'] : null
         }
     }
 )

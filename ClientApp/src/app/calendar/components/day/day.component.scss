@@ -10,6 +10,11 @@
     flex-direction: column;
 
     > .day-header {
+        
+        span {
+            font-family: 'Lora', serif;
+        }
+
         margin: 6px 5px 2px 5px;
         height: 26px;
         display: flex;
@@ -51,8 +56,10 @@
         overflow-y: hidden;
         display: flex;
         flex-direction: column;
-
+        padding: 0 2px;
+        
         > .todo-item {
+            border-radius: 5px;
             font-weight: 500;
             display: flex;
             flex-basis: 27px;

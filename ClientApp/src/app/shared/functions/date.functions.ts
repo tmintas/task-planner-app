@@ -47,21 +47,21 @@ export function GetPreviousMonthLastDays(year : number, month : number) : number
 	return arr.reverse();
 }
 
-export function GetPreviousMonthLastDates(year : number, month : number) : string[] {
+export function GetPreviousMonthLastDates(year : number, month : number) : Date[] {
 	const arr = [];
 	const firstDayPosition = GetDayOfWeek( new Date(year, month, 1) );
 
 	let lastMonthMaxDay = GetNumberOfDaysInMonth(year, month - 1);
 
 	for (let i = 1; i < firstDayPosition; i++) {
-		arr.push(new Date(year, month - 2, lastMonthMaxDay).toLocaleDateString());
+		arr.push(new Date(year, month - 2, lastMonthMaxDay));
 		lastMonthMaxDay--;
 	}
 	
 	return arr.reverse();
 }
 
-export function GetNextMonthFirstDates(year : number, month : number) : string[] {
+export function GetNextMonthFirstDates(year : number, month : number) : Date[] {
 	const arr = [];
 	const nextMonthFirstDayPosition = GetDayOfWeek( new Date(year, month + 1, 1) );
 
@@ -69,7 +69,7 @@ export function GetNextMonthFirstDates(year : number, month : number) : string[]
 	if (nextMonthFirstDayPosition === 1) { return arr; }
 
 	for (let i = 1; i <= 8 - nextMonthFirstDayPosition; i++) {
-		arr.push(new Date(year, month, i).toLocaleDateString());
+		arr.push(new Date(year, month + 1, i));
 	}
 
 	return arr;
@@ -89,16 +89,14 @@ export function GetNextMonthFirstDays(year : number, month : number) : number[] 
 	return arr;
 }
 
-export function GetMonthDates(year : number, month : number) : string[] {
+export function GetMonthDates(year : number, month : number) : Date[] {
 	const numberOfDays = (new Date(year, month , 0)).getDate()
-	console.log(month);
 	
-	let arr : string[] = [];
+	let arr : Date[] = [];
 
 	for (let i = 1; i <= numberOfDays; i++) {
-		arr.push(new Date(year, month - 1, i, 3).toLocaleDateString())
+		arr.push(new Date(year, month - 1, i))
 	}
-		console.log(arr);
 		
-	return arr
+	return arr;
 }

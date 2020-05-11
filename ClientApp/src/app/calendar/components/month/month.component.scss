@@ -1,13 +1,11 @@
 @import 'variables';
 
 .month {
-    border: rgb(28, 163, 204) 8px solid;
+    border: #8EB1D9 8px solid;
     border-radius: 0;
     display: flex;
     flex-direction: row;
-    font-family: 'Arial';
-
-    // to get rid of right-hand scroll bar
+    font-family: 'Lora', serif;
     height: 101%;
 
     .notes-area {
@@ -15,17 +13,38 @@
         min-width: 270px;
         display: flex;
         flex-direction: column;
-        align-content: center;
+        align-items: center;
         padding: 0 10px;
         box-sizing: border-box;
 
-        > .title {
-            background-color: rgb(28, 163, 204);
-            margin: 20px 0;
-            padding: 15px 3px;;
-            align-content: center;
+        > .login-actions {
+            display: flex;
+            flex-basis: 43px;
+            flex-shrink: 0;
+            flex-direction: row;
+            justify-content: space-around;
+            width: 70%;
+            align-items: center;;
+            
+            fa-icon {
+                outline: none;
+                padding: 0 15px;
+                transform: scale(2);
+                color: #708eb1;
+                cursor: pointer;
+                
+                &:hover {
+                    color: darken(#708eb1, 10%);
+                };
+            }
+        }
 
-            flex: 0 1 50px;
+        > .title {
+            background-color: #8EB1D9;
+            margin: 20px 0;
+            margin-top: 1px;
+            padding: 15px 3px;;
+            width: 100%;
 
             > .month-title {
                 font-size: 35px;
@@ -65,7 +84,8 @@
             background-color: $gray;
             font-size: 28px;
             height: 45px;
-    
+            font-family: 'Indie Flower', cursive;
+
             > .week-day {
                 display: flex;
                 justify-content: center;
@@ -82,7 +102,6 @@
                 flex-wrap: wrap;
                 justify-content: flex-start;
                 align-items: stretch;
-                // height: 790px;
                 border: 1px solid gray;
                 border-radius: 0;
 
@@ -90,7 +109,6 @@
                     border: 1px solid gray;
                     border-style: solid;
                     border-radius: 0;
-                    // box-sizing: border-box;
                     height: 172px;
                 }
             }

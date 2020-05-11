@@ -4,7 +4,7 @@ import * as fromRouterSelectors from '@selectors/router';
 
 import { Injectable } from '@angular/core';
 import { createEffect, ofType, Actions } from '@ngrx/effects';
-import { tap, withLatestFrom, map } from 'rxjs/operators';
+import { tap, withLatestFrom, map, switchMapTo } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import AppState from '@states/app';
 import * as fromCalendarSelectors from '@selectors/calendar';
@@ -17,10 +17,7 @@ export class CalendarEffects {
 
     public NavigateAfterDaySelected$ = createEffect(() => this.actions$.pipe(
         ofType(fromCalendarActions.SelectDayToAdd),
-        withLatestFrom(this.store$.select(fromCalendarSelectors.featureSelector)),
-        tap(([payload, calendarState]) => {
-            console.log(payload.date);
-            
+        tap((payload) => {
             this.store$.dispatch(fromRouterActions.go({ path : [
                 'calendar', 
                 payload.date.getFullYear(),
@@ -30,60 +27,61 @@ export class CalendarEffects {
                 0
             ] }))
         })
-    ), { dispatch : false });
+    ));
 
     public NavigateAfterItemSelectedForEdit$ = createEffect(() => this.actions$.pipe(
         ofType(fromCalendarActions.SelectItemForEdit),
         withLatestFrom(this.store$.select(fromCalendarSelectors.featureSelector)),
-        tap(([payload, calendarState]) => { 
-            this.store$.dispatch(fromRouterActions.go({ path : [
+        map(([payload, calendarState]) => { 
+            return fromRouterActions.go({ path : [
                 'calendar', 
                 payload.item.Date.getFullYear(), 
                 payload.item.Date.getMonth() + 1, 
                 payload.item.Date.getDate(),
                 'edit',
                 payload.item.id
-            ]}))                
+            ]})               
         })
-    ), { dispatch : false });
+    ));
 
     public NavigateAfterDayForViewChanged$ = createEffect(() => this.actions$.pipe(
         ofType(fromCalendarActions.SelectDayToView),
         withLatestFrom(this.store$.select(fromCalendarSelectors.featureSelector)),
-        tap(([payload, calendarState]) => {
-            this.store$.dispatch(fromRouterActions.go({ path : [
+        map(([payload, calendarState]) => fromRouterActions.go({ path : [
                 'calendar', 
                 payload.date.getFullYear(), 
                 payload.date.getMonth() + 1, 
                 payload.date.getDate() ,
-            ] }));            
-        })
-    ), { dispatch : false });
+            ]}            
+        )
+    )));
 
     public NavigateAfterMonthChanged$ = createEffect(() => this.actions$.pipe(
-        ofType(fromCalendarActions.GoNextMonth, fromCalendarActions.GoPreviousMonth),
-        withLatestFrom(this.store$.select(fromCalendarSelectors.featureSelector)),
-        tap(([, calendarState]) => {
-            this.store$.dispatch(fromRouterActions.go({ path : [
+        ofType(
+            fromCalendarActions.GoNextMonth, 
+            fromCalendarActions.GoPreviousMonth,
+            fromCalendarActions.GoDefaultMonth),
+        switchMapTo(this.store$.select(fromCalendarSelectors.featureSelector)),
+        map(calendarState => {
+            return fromRouterActions.go({ path : [
                 'calendar', 
                 calendarState.selectedYear, 
                 calendarState.selectedMonth
-            ] }))
+            ] })
         })
-    ), { dispatch : false });
+    ));
 
     public InitFromUrl$ = createEffect(() => this.actions$.pipe(
         ofType(fromCalendarActions.InitFromUrl),
         withLatestFrom(this.store$.select(fromRouterSelectors.selectedMonthAndYear)),
         map(([payload, date]) => {
-            if (date == null) {
-                const now = new Date();
-                return fromCalendarActions.InitMonthToView({ month : now.getMonth() , year: now.getFullYear() });
-            }
-            
-            return fromCalendarActions.InitMonthToView({ month : date.month, year: date.year });
+            if (date == null || !date.month) {
+                return fromCalendarActions.GoDefaultMonth();
+            } else {
+                return fromCalendarActions.LoadMonthDays({ month : date.month, year: date.year });
+            }    
         })
-    ), { dispatch : true });
+    ));
 
     public InitMonthToView$ = createEffect(() => this.actions$.pipe(
         ofType(fromCalendarActions.InitMonthToView),
