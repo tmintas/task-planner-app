@@ -7,3 +7,23 @@ export const getSignupSuccessMessage = createSelector(
     featureSelector,
     state => state.signUpSuccessMessage
 )
+
+export const currentUser = createSelector(
+    featureSelector,
+    state => state.currentUser
+)
+
+export const isAuthenticated = createSelector(
+    featureSelector,
+    state => state.isAuthenticated
+)
+
+export const authError = createSelector(
+    featureSelector,
+    state => state.authError
+)
+
+export const backUrl = createSelector(
+    featureSelector,
+    state => state.backUrl
+)

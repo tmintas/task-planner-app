@@ -17,7 +17,7 @@
         padding: 0 10px;
         box-sizing: border-box;
 
-        > .login-actions {
+        .login-actions {
             display: flex;
             flex-basis: 43px;
             flex-shrink: 0;
@@ -29,7 +29,7 @@
             fa-icon {
                 outline: none;
                 padding: 0 15px;
-                transform: scale(2);
+                transform: scale(1.6);
                 color: #708eb1;
                 cursor: pointer;
                 

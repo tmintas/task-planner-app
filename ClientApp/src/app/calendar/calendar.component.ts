@@ -1,19 +1,24 @@
 import { Component, OnInit } from '@angular/core';
 import * as fromCalendarActions from '@actions/calendar';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import AppState from '@states/app';
+import { Observable } from 'rxjs';
+import { daysLoaded } from '@selectors/calendar';
 
 @Component({
-  selector: 'app-calendar',
-  templateUrl: './calendar.component.html',
-  styles: []
+    selector: 'app-calendar',
+    templateUrl: './calendar.component.html',
+    styles: []
 })
 export class CalendarComponent implements OnInit {
 
-  constructor(private store$ : Store<AppState>) { }
+    public DaysLoaded$ : Observable<boolean>;
 
-  ngOnInit() {
-    this.store$.dispatch(fromCalendarActions.InitFromUrl());
-  }
+    constructor(private store$: Store<AppState>) { 
+        this.DaysLoaded$ = this.store$.pipe(select(daysLoaded));
+    }
 
+    ngOnInit() {
+        this.store$.dispatch(fromCalendarActions.InitFromUrl());
+    }
 }

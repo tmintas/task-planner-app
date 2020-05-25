@@ -34,7 +34,7 @@ namespace Web.Controllers
 
         // GET: api/Todo/5
         [HttpGet("{id}")]
-        [Authorize]
+        //[Authorize]
         public async Task<ActionResult<ToDoItem>> GetToDoItem(int id)
         {
             var item = await _todoRepository.GetByIdAsync(id);

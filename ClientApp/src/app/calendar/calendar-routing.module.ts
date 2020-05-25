@@ -27,29 +27,40 @@ const routes: Routes = [
 					},
 					{
 						path: 'landing',
-						component: LandingPageComponent
+						component: LandingPageComponent,
+						canActivate : [ AuthGuard ],
+						data : { requiresToBeAuthenticated : false }
+					},
+					{
+						path: 'register',
+						component: RegisterFormComponent,
+						canActivate : [ AuthGuard ],
+						data : { requiresToBeAuthenticated : false }
+					},
+					{
+						path: 'login',
+						component: LoginFormComponent,
+						canActivate : [ AuthGuard ],
+						data : { requiresToBeAuthenticated : false }
 					},
 					{
 						path: 'home',
 						component: HomeComponent,
-						canActivate : [ AuthGuard ]
-					},
-					{
-						path: 'register',
-						component: RegisterFormComponent
-					},
-					{
-						path: 'login',
-						component: LoginFormComponent
+						canActivate : [ AuthGuard ],
+						data : { requiresToBeAuthenticated : true }
 					},
 					{
 						path: ':day',
-						component: DayTodoListComponent
+						component: DayTodoListComponent,
+						canActivate : [ AuthGuard ],
+						data : { requiresToBeAuthenticated : true, error : 'Please login to view items' }
 					},
 					{
 						path: ':day/edit/:itemId',
-						component: EditTodoItemComponent
-					},
+						component: EditTodoItemComponent,
+						canActivate : [ AuthGuard ],
+						data : { requiresToBeAuthenticated : true, error : 'Please login to add or edit items' }
+					}
 				]
 			}
 		]

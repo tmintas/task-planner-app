@@ -4,14 +4,18 @@ import CalendarState, * as fromCalendarState from '@states/calendar';
 import * as fromCalendarActions from '@actions/calendar';
 import * as fromDateFunctions from '@shared-functions/date';
 import { Todo } from '@todo-models';
+import { CalendarModes } from '@states/calendar';
 
 const calendarReducer = createReducer(
 	fromCalendarState.CALENDAR_INITIAL_STATE,
 	on(fromCalendarActions.LoadMonthDays, (state : CalendarState, payload : { month : number, year : number }) => {
 		return { ...state,
+			selectedMonth : payload.month,
+			selectedYear : payload.year,
 			currentDates : fromDateFunctions.GetMonthDates(payload.year, payload.month),
 			previousDates : fromDateFunctions.GetPreviousMonthLastDates(payload.year, payload.month),
-			nextDates : fromDateFunctions.GetNextMonthFirstDates(payload.year, payload.month)
+			nextDates : fromDateFunctions.GetNextMonthFirstDates(payload.year, payload.month),
+			loading : false
 		};
 	}),
 	on(fromCalendarActions.SelectDayToAdd, (state : CalendarState, payload : { date : Date }) => {
@@ -21,13 +25,6 @@ const calendarReducer = createReducer(
 			selectedDate : payload.date,
 			selectedItem : null,
 			selectedDayToView : null
-		}
-	}),
-	on(fromCalendarActions.InitMonthToView, (state : CalendarState, payload : { month : number, year : number }) => {
-		return {
-			...state,
-			selectedMonth : payload.month,
-			selectedYear : payload.year,
 		}
 	}),
 	on(fromCalendarActions.GoNextMonth, (state : CalendarState) => {
@@ -85,9 +82,25 @@ const calendarReducer = createReducer(
 	on(fromCalendarActions.SelectItemForEdit, (state : CalendarState, payload : { item : Todo }) => {
 		return {
 			...state,
-			selectedDay : null,
+			selectedDate : null,
 			selectedItem : payload.item,
 			mode : fromCalendarState.CalendarModes.EditTodo
+		}
+	}),
+	on(fromCalendarActions.InitFromUrlSuccess, (state : CalendarState, payload : { day : number, item : Todo, year : number, month : number, mode : CalendarModes }) => {
+		return { 
+			...state,
+			loading : true
+		}
+	}),
+	on(fromCalendarActions.InitFromUrlSuccess, (state : CalendarState, payload : { day : number, item : Todo, year : number, month : number, mode : CalendarModes }) => {
+		return { 
+			...state,
+			selectedItem : payload.item,
+			selectedYear : payload.year,
+			selectedMonth : payload.month,
+			selectedDate : new Date(payload.year, payload.month - 1, payload.day),
+			mode : payload.mode,
 		}
 	})
 );

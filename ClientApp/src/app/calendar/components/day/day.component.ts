@@ -1,4 +1,4 @@
-import { Component, Input, ViewEncapsulation } from '@angular/core';
+import { Component, Input, ViewEncapsulation, OnChanges } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import * as fromCalendarActions from '@actions/calendar';
 import * as fromCalendarSelectors from '@selectors/calendar';
@@ -7,8 +7,9 @@ import * as fromTodoActions from '@actions/todo';
 import { Todo } from '@todo-models';
 import { TodosState } from '@states/todo';
 import { Subject, Observable } from 'rxjs';
-import { map, withLatestFrom } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { CalendarModes } from '@states/calendar';
+import { selectedMode } from '@selectors/calendar';
 
 @Component({
 	selector: 'app-day',
@@ -16,38 +17,11 @@ import { CalendarModes } from '@states/calendar';
 	styleUrls: ['./day.component.scss'],
 	encapsulation: ViewEncapsulation.None
 })
-export class DayComponent {
-	
-	constructor(private store : Store<TodosState>) {
-		this.toggleClickSubj.pipe(
-			// debounceTime(100),
-			map((id : string) => this.store.dispatch(fromTodoActions.ToggleDone({ id })))
-		).subscribe();
-	}
-
+export class DayComponent implements OnChanges {
 	private toggleClickSubj = new Subject<string>();
 
-	public IsDayInMode$(mode : CalendarModes) : Observable<boolean> {
-		return this.store.pipe(
-			select(fromCalendarSelectors.selectedDate),
-			withLatestFrom(this.store.select(fromCalendarSelectors.selectedMode)),
-			map(([date, curMode]) => curMode === mode && this.Date && date && 
-				date.getMonth() === this.Date.getMonth() && date.getFullYear() === this.Date.getFullYear() && 
-				date.getDate() === this.Date.getDate())
-		);
-	}
-
-	public IsCurrentMonth$ : Observable<boolean> = this.store.pipe(
-		select(fromCalendarSelectors.selectedMonth),
-		map(m => this.Date.getMonth() + 1 === m)
-	)
-
-	public IsItemEditing$(id : number) : Observable<boolean> {
-		return this.store.select(fromCalendarSelectors.selectedTodo).pipe(
-			map(selectedTodo => selectedTodo && selectedTodo.id === id)
-		)
-	}
-
+	public IsCurrentMonth$ : Observable<boolean>;
+	
 	@Input()
 	public Date : Date;
 	@Input()
@@ -61,9 +35,41 @@ export class DayComponent {
 		return this.Items.filter(i => i.Visible);
 	}
 
+	public get selMode() {
+		return this.store.select(selectedMode) ;
+	}
+
+	public get selDate() {
+		return this.store.select(fromCalendarSelectors.selectedDate) ;
+	}
+
 	public get InvisibleItems() : Todo[] {
 		return this.Items.filter(i => !i.Visible);
 	}
+
+	constructor(private store : Store<TodosState>) {
+		this.toggleClickSubj.pipe(
+			tap((id : string) => this.store.dispatch(fromTodoActions.ToggleDone({ id })))
+		).subscribe();
+	}
+
+	public ngOnChanges() : void {
+		this.IsCurrentMonth$ = this.store.pipe(
+			select(fromCalendarSelectors.isMonthSelected, { month : this.Date.getMonth() })
+		)
+	}
+
+	public IsDayInMode$(mode : CalendarModes) : Observable<boolean> {
+		return this.store.pipe(select(fromCalendarSelectors.isDayInMode, { mode, date : this.Date }));
+	}
+
+	public IsItemEditing$(id : number) : Observable<boolean> {
+		// return this.store.select(fromCalendarSelectors.selectedTodo).pipe(
+		// 	map(selectedTodo => selectedTodo && selectedTodo.id === id)
+		// )
+
+		return this.store.select(fromCalendarSelectors.isItemEditing, { id });
+	}	
 	
 	public ToggleIcon(isDone : boolean) : string[] {
 		return isDone ? ['fas', 'check-circle'] : ['far', 'circle'];

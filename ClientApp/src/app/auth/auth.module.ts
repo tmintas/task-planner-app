@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { AuthRoutingModule } from './auth-routing.module';
 import { LoginFormComponent } from './components/login-form/login-form.component';
 import { RegisterFormComponent } from './components/register-form/register-form.component';
 import { SharedModule } from 'app/shared/shared.module';
@@ -20,7 +19,6 @@ import { AuthEffects } from '../store/effects/auth.effects';
     ],
     imports: [
         CommonModule,
-        AuthRoutingModule,
         SharedModule,
         FormsModule,
         StoreModule.forFeature(fromAuthState.AUTH_FEATURE_KEY, fromAuthReducers.reducer),

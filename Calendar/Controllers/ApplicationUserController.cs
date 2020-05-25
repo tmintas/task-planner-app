@@ -40,7 +40,6 @@ namespace Web.Controllers
         {
             var appUser = new IdentityUser
             {
-                Email = model.Email,
                 UserName = model.UserName
             };
 
@@ -75,29 +74,29 @@ namespace Web.Controllers
                 {
                     Subject = new ClaimsIdentity(new Claim[]
                     {
-                        new Claim(ClaimTypes.Name, user.Id.ToString())
+                        new Claim(ClaimTypes.Name, user.Id.ToString()),
                     }),
                     Expires = DateTime.UtcNow.AddHours(4),
-                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
                 };
 
                 var token = tokenHandler.CreateToken(tokenDescriptor);
                 var encodedToken = tokenHandler.WriteToken(token);
 
-                return Ok(new { token = encodedToken });
+                return Ok(new { token = encodedToken, userName = user.UserName });
 
             }
         }
 
         [HttpGet]
         [Authorize]
-        [Route("user-email")]
-        public async Task<string> GetUserEmail()
+        [Route("user-name")]
+        public async Task<string> GetUserName()
         {
             var userId = User.Claims.First(c => c.Type == "UserId").Value;
             var user = await _userManager.FindByIdAsync(userId);
 
-            return user.Email;
+            return user.UserName;
         }
     }
 }

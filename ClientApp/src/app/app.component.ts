@@ -4,6 +4,7 @@ import AppState from '@states/app';
 import { Store, select } from '@ngrx/store';
 import { map } from 'rxjs/operators';
 import * as fromRouterSelectors from '@selectors/router';
+import { InitUser } from '@actions/auth';
 
 @Component({
 	selector: 'app-root',
@@ -17,5 +18,7 @@ export class AppComponent {
 			select(fromRouterSelectors.selectState),
 			map(() => this.notificationService.RemoveAllNotifications())
 		).subscribe();
+
+		this.store.dispatch(InitUser());
 	}
 }

@@ -1,0 +1,18 @@
+@import 'variables';
+
+.btn-neutral {
+    background-color: $blue;
+}
+
+p.error-text {
+    color: $invalid-color;
+    margin-top: 10px;
+}
+
+.form-group {
+    height: 90px;
+}
+
+.error-hint > small {
+    color: $invalid-color;
+}
