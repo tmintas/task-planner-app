@@ -11,6 +11,8 @@ import * as fromAuthState from '@states/auth';
 import * as fromAuthReducers from '@reducers/auth';
 import { EffectsModule } from '@ngrx/effects';
 import { AuthEffects } from '../store/effects/auth.effects';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './services/auth.interceptor';
 
 @NgModule({
     declarations: [
@@ -28,7 +30,8 @@ import { AuthEffects } from '../store/effects/auth.effects';
         LoginFormComponent,
     ],
     providers:[
-        AuthService
+        AuthService,
+        { provide : HTTP_INTERCEPTORS, useClass : AuthInterceptor, multi : true }
     ]
 })
 export class AuthModule { }

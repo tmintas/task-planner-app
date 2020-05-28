@@ -25,6 +25,7 @@ namespace Web.Controllers
 
         // GET: api/Todo
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<ToDoItem>>> GetAllTodos()
         {
             var items = await _todoRepository.GetAllAsync();

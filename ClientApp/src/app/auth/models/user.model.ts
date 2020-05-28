@@ -1,10 +1,9 @@
 export class User {
     UserName : string;
-    Email : string;
     Token : string;
 
-    constructor(email : string, token : string) {
-        this.Email = email;
+    constructor(userName : string, token : string) {
+        this.UserName = userName;
         this.Token = token;
     }
 }

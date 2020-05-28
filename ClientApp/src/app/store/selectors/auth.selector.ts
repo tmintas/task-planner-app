@@ -13,6 +13,16 @@ export const currentUser = createSelector(
     state => state.currentUser
 )
 
+export const token = createSelector(
+    currentUser,
+    user => user.Token
+)
+
+export const currentUserName = createSelector(
+    currentUser,
+    user => user.UserName
+)
+
 export const isAuthenticated = createSelector(
     featureSelector,
     state => state.isAuthenticated

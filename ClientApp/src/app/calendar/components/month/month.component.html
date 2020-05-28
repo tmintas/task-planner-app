@@ -36,7 +36,7 @@
 			<h5 class="card-title">Current State</h5>
 			<ul>
 			<li><strong>isAuthenticated</strong> - {{IsAuthenticated$ | async }}</li>
-			<li><strong>user name</strong> - {{ (User$ | async)?.Email }}</li>
+			<li><strong>user name</strong> - {{ (User$ | async)?.UserName }}</li>
 			</ul>
 			<p>{{AuthError$ | async}}</p>
 			<router-outlet></router-outlet>

@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 
+import { Store, select } from '@ngrx/store';
+import AppState from '@states/app';
+import { Observable } from 'rxjs';
+import { currentUserName } from '@selectors/auth';
+
 @Component({
     selector: 'app-home',
     templateUrl: './home.component.html',
@@ -7,9 +12,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
 
-    constructor() { }
+    public UserName$ : Observable<string> = this.store$.select(currentUserName);
 
-    ngOnInit() {
-    }
+    constructor(private store$: Store<AppState>) { }
 
+    ngOnInit() { }
 }
