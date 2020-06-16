@@ -75,7 +75,6 @@ export class CalendarEffects {
                     'calendar', 
                     calendarState.selectedYear, 
                     calendarState.selectedMonth,
-                    isAuthenticated ? 'home' : 'login'
                 ] });
             })
     ));  

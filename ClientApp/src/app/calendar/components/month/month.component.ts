@@ -9,7 +9,7 @@ import { itemsLoading, selectTodosByDate } from '@selectors/todo';
 import { LoadImportanceOptions, LoadTodosAll } from '@actions/todo';
 import { selectedMonth, selectedYear, selectedMonthName, selectedMonthDaysWithNeighbors } from '@selectors/calendar';
 import { isAuthenticated, currentUser, authError } from '@selectors/auth';
-import { GoPreviousMonth, GoNextMonth } from '@actions/calendar';
+import { GoPreviousMonth, GoNextMonth, GoDefaultMonth } from '@actions/calendar';
 import { User } from 'app/auth/models/user.model';
 
 @Component({

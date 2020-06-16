@@ -17,7 +17,10 @@ export class LoginFormComponent {
     public ErrorMessage : string;
 
     constructor(
-        private store$ : Store<AppState>) { }
+        private store$ : Store<AppState>) { 
+            console.log('logi');
+            
+        }
 
     public OnSubmit(f: NgForm): void {
         if (f.invalid) { 

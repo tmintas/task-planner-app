@@ -13,6 +13,8 @@ export class LandingPageComponent {
 
     public SuccessMessage$ : Observable<string> = this.store$.pipe(select(fromAuthSelectors.getSignupSuccessMessage));
 
-    constructor(private store$ : Store<AppState>) { }
+    constructor(private store$ : Store<AppState>) { 
+        var a = 5;
+    }
 
 }

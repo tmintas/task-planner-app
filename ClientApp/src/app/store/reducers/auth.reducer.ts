@@ -1,7 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
 import { AuthState, AUTH_INITIAL_STATE } from '@states/auth';
 import { User } from 'app/auth/models/user.model';
-import { SignUpSuccess, SignInSuccess, SignOut, SignIn, InitUser, GoDenied } from '@actions/auth';
+import { SignUpSuccess, SignInSuccess, SignOut, SignIn, InitUser, GoDenied, InitUserSuccess, InitUserFail } from '@actions/auth';
 
 export const reducer = createReducer(
     AUTH_INITIAL_STATE,
@@ -27,10 +27,16 @@ export const reducer = createReducer(
             isLoading : true
         };
     }),
-    on(InitUser, (state : AuthState) => {
+    on(InitUserSuccess, (state : AuthState, payload : { user : User }) => {
         return { ...state, 
-            currentUser : JSON.parse(localStorage.getItem('user')),
-            isAuthenticated : localStorage.getItem('user') != null
+            currentUser : payload.user,
+            isAuthenticated : true
+        };
+    }),
+    on(InitUserFail, (state : AuthState) => {
+        return { ...state, 
+            currentUser : null,
+            isAuthenticated : false
         };
     }),
     on(GoDenied, (state : AuthState, payload : { reason : string, backUrl : string }) => {

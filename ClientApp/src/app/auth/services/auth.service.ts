@@ -4,6 +4,7 @@ import { RegisterModel } from '../models/register.model';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { RegisterResponse } from '../models/register-response.model';
 import { LoginModel } from '../models/login.model';
+import { take } from 'rxjs/operators';
 
 @Injectable()
 export class AuthService {
@@ -15,7 +16,7 @@ export class AuthService {
     }
 
     public Login(model: LoginModel) : Observable<{ token : string, error? : string, userName : string }> {
-        return this.http.post<{ token : string, error? : string, userName : string }>('http://localhost:62664/api/ApplicationUser/login', model);
+        return this.http.post<{ token : string, error? : string, userName : string }>('http://localhost:62664/api/ApplicationUser/login', model).pipe(take(1));
     }
 
     public IsAuthencticated() : boolean {

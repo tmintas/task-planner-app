@@ -17,7 +17,7 @@ export class ColoredTodoDirective implements OnInit {
         
         switch (this.Todo.Importance) {
             case Importance.High:
-                color = "#FF9900";
+                color = "#ff9466";
                 break;
             case Importance.Middle:
                 color = "#eedd47";

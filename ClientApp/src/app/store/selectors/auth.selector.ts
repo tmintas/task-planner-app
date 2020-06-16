@@ -15,12 +15,12 @@ export const currentUser = createSelector(
 
 export const token = createSelector(
     currentUser,
-    user => user.Token
+    user => user && user.Token
 )
 
 export const currentUserName = createSelector(
     currentUser,
-    user => user.UserName
+    user => user && user.UserName
 )
 
 export const isAuthenticated = createSelector(

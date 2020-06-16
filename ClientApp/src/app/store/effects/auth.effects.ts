@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import AppState from '@states/app';
 import { Store } from '@ngrx/store';
 import { createEffect, ofType, Actions } from '@ngrx/effects';
-import { withLatestFrom, map, mergeMap, catchError } from 'rxjs/operators';
+import { withLatestFrom, map, mergeMap, catchError, mergeMapTo, switchMap } from 'rxjs/operators';
 import * as fromAuthActions from '@actions/auth';
 import * as fromCalendarSelectors from '@selectors/calendar';
 import * as fromRouterActions from '@actions/router';
 import { AuthService } from 'app/auth/services/auth.service';
-import { SignInSuccess, SignInFail } from '@actions/auth';
+import { SignInSuccess, SignInFail, InitUser, InitUserSuccess, InitUserFail } from '@actions/auth';
 import { of } from 'rxjs';
 import { User } from 'app/auth/models/user.model';
 import { backUrl } from '@selectors/auth';
@@ -48,29 +48,31 @@ export class AuthEffects {
          })
     ));
 
-    
-	// public UpdateTodo$ = createEffect(() => this.actions$.pipe(
-	// 	ofType(fromTodoActions.UpdateTodo),
-	// 	mergeMap((action) => {
-			
-	// 		return this.todoService.Update(+action.item.id, action.item.changes).pipe(
-	// 			map(() => {
-	// 				const todoUpdate : Update<Todo> = {
-	// 					id : +action.item.id,
-	// 					changes : action.item.changes
-	// 				};
-					
-	// 				return fromTodoActions.UpdateTodoSuccess({ item : todoUpdate });
-	// 			}),
-	// 			catchError(err => of(fromTodoActions.UpdateTodoFail({ err })))
-	// 		);
-	// 	})
-	// ));
+    public InitUser$ = createEffect(() => this.actions$.pipe(
+        ofType(InitUser),
+        map(() => {
+            const userStr = localStorage.getItem('user');
+            let user : User;
 
+            if (userStr) 
+            {
+                user = JSON.parse(userStr) as User;
+
+                if (user.UserName && user.Token)
+                {
+                    return InitUserSuccess({ user })
+                }
+
+                return InitUserFail();
+            }
+
+            return InitUserFail();
+        })
+    ));
 
     public SignIn$ = createEffect(() => this.actions$.pipe(
         ofType(fromAuthActions.SignIn),
-        mergeMap((action) => {
+        switchMap((action) => {
             return this.authService.Login(action.user).pipe(
                 map((res : { token : string, error? : string, userName : string }) => {
                     return SignInSuccess({ user : new User(res.userName, res.token) })
@@ -84,13 +86,12 @@ export class AuthEffects {
 
     public SignInSuccess$ = createEffect(() => this.actions$.pipe(
         ofType(fromAuthActions.SignInSuccess),
-        map(action => action.user),
         withLatestFrom(
             this.store$.select(backUrl), 
             this.store$.select(fromCalendarSelectors.selectedMonth), 
             this.store$.select(fromCalendarSelectors.selectedYear), 
-            (user, backUrl, month, year) => {
-                localStorage.setItem('user', JSON.stringify(user));
+            (action, backUrl, month, year) => {
+                localStorage.setItem('user', JSON.stringify(action.user));
 
                 if (backUrl) {
                     let pathItems = [];
@@ -116,7 +117,7 @@ export class AuthEffects {
             this.store$.select(fromCalendarSelectors.selectedMonth), 
             this.store$.select(fromCalendarSelectors.selectedYear), (token, month, year) => {
                 
-                localStorage.removeItem('user');
+            localStorage.removeItem('user');
             return fromRouterActions.go({ path : [
                 'calendar', 
                 year,

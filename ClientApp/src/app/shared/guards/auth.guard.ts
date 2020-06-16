@@ -15,39 +15,39 @@ export class AuthGuard implements CanActivate {
     constructor(private store$ : Store<AppState>) {}
 
     canActivate(next: ActivatedRouteSnapshot, state : RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-
-        return this.store$.pipe(
-            select(isAuthenticated),
-            map(isAuth => {
-                console.log(state);
+return true;
+        // return this.store$.pipe(
+        //     select(isAuthenticated),
+        //     map(isAuth => {
+        //         console.log(state);
                 
 
-                if (next.data.requiresToBeAuthenticated) {
-                    if (isAuth) {
-                        return true;
-                    } else {
+        //         if (next.data.requiresToBeAuthenticated) {
+        //             if (isAuth) {
+        //                 return true;
+        //             } else {
 
-                        const backUrl = next.params;
-                        // encodeURI()
-                        this.store$.dispatch(GoDenied({ reason : next.data.error, backUrl: state.url }));
-                        return false;
-                    }
-                } else {
-                    if (isAuth) {
-                        this.store$.dispatch(go({ path : [
-                            'calendar',
-                            next.params.year,
-                            next.params.month,
-                            'home',
-                        ]}));
+        //                 const backUrl = next.params;
+        //                 // encodeURI()
+        //                 this.store$.dispatch(GoDenied({ reason : next.data.error, backUrl: state.url }));
+        //                 return false;
+        //             }
+        //         } else {
+        //             if (isAuth) {
+        //                 this.store$.dispatch(go({ path : [
+        //                     'calendar',
+        //                     next.params.year,
+        //                     next.params.month,
+        //                     'home',
+        //                 ]}));
 
-                        return false;
-                    } else {
-                        return true;
-                    }
-                }
-            })
-        );
+        //                 return false;
+        //             } else {
+        //                 return true;
+        //             }
+        //         }
+        //     })
+        // );
     }
 
 }
