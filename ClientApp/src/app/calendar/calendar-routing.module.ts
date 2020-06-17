@@ -20,11 +20,11 @@ const routes: Routes = [
 				component: MonthComponent,
 				children: 
 				[
-					{
-						path: '',
-						redirectTo: 'landing',
-						pathMatch: 'full'
-					},
+					// {
+					// 	path: '',
+					// 	redirectTo: 'landing',
+					// 	pathMatch: 'full'
+					// },
 					{
 						path: 'landing',
 						component: LandingPageComponent,

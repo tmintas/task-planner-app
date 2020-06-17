@@ -6,7 +6,7 @@ import * as fromDateFunctions from '@shared-functions/date';
 import { Todo } from '@todo-models';
 import { CalendarModes } from '@states/calendar';
 
-const calendarReducer = createReducer(
+const reducer = createReducer(
 	fromCalendarState.CALENDAR_INITIAL_STATE,
 	on(fromCalendarActions.LoadMonthDays, (state : CalendarState, payload : { month : number, year : number }) => {
 		return { ...state,
@@ -87,16 +87,16 @@ const calendarReducer = createReducer(
 			mode : fromCalendarState.CalendarModes.EditTodo
 		}
 	}),
-	on(fromCalendarActions.InitFromUrlSuccess, (state : CalendarState, payload : { day : number, item : Todo, year : number, month : number, mode : CalendarModes }) => {
+	on(fromCalendarActions.InitFromUrl, (state : CalendarState) => {
 		return { 
 			...state,
 			loading : true
 		}
 	}),
-	on(fromCalendarActions.InitFromUrlSuccess, (state : CalendarState, payload : { day : number, item : Todo, year : number, month : number, mode : CalendarModes }) => {
+	on(fromCalendarActions.InitFromUrlSuccess, (state : CalendarState, payload : { day : number, itemId : number, year : number, month : number, mode : CalendarModes }) => {
 		return { 
 			...state,
-			selectedItem : payload.item,
+			selectedItem : null,
 			selectedYear : payload.year,
 			selectedMonth : payload.month,
 			selectedDate : new Date(payload.year, payload.month - 1, payload.day),
@@ -105,9 +105,8 @@ const calendarReducer = createReducer(
 	})
 );
 
-// tslint:disable-next-line: typedef
-export function CalendarReducer(
+export function calendarReducer(
 	state : CalendarState | undefined,
 	action : Action) {
-	return calendarReducer(state, action);
+	return reducer(state, action);
 }

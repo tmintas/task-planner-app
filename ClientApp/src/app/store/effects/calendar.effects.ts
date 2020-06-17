@@ -3,24 +3,21 @@ import * as fromRouterActions from '@actions/router';
 
 import { Injectable } from '@angular/core';
 import { createEffect, ofType, Actions } from '@ngrx/effects';
-import { withLatestFrom, map, switchMap } from 'rxjs/operators';
+import { withLatestFrom, map, switchMapTo, skip } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import AppState from '@states/app';
 import * as fromCalendarSelectors from '@selectors/calendar';
 import * as fromAuthSelectors from '@selectors/auth';
-import { GoDefaultMonth, LoadMonthDays, InitFromUrlSuccess } from '@actions/calendar';
+import { LoadMonthDays } from '@actions/calendar';
 import { selectedRoutedYear, selectedRoutedDay, selectedRoutedMonth, selectedRoutedItemId, selectedRoutedMode } from '@selectors/router';
 import { selectedDate } from '@selectors/calendar';
-import { TodoService } from 'app/to-dos/services/todo.service';
-import { of } from 'rxjs';
+import { of, merge } from 'rxjs';
 
 @Injectable()
 export class CalendarEffects {
     constructor(
         private actions$ : Actions,
-        private store$ : Store<AppState>,
-        private todoService : TodoService
-    ) {}
+        private store$ : Store<AppState>    ) {}
 
     public NavigateAfterDaySelected$ = createEffect(() => this.actions$.pipe(
         ofType(fromCalendarActions.SelectDayToAdd),
@@ -70,7 +67,7 @@ export class CalendarEffects {
         withLatestFrom(
             this.store$.select(fromCalendarSelectors.featureSelector), 
             this.store$.select(fromAuthSelectors.isAuthenticated),
-            (action, calendarState, isAuthenticated) => {
+            (action, calendarState) => {
                 return fromRouterActions.go({ path : [
                     'calendar', 
                     calendarState.selectedYear, 
@@ -84,10 +81,10 @@ export class CalendarEffects {
         withLatestFrom(
             this.store$.select(selectedDate),
             ((action, date) => {
-                console.log(date);
+                console.log(action);
                 
                 if (date == null) {
-                    return GoDefaultMonth();
+                    return LoadMonthDays({ month : 5, year: 1999 });
                 } else {
                     return LoadMonthDays({ month : date.getMonth() + 1, year: date.getFullYear() });
                 } 
@@ -97,23 +94,47 @@ export class CalendarEffects {
     
     public InitFromUrl$ = createEffect(() => this.actions$.pipe(
         ofType(fromCalendarActions.InitFromUrl),
-        withLatestFrom(this.store$.select(selectedRoutedItemId)),
-        map(([, itemId]) => itemId),
-        switchMap((itemId : number) => !itemId ? of(null) : this.todoService.Get(itemId)),
-        withLatestFrom(
-            this.store$.select(selectedRoutedYear),
-            this.store$.select(selectedRoutedMonth),
-            this.store$.select(selectedRoutedDay),
-            this.store$.select(selectedRoutedMode),
-        ),
-        map(([item, year, month, day, mode]) => {
-            
-            if (!year || !month) {
-                return GoDefaultMonth();
-            }
+        switchMapTo(merge(
+            // ignore first value of router selectors which is always null
+            // TODO find a better soultion
+            this.store$.select(selectedRoutedYear).pipe(skip(1)), 
+            this.store$.select(selectedRoutedMonth).pipe(skip(1)),
+            this.store$.select(selectedRoutedDay).pipe(skip(1)),
+            this.store$.select(selectedRoutedItemId).pipe(skip(1)),
+            this.store$.select(selectedRoutedMode).pipe(skip(1))
+        )),
+        map((v) => {
+            console.log(v);
+            return of(0);
+        })
+        // withLatestFrom(
+        //     this.store$.select(selectedRoutedItemId),
+        //     this.store$.select(selectedRoutedYear),
+        //     this.store$.select(selectedRoutedMonth),
+        //     this.store$.select(selectedRoutedDay),
+        //     this.store$.select(selectedRoutedMode),
+        //     (result) => { 
+        //         console.log(result);
+        //         return result;
+        //     }
+        // ),
+        // switchMap((v) => {
+        //     console.log(v);
+        //     return of(0);
+        // })
+        // map((result) => {
 
-            return InitFromUrlSuccess({ year, day, item, month, mode });
-        }
-    )), { dispatch : true });
+        //     // if (!year || !month) {
+        //     //     return GoDefaultMonth();
+        //     // }
+        //     console.log('params obtained:');
+        //     console.log(result);
+            
+        //     // console.log(itemId, year, month, day, mode);
+        //     return of(3);
+            
+        //     // return InitFromUrlSuccess({ year, day, itemId, month, mode });
+        // })
+    ), { dispatch : false });
 
 }

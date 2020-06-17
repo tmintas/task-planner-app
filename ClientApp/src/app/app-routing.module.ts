@@ -1,11 +1,10 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { StoreModule } from '@ngrx/store';
-import { routerReducer, StoreRouterConnectingModule } from '@ngrx/router-store';
-import { CustomSerializer } from './shared/utils/custom-router-serializer';
-import * as fromRouterState from '@states/router';
 import { EffectsModule } from '@ngrx/effects';
+
 import { RouterEffects } from './store/effects/router.effects';
+import { StoreRouterConnectingModule, RouterStateSerializer } from '@ngrx/router-store';
+import { CustomSerializer } from './shared/utils/custom-router-serializer';
 
 const routes : Routes = [
 	{
@@ -22,10 +21,16 @@ const routes : Routes = [
 @NgModule({
 	imports: [
 		RouterModule.forRoot(routes, { paramsInheritanceStrategy : 'always' }),
-		StoreModule.forFeature(fromRouterState.ROUTER_FEATURE_KEY, routerReducer),
+		StoreRouterConnectingModule.forRoot(),
 		EffectsModule.forFeature([RouterEffects]),
-		StoreRouterConnectingModule.forRoot({ serializer: CustomSerializer })
 	],
-	exports: [RouterModule]
+	exports: [RouterModule],
+	providers: [
+		{ 
+			provide: RouterStateSerializer, 
+			useClass : CustomSerializer
+		},
+	]
+
 })
 export class AppRoutingModule { }

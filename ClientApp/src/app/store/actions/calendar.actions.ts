@@ -32,5 +32,5 @@ export const GoDefaultMonth = createAction(CalendarActionTypes.MOVE_DEFAULT_MONT
 export const SubmitTodo = createAction(CalendarActionTypes.SUBMIT_TODO_CLICK , props<{ item : Todo }>());
 
 export const InitFromUrl = createAction(CalendarActionTypes.INIT_FROM_URL);
-export const InitFromUrlSuccess = createAction(CalendarActionTypes.INIT_FROM_URL_SUCCESS, props<{ year : number, month : number, day : number, item : Todo , mode : CalendarModes }>());
 export const LoadMonthDays = createAction(CalendarActionTypes.LOAD_MONTH_DAYS, props<{ month : number, year : number }>());
+export const InitFromUrlSuccess = createAction(CalendarActionTypes.INIT_FROM_URL_SUCCESS, props<{ year : number, month : number, day : number, itemId : number , mode : CalendarModes }>());

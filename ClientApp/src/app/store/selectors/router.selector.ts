@@ -1,21 +1,18 @@
-import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { CustomRouterState } from 'app/shared/utils/custom-router-serializer';
-import { RouterReducerState } from '@ngrx/router-store';
+import { createFeatureSelector, createSelector, select } from '@ngrx/store';
 import * as fromRouterState from '@states/router';
 import { CalendarModes } from '@states/calendar';
-
-export type CustomRouterReducerState = RouterReducerState<CustomRouterState>;
+import { CustomRouterReducerState, CustomRouterState } from '@states/router';
+import { skip } from 'rxjs/internal/operators/skip';
+import { pipe } from 'rxjs';
 
 export const selectFeature = createFeatureSelector<CustomRouterReducerState>(fromRouterState.ROUTER_FEATURE_KEY);
 
 export const selectState = createSelector(
     selectFeature,
-    (state: CustomRouterReducerState) => {
+    (state) => {
         if (state) return state.state;
         else return null;
-    }
-)
-
+    });
 export const selectedRoutedDay = createSelector(
     selectState,
     (state) => state && toNullOrNumber(state, 'day')
@@ -43,7 +40,8 @@ export const selectedRoutedMode = createSelector(
     }
 )
 
-function toNullOrNumber(state : any, paramName : string) : number | null {
+function toNullOrNumber(state : CustomRouterState, paramName : string) : number | null {
+    if (!state) return null;
     if (!(paramName in state.params)) return null;
 
     return +state.params[paramName];

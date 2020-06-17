@@ -1,12 +1,10 @@
 import { createSelector, createFeatureSelector } from '@ngrx/store';
+
 import CalendarState, { CALENDAR_FEATURE_KEY } from '@states/calendar';
 import * as fromDateFunctions from '@shared-functions/date';
-import * as fromRouterState from '@states/router';
-import { CustomRouterReducerState } from './router.selector';
 import { Todo } from '@todo-models';
 
 export const featureSelector = createFeatureSelector<CalendarState>(CALENDAR_FEATURE_KEY);
-export const selectRouteFeature = createFeatureSelector<CustomRouterReducerState>(fromRouterState.ROUTER_FEATURE_KEY);
 
 export const selectedMonth = createSelector(
 	featureSelector,

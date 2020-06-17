@@ -21,7 +21,7 @@ import { AuthModule } from 'app/auth/auth.module';
 		CalendarComponent,
 	],
 	imports: [
-		StoreModule.forFeature(CALENDAR_FEATURE_KEY, fromCalendarReducers.CalendarReducer),
+		StoreModule.forFeature(CALENDAR_FEATURE_KEY, fromCalendarReducers.calendarReducer),
 		EffectsModule.forFeature([CalendarEffects]),
 		CalendarRoutingModule,
 		SharedModule,

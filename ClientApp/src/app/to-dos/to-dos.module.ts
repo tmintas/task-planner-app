@@ -21,7 +21,7 @@ import { SharedModule } from 'app/shared/shared.module';
 	],
 	imports: [
 		SharedModule,
-		StoreModule.forFeature(fromTodoState.TODO_FEATURE_KEY, fromTodoReducer.TodoReducer),
+		StoreModule.forFeature(fromTodoState.TODO_FEATURE_KEY, fromTodoReducer.todoReducer),
 		EffectsModule.forFeature([TodoEffect]),
 		CommonModule,
 		FormsModule,

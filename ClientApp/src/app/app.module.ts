@@ -15,6 +15,9 @@ import { CalendarModule } from './calendar/calendar.module';
 import { SharedModule } from './shared/shared.module';
 import { NotificationService } from './shared/services/notification.service';
 import { NotificatorComponent } from './shared/components/notificator/notificator.component';
+import { RouterStateSerializer } from '@ngrx/router-store';
+import { CustomSerializer } from './shared/utils/custom-router-serializer';
+import { appReducers } from '@reducers/app';
 
 @NgModule({
 	declarations: [
@@ -22,7 +25,7 @@ import { NotificatorComponent } from './shared/components/notificator/notificato
 		NotificatorComponent,
 	],
 	imports: [
-		StoreModule.forRoot([]),
+		StoreModule.forRoot(appReducers),
 		EffectsModule.forRoot([]),
 		StoreDevtoolsModule.instrument({}),
 		SharedModule,
@@ -34,7 +37,14 @@ import { NotificatorComponent } from './shared/components/notificator/notificato
 		FormsModule,
 		HttpClientModule,
 	],
-	providers: [DatePipe, NotificationService],
+	providers: [
+		// { 
+		// 	provide: RouterStateSerializer, 
+		// 	useClass : CustomSerializer
+		// },
+		DatePipe, 
+		NotificationService,
+	],
 	bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,8 +1,8 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { TODO_FEATURE_KEY, TodosState, adapter, todoSortFunc, todoSortDone, TODO_MAX_ITEMS_DOR_DAY } from '@states/todo';
-import { CustomRouterReducerState } from './router.selector';
 import * as fromRouterState from '@states/router';
 import { Todo } from '@todo-models';
+import { CustomRouterReducerState } from '@states/router';
 
 export const selectFeature = createFeatureSelector<TodosState>(TODO_FEATURE_KEY);
 export const selectRouteFeature = createFeatureSelector<CustomRouterReducerState>(fromRouterState.ROUTER_FEATURE_KEY);

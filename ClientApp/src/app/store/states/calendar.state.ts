@@ -14,9 +14,11 @@ export enum CalendarModes {
 export const CALENDAR_INITIAL_STATE = {
 	selectedMonth: null,
 	selectedYear: null,
+	selectedItem : null,
 	mode : CalendarModes.Start,
 	loading : null,
 
+	selectedDate : null,
 	previousDates : [],
 	currentDates : [],
 	nextDates : [],
