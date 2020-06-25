@@ -8,7 +8,9 @@ import { Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 import AppState from '@states/app';
 import { Todo } from '@todo-models';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, filter, tap, take } from 'rxjs/operators';
+import { selectedDate, selectedMode, selectedDayNumber } from '@selectors/calendar';
+import { CalendarModes } from '@states/calendar';
 
 @Component({
 	selector: 'app-day-todo-list',
@@ -18,16 +20,22 @@ import { switchMap } from 'rxjs/operators';
 export class DayTodoListComponent implements OnInit {
 
 	public Todos$ : Observable<Todo[]>;
-	public SelectedDay$ : Observable<number> = this.store.pipe(select(fromRouterSelectos.getSelectedDay));
+	public SelectedDay$ : Observable<number> = this.store.pipe(select(selectedDayNumber));
 
 	constructor(private store : Store<AppState>) { }
 
 	public ngOnInit() : void {
 		this.Todos$ = this.store.pipe(
-			select(fromRouterSelectos.getDateParams),
-			switchMap((prms : { day : number, month : number, year : number }) => 
-				this.store.select(fromTodoSelectors.selectTodosByDate, { date : new Date(prms.year, prms.month -1, prms.day) })
-			)
+			// select(selectedMode),
+			filter(state => state.calendar.mode === CalendarModes.ViewingDayItems),
+			tap((state) => console.log(state)),
+			select(selectedDate),
+			switchMap((date : Date) => {
+				console.log('date changed');
+				console.log(date);
+			
+				return this.store.select(fromTodoSelectors.selectTodosByDate, { date })
+			})
 		);
 	}
 

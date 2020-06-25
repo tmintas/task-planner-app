@@ -1,44 +1,38 @@
-import { Day } from '@month-models';
 import { Todo } from '@todo-models';
 
 export const CALENDAR_FEATURE_KEY = 'calendar';
+export const CALENDAR_DEFAULT_MONTH : number = new Date().getMonth() + 1; // month is 1-based
+export const CALENDAR_DEFAULT_YEAR : number = new Date().getFullYear();
 
 export enum CalendarModes {
-	Start,
-	EditTodo,
-	AddTodo,
-	ViewingItems
+	Start = 0,
+	EditTodo = 1,
+	AddTodo = 2,
+	ViewingDayItems = 3
+}
+
+export default class CalendarState {
+	selectedMonth : number;
+	selectedYear : number;
+	selectedItem : Todo;
+	mode : CalendarModes;
+	loading : boolean;
+
+	selectedDate : Date;
+	previousDates : Date[];
+	currentDates : Date[];
+	nextDates : Date[];
 }
 
 export const CALENDAR_INITIAL_STATE = {
-	selectedMonth: 1,
-	selectedYear: 2019,
-	selectedDay: null,
-	mode : CalendarModes.Start,
+	selectedMonth: null,
+	selectedYear: null,
+	selectedItem : null,
+	mode : null,
+	loading : null,
 
-	currentMonthDays : [],
-	previousMonthDays : [],
-	nextMonthDays : [],
-
-	previousDates : null,
+	selectedDate : null,
+	previousDates : [],
 	currentDates : [],
-	nextDates : null,
+	nextDates : [],
 };
-
-export default class CalendarState {
-	public selectedMonth : number;
-	public selectedDay : number;
-	public selectedYear : number;
-	public selectedItem : Todo;
-	public mode : CalendarModes;
-	public selectedDate : Date;
-
-	public currentMonthDays : Day[];
-	public previousMonthDays : Day[];
-	public nextMonthDays : Day[];
-
-	public previousDates : string[];
-	public currentDates : string[];
-	public nextDates : string[];
-}
-

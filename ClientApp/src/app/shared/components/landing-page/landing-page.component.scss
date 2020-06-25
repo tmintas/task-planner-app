@@ -1,0 +1,46 @@
+.home {
+    h2 {
+        font-size: 21px;
+        margin-bottom: 25px;
+    }
+
+    p {
+        margin-bottom: 10px;
+    }
+
+    a {
+        color: #98B6D4;
+        cursor: pointer;
+    }
+
+    .icons-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+
+        .icon-item {
+            flex-basis: 47%;
+            height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+
+            .text {
+                flex-basis: 80px;
+                text-align: center;
+            }
+
+            .register {
+                margin-left: -26px;
+            }
+            
+            fa-icon {
+                color: rgb(112, 142, 177);
+                cursor: pointer;
+            }
+        }
+    }
+
+}

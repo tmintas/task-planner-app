@@ -1,0 +1,152 @@
+@import 'variables';
+
+.month {
+    border: #8EB1D9 8px solid;
+    display: flex;
+    font-family: 'Lora', serif;
+    padding: 5px 0 20px 0;
+    max-height: 950px;
+
+    .notes-area {
+        background-color: $gray;
+        min-width: 270px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 0 10px;
+        box-sizing: border-box;
+
+        .login-actions {
+            display: flex;
+            flex-basis: 43px;
+            flex-shrink: 0;
+            flex-direction: row;
+            justify-content: space-around;
+            width: 70%;
+            align-items: center;;
+            
+            fa-icon {
+                outline: none;
+                padding: 0 15px;
+                transform: scale(1.6);
+                color: #708eb1;
+                cursor: pointer;
+                
+                &:hover {
+                    color: darken(#708eb1, 10%);
+                };
+            }
+        }
+
+        > .title {
+            background-color: #8EB1D9;
+            margin: 20px 0;
+            margin-top: 1px;
+            padding: 15px 3px;;
+            width: 100%;
+
+            > .month-title {
+                font-size: 35px;
+                margin-bottom: 10px;
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                    
+                > a:visited, a:active {
+                    color: rgb(95, 94, 94);
+                }
+            }
+
+            > .year-title {
+                margin: 0 auto;
+                font-size: 25px;
+                width: 70px;
+                text-align: center;
+                line-height: 20px;
+            }
+        }
+
+        > .notes {
+            overflow-y: auto;
+            flex: 1 1 auto;
+            width: 100%;
+        };
+    }
+
+    .calendar-area {
+        border-radius: 0;
+        flex-grow: 1;
+        overflow-y: auto;
+
+        > .week-days-bar {
+            padding: 0 1%;
+            background-color: $gray;
+            font-size: 28px;
+            height: 45px;
+            font-family: 'Indie Flower', cursive;
+
+            > .week-day {
+                display: flex;
+                justify-content: center;
+                flex-basis: calc(100%/7);
+            }
+        }
+        
+        .day-list {
+            padding: 0 1%;
+
+            > .bordered-flex {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: flex-start;
+                align-items: stretch;
+                border: 1px solid gray;
+                border-radius: 0;
+
+                > .day-flex-item {            
+                    border: 1px solid gray;
+                    border-style: solid;
+                    border-radius: 0;
+                    height: 172px;
+                }
+            }
+        }
+
+        @media(min-width: 1500px) {
+            .day-flex-item {
+                flex-basis: calc(100%/7);
+            }
+        }
+
+        @media(max-width: 1500px) {
+            .day-flex-item {
+                flex-basis: 25%;
+            }
+        }
+
+        @media(max-width: 1100px) {
+            .day-flex-item {
+                flex-basis: 50%;
+            }
+        }
+
+        @media(max-width: 700px) {
+            .day-flex-item {
+                flex-basis: 100%;
+            }
+        }
+    }
+}
+
+@media(min-width: 0px) and (max-width: 1500px) {
+    .week-days-bar {
+        display: none;
+    }
+}
+
+@media(min-width: 1500px) {
+    .week-days-bar {
+        display: flex;
+    }
+}

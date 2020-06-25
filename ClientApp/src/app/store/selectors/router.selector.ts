@@ -1,48 +1,64 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { CustomRouterState } from 'app/shared/utils/custom-router-serializer';
-import { RouterReducerState } from '@ngrx/router-store';
+import * as fromRouter from '@ngrx/router-store';
+
 import * as fromRouterState from '@states/router';
+import { CalendarModes } from '@states/calendar';
+import { CustomRouterState } from '@states/router';
+import AppState from '@states/app';
 
-export type CustomRouterReducerState = RouterReducerState<CustomRouterState>;
-
-export const selectFeature = createFeatureSelector<CustomRouterReducerState>(fromRouterState.ROUTER_FEATURE_KEY);
+export const selectFeature = createFeatureSelector<AppState, fromRouter.RouterReducerState<any>>(fromRouterState.ROUTER_FEATURE_KEY);
 
 export const selectState = createSelector(
-	selectFeature,
-	(state : CustomRouterReducerState) => {
-         if (state) return state.state;
-         else return null;
+    selectFeature,
+    (state) => {
+        if (state) return state.state;
+        else return null;
+    });
+export const selectedRoutedDay = createSelector(
+    selectState,
+    (state) => state && toNullOrNumber(state, 'day')
+);
+export const selectedRoutedMonth = createSelector(
+    selectState,
+    (state) => state && toNullOrNumber(state, 'month')
+)
+export const selectedRoutedYear = createSelector(
+    selectState,
+    (state) => {
+        if(state) return toNullOrNumber(state, 'year');
+    }
+)
+export const selectedRoutedItemId = createSelector(
+    selectState,
+    (state) => state && toNullOrNumber(state, 'itemId')
+)
+
+
+export const selectedRoutedMode = createSelector(
+    selectedRoutedDay,
+    selectedRoutedItemId,
+    (day, itemId) => {
+        if (itemId === 0 && day) return CalendarModes.AddTodo;
+        if (itemId === null && day) return CalendarModes.ViewingDayItems;
+        if (itemId === null && day === null) return CalendarModes.Start;
+        if (itemId && day) return CalendarModes.EditTodo;
     }
 )
 
-export const getDateParams = createSelector(
-    selectState,
-    (state) => { 
-        if (!state || !state.params) { return null}
-
-        return { 
-            year : +state.params['year'],
-            month : +state.params['month'],
-            day : +state.params['day'] 
-        }
+export const selectCalendarParamsFromUrl = createSelector(
+    selectedRoutedYear,
+    selectedRoutedMonth,
+    selectedRoutedDay,
+    selectedRoutedItemId,
+    selectedRoutedMode,
+    (year, month, day, itemId, mode) => {
+        return { year, month, day, itemId, mode }
     }
 )
 
-export const getSelectedDay = createSelector(
-    selectState,
-    (state) => +state.params['day']
-)
+function toNullOrNumber(state : CustomRouterState, paramName : string) : number | null {
+    if (!state) return null;
+    if (!(paramName in state.params)) return null;
 
-export const selectedMonthAndYear = createSelector(
-    selectState,
-    (state) => { 
-        if (!state) return { 
-            month : 1, 
-            year : 2019 
-        }
-        return { 
-            month : +state.params['month'], 
-            year : +state.params['year'] 
-        }
-    }
-)
+    return +state.params[paramName];
+}

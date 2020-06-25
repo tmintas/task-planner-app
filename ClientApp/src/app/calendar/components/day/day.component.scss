@@ -1,0 +1,144 @@
+@import 'variables';
+
+.day {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+
+    > .day-header {
+        
+        span {
+            font-family: 'Lora', serif;
+        }
+
+        margin: 6px 5px 2px 5px;
+        height: 26px;
+        display: flex;
+        justify-content: space-between;
+        font-size: 25px;
+        align-items: center;
+
+        > .day-actions {
+
+            > a, button {
+                margin-left: 3px;
+                cursor: pointer;
+                color: $blue;
+                background: transparent;
+                border: none;
+                outline: none;
+
+                :hover {
+                    color: darken($blue, 10%);
+                }
+
+                &.viewed {
+                    visibility: visible;
+                    color: darken($blue, 10%);
+                }
+            }
+
+            visibility: hidden;
+            font-size: 24px;
+        }
+    }
+
+    &:hover .day-actions, .viewed {
+        visibility: visible;
+        color: darken($blue, 10%);
+    }
+
+    .item-list {
+        overflow-y: hidden;
+        display: flex;
+        flex-direction: column;
+        padding: 0 2px;
+        
+        > .todo-item {
+            border-radius: 5px;
+            font-weight: 500;
+            display: flex;
+            flex-basis: 27px;
+            flex-direction: row;
+            justify-content: space-between;
+            font-size: 13px;
+            padding-left: 7px;
+            align-items: center;
+            visibility: visible;
+            
+            &.hidden {
+                visibility: false;
+            }
+
+            &.done {
+                text-decoration: line-through; 
+            }
+
+            .short-name {
+                flex-grow: 1;
+
+                .done-toggler{
+                    margin-top: 3px;
+                    margin-right: 5px;
+                    background: transparent;
+                    border: none;
+                    outline: none;
+                    padding: 0;
+                    height: 18px;
+                }
+    
+                .todo-text {
+                    white-space: break-spaces;
+                    width: 130px;
+                }
+            }
+            
+            .actions {
+                flex-shrink: 0;
+
+                .todo-action-btn {
+                    background: transparent;
+                    border: transparent;
+                    margin-left: 2px;
+                    border-radius: 5px;
+                    padding: 0 3px;
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+
+    .more-container {
+        flex-grow: 1;
+        display: flex;
+        justify-content: center;
+        fa-icon {
+            display: inline-block;
+            transition: transform 0.2s;
+            margin-left: 5px;
+            
+            &.expanded {
+                transform: rotate(180deg);
+            }
+
+            &.collapsed {
+                transform: rotate(0);
+            }
+        }
+
+        button.more-btn {
+            background: #ECECEC;
+            color: black;
+            outline: none;
+            border: none;
+        }
+    } 
+}
+
+.not-current-month {
+    background-color: #ECECEC;
+}

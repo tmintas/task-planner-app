@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, delay } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Todo } from '@todo-models';
 import { DropdownOption } from 'app/shared/models/dropdown-option.model';
@@ -65,6 +65,16 @@ export class TodoService {
 
 	public ToggleDone(id : string) : Observable<void> {
 		return this.http.put<void>(`${this.apiEndpoint}/toggle-done/${id}`, {}, httpOptions);
+	}
+
+	public Get(id : number) : Observable<Todo> {
+		return this.http.get<Todo>(`${this.apiEndpoint}/${id}`).pipe(
+			map(item => { 
+				// string to Date
+				item.Date = new Date(item.Date);
+				return item;
+			})
+		);
 	}
 
 }

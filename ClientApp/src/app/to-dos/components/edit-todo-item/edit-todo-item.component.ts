@@ -1,18 +1,16 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
-import { takeUntil, switchMapTo } from 'rxjs/operators';
 import { NgbDate, NgbDateStruct, NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
-import { Store, select } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import * as fromTodoSelectors from '@selectors/todo';
-import * as fromRouterSelectors from '@selectors/router';
-import *  as fromCalendarSelectors from '@selectors/calendar';
 
 import { Importance } from '@todo-enums';
 import { Todo } from '@todo-models';
 import { DropdownOption } from 'app/shared/models/dropdown-option.model';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, combineLatest } from 'rxjs';
 import AppState from '@states/app';
+import { selectedDate, selectedTodo } from '@selectors/calendar';
 import { SubmitTodo } from '@actions/todo';
 
 @Component({
@@ -40,33 +38,26 @@ export class EditTodoItemComponent implements OnInit, OnDestroy {
 	}
 
 	public ngOnInit() : void {
-		this.store.pipe(
-			select(fromCalendarSelectors.selectedTodo),
-			switchMapTo(
-				this.store.pipe(select(fromRouterSelectors.getDateParams)),
-				(selectedItem, date) => {
-					console.log(selectedItem);
-					console.log(date);
-					
-					
-					if (selectedItem) {
-						this.patchFromItem(selectedItem);
-					} else {
-						this.patchDate(date.year, date.month, date.day)
-					}
+		combineLatest(
+			this.store.select(selectedTodo),
+			this.store.select(selectedDate),
+			(item : Todo, date : Date) => {
+				if (item) {
+					this.patchFromItem(item);
+				} else if (date) {
+					this.patchDate(date);
 				}
-			),
-			takeUntil(this.destroy$)
+			}
 		).subscribe();
 	}
 
-	private patchDate(year : number, month : number, day : number) : void {
-		const date = new NgbDate(year, month, day);
+	private patchDate(date : Date) : void {
+		const ngDate = new NgbDate(date.getFullYear(), date.getMonth() + 1, date.getDate());
 
 		this.ToDoForm.reset();
 		this.ToDoForm.patchValue({
 			Importance : this.dftImportance,
-			Date : date
+			Date : ngDate
 		});
 	}
 
@@ -95,14 +86,13 @@ export class EditTodoItemComponent implements OnInit, OnDestroy {
 
 		const date : Date = new Date(ngbDate.year, ngbDate.month - 1, ngbDate.day, hour, minute);
 		
-		const item : Todo = {
-			Name : this.ToDoForm.get('Name').value,
-			HasTime : ngbTime != null,
-			Description : this.ToDoForm.get('Description').value,
-			Date : date,
-			Importance : +this.ToDoForm.get('Importance').value,
-			IsDone : false
-		}
+		const item : Todo = new Todo(
+			date,
+			this.ToDoForm.get('Name').value,
+			ngbTime != null,
+			this.ToDoForm.get('Description').value,
+			+this.ToDoForm.get('Importance').value
+		);
 
 		this.store.dispatch(SubmitTodo({ item }));
 	}

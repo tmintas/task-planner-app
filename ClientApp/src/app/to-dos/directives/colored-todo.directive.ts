@@ -17,13 +17,13 @@ export class ColoredTodoDirective implements OnInit {
         
         switch (this.Todo.Importance) {
             case Importance.High:
-                color = "#FF9900";
+                color = "#ff9466";
                 break;
             case Importance.Middle:
                 color = "#eedd47";
                 break;
             case Importance.Low:
-                color = "#84c8dd";
+                color = "#8EB1D9";
                 break;
             default:
                 color = "transparent";
@@ -31,7 +31,7 @@ export class ColoredTodoDirective implements OnInit {
         }
 
         if (this.Todo.IsDone) {
-            color = "#2ECC40";
+            color = "#8CD055";
         }
 
         this.renderer.setStyle(this.el.nativeElement, 'background-color', color);

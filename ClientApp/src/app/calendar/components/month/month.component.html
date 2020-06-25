@@ -1,0 +1,68 @@
+<div class="month">
+	<div class="notes-area">
+		<div  *ngIf="!(IsAuthenticated$ | async)" class="login-actions">
+			<fa-icon 
+				[icon]="['fas', 'sign-in-alt']" 
+				[routerLink]="['./', 'login']">
+			</fa-icon>
+			<fa-icon 
+				[icon]="['fas', 'user-plus']"
+				[routerLink]="['./', 'register']">
+			</fa-icon>
+		</div>
+		<div *ngIf="IsAuthenticated$ | async" class="login-actions">
+			<fa-icon 
+				[icon]="['fas', 'sign-out-alt']"
+				(click)="OnSignoutClick()">
+			</fa-icon>
+		</div>
+		<div class="title badge ">
+			<div class="month-title">
+				<a (click)="GoPreviousMonth()">
+					<fa-icon [icon]="['fas', 'chevron-left']"></fa-icon>
+				</a>
+				<span>
+					<span>{{ MonthName$ | async }}</span>
+				</span>
+				<a (click)="GoNextMonth()">
+					<fa-icon [icon]="['fas', 'chevron-right']"></fa-icon>
+				</a>
+			</div>
+			<div class="year-title">
+				{{ Year$ | async }}
+			</div>
+		</div>
+		<div class="notes">
+			<h5 class="card-title">Current State</h5>
+			<ul>
+			<li><strong>isAuthenticated</strong> - {{IsAuthenticated$ | async }}</li>
+			<li><strong>user name</strong> - {{ (User$ | async)?.UserName }}</li>
+			</ul>
+			<p>{{AuthError$ | async}}</p>
+			<router-outlet></router-outlet>
+		</div>
+	</div>
+	<div class="calendar-area">
+		<app-loading-spinner *ngIf="IsLoading$ | async"></app-loading-spinner>
+		<div class="week-days-bar">
+			<div class="week-day">Monday</div>
+			<div class="week-day">Tuesday</div>
+			<div class="week-day">Wednessday</div>
+			<div class="week-day">Thursday</div>
+			<div class="week-day">Friday</div>
+			<div class="week-day">Saturday</div>
+			<div class="week-day">Sunday</div>
+		</div>
+
+		<div class="day-list">
+			<div class="bordered-flex">
+				<div class="day-flex-item" *ngFor="let date of Dates$ | async">
+					<app-day 
+						[Date]="date"  
+						[Items]="TodosByDate$(date) | async">
+					</app-day>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -3,22 +3,24 @@ import { Action, createReducer, on } from '@ngrx/store';
 import CalendarState, * as fromCalendarState from '@states/calendar';
 import * as fromCalendarActions from '@actions/calendar';
 import * as fromDateFunctions from '@shared-functions/date';
-import { Day } from '@month-models';
 import { Todo } from '@todo-models';
+import { CalendarModes } from '@states/calendar';
+import { CreateTodoSuccess, UpdateTodoFail, UpdateTodoSuccess } from '@actions/todo';
+import { CreateTodoFail } from '@actions/todo';
 
-const calendarReducer = createReducer(
+const reducer = createReducer(
 	fromCalendarState.CALENDAR_INITIAL_STATE,
-	on(fromCalendarActions.LoadMonthDays, (state : CalendarState, payload : { month : number, year : number }) => {
-		console.log(payload.month);
-		
+	on(fromCalendarActions.InitMonth, (state : CalendarState, payload : { month : number, year : number, day? : number, todo? : Todo, mode? : CalendarModes }) => {
 		return { ...state,
-			previousMonthDays : fromDateFunctions.GetPreviousMonthLastDays(payload.year, payload.month).map(i => new Day(i)),
-			currentMonthDays : fromDateFunctions.GetCurrentMonthDays(payload.year, payload.month).map(i => new Day(i)),
-			nextMonthDays : fromDateFunctions.GetNextMonthFirstDays(payload.year, payload.month).map(i => new Day(i)),
-
+			selectedMonth : payload.month,
+			selectedYear : payload.year,
+			selectedDate : payload.day === null ? null : new Date(payload.year, payload.month, payload.day),
+			selectedItem : payload.todo,
+			mode : payload.mode != null ? payload.mode : CalendarModes.Start,
 			currentDates : fromDateFunctions.GetMonthDates(payload.year, payload.month),
 			previousDates : fromDateFunctions.GetPreviousMonthLastDates(payload.year, payload.month),
-			nextDates : fromDateFunctions.GetNextMonthFirstDates(payload.year, payload.month)
+			nextDates : fromDateFunctions.GetNextMonthFirstDates(payload.year, payload.month),
+			loading : false
 		};
 	}),
 	on(fromCalendarActions.SelectDayToAdd, (state : CalendarState, payload : { date : Date }) => {
@@ -30,13 +32,6 @@ const calendarReducer = createReducer(
 			selectedDayToView : null
 		}
 	}),
-	on(fromCalendarActions.InitMonthToView, (state : CalendarState, payload : { month : number, year : number }) => {
-		return {
-			...state,
-			selectedMonth : payload.month,
-			selectedYear : payload.year,
-		}
-	}),
 	on(fromCalendarActions.GoNextMonth, (state : CalendarState) => {
 		const changeYear = state.selectedMonth === 12;
 		const newMonth = changeYear ? 1 : ++state.selectedMonth;
@@ -45,6 +40,7 @@ const calendarReducer = createReducer(
 		return {
 			...state,
 			selectedItem : null,
+			selectedDate : null,
 			selectedMonth : newMonth,
 			selectedYear: newYear,
 			currentDates : fromDateFunctions.GetMonthDates(newYear, newMonth),
@@ -60,6 +56,7 @@ const calendarReducer = createReducer(
 		return {
 			...state,
 			selectedItem : null,
+			selectedDate : null,
 			selectedMonth : newMonth,
 			selectedYear: newYear,
 			currentDates : fromDateFunctions.GetMonthDates(newYear, newMonth),
@@ -67,27 +64,61 @@ const calendarReducer = createReducer(
 			nextDates : fromDateFunctions.GetNextMonthFirstDates(newYear, newMonth)
 		}
 	}),
+	on(fromCalendarActions.GoDefaultMonth, (state : CalendarState) => {
+		const month = fromCalendarState.CALENDAR_DEFAULT_MONTH;
+		const year = fromCalendarState.CALENDAR_DEFAULT_YEAR;
+
+		return {
+			...state,
+			selectedItem : null,
+			selectedDate : null,
+			selectedMonth : month,
+			selectedYear: year,
+			currentDates : fromDateFunctions.GetMonthDates(year, month),
+			previousDates : fromDateFunctions.GetPreviousMonthLastDates(year, month),
+			nextDates : fromDateFunctions.GetNextMonthFirstDates(year, month)
+		}
+	}),
 	on(fromCalendarActions.SelectDayToView, (state : CalendarState, payload : { date : Date }) => {
 		return {
 			...state,
 			selectedItem : null,
-			mode : fromCalendarState.CalendarModes.ViewingItems,
+			mode : fromCalendarState.CalendarModes.ViewingDayItems,
 			selectedDate : payload.date,
 		}
 	}),
 	on(fromCalendarActions.SelectItemForEdit, (state : CalendarState, payload : { item : Todo }) => {
 		return {
 			...state,
-			selectedDay : null,
+			selectedDate : null,
 			selectedItem : payload.item,
 			mode : fromCalendarState.CalendarModes.EditTodo
+		}
+	}),
+	on(fromCalendarActions.InitFromUrl, (state : CalendarState) => {
+		return { 
+			...state,
+			loading : true
+		}
+	}),
+	on(CreateTodoSuccess, CreateTodoFail, (state : CalendarState) => {
+		return { 
+			...state,
+			loading : false,
+			selectedDate : null
+		}
+	}),
+	on(UpdateTodoFail, UpdateTodoSuccess, (state : CalendarState) => {
+		return { 
+			...state,
+			loading : false,
+			selectedItem : null
 		}
 	})
 );
 
-// tslint:disable-next-line: typedef
-export function CalendarReducer(
+export function calendarReducer(
 	state : CalendarState | undefined,
 	action : Action) {
-	return calendarReducer(state, action);
+	return reducer(state, action);
 }

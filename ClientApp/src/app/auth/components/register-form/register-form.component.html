@@ -1,0 +1,74 @@
+<form #f="ngForm" (ngSubmit)="OnSubmit(f)">
+    <div class="form-group">
+        <label for="exampleInputPassword1">User name</label>
+        <input 
+            class="form-control" 
+            placeholder="User name"
+            [(ngModel)]="Model.Username"
+            name="username"
+            required
+            #username="ngModel"
+        >
+        <small class="error-hint" [hidden]="!username.touched">    
+            <small [hidden]="!username.errors || !username.errors.required">User name is required </small>
+        </small> 
+    </div>
+
+    <div class="form-group">
+        <label>Email address</label>
+        <input 
+            type="email" 
+            class="form-control" 
+            placeholder="Enter email"
+            [(ngModel)]="Model.Email"
+            name="email"
+            required
+            #email="ngModel"
+            [email]="true"
+        >
+        <small class="error-hint" [hidden]="!email.touched">    
+            <small [hidden]="!email.errors || !email.errors.required">Email is required </small>
+            <small [hidden]="!email.errors || !email.errors.email">Email is invalid </small>
+        </small> 
+    </div>
+    <div class="form-group">
+        <label>Password</label>
+        <input 
+            type="password" 
+            class="form-control" 
+            placeholder="Password"
+            [(ngModel)]="Model.Password"
+            name="password"
+            required
+            #password="ngModel"
+            minlength="4"
+        >
+        <small class="error-hint" [hidden]="!password.touched">    
+            <small [hidden]="!password.errors || !password.errors.required">Password is required</small>
+            <small [hidden]="!password.errors || !password.errors.minlength">Min length is 4 symbols</small>
+        </small> 
+    </div>
+    <div class="form-group">
+        <label>Confitm Password</label>
+        <input 
+            type="password" 
+            class="form-control" 
+            placeholder="Confirm password"
+            [(ngModel)]="Model.ConfrimPassword"
+            name="ConfrimPassword"
+            required
+            minlength="4"
+            #confirm="ngModel"
+            appEqualValidator="password"
+        >
+        <small class="error-hint" [hidden]="!confirm.touched">    
+            <small [hidden]="!confirm.errors || !confirm.errors.required">Confirm is required</small>
+            <small [hidden]="!confirm.errors || !confirm.errors.minlength">Min length is 4 symbols</small>
+            <small [hidden]="!confirm.errors || !confirm.errors.notEqual">Passwords are not equal</small>
+        </small> 
+    </div>
+    <button 
+        type="submit" class="btn btn-neutral">Register</button>
+</form>
+
+{{diagnostic}}

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Web.Repositories.Contracts;
 using Microsoft.AspNetCore.Cors;
 using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Web.Controllers
 {
@@ -24,6 +25,7 @@ namespace Web.Controllers
 
         // GET: api/Todo
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<ToDoItem>>> GetAllTodos()
         {
             var items = await _todoRepository.GetAllAsync();
@@ -33,6 +35,7 @@ namespace Web.Controllers
 
         // GET: api/Todo/5
         [HttpGet("{id}")]
+        //[Authorize]
         public async Task<ActionResult<ToDoItem>> GetToDoItem(int id)
         {
             var item = await _todoRepository.GetByIdAsync(id);
