@@ -5,7 +5,6 @@ import { Store, select } from '@ngrx/store';
 import { map } from 'rxjs/operators';
 import * as fromRouterSelectors from '@selectors/router';
 import { InitUser } from '@actions/auth';
-import { InitFromUrl } from '@actions/calendar';
 
 @Component({
 	selector: 'app-root',
@@ -21,6 +20,5 @@ export class AppComponent {
 		).subscribe();
 
 		this.store.dispatch(InitUser());
-		this.store.dispatch(InitFromUrl());
 	}
 }

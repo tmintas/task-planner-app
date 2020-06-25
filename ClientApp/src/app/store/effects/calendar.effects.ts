@@ -1,27 +1,30 @@
 import * as fromCalendarActions from '@actions/calendar';
 import * as fromRouterActions from '@actions/router';
-
-import { Injectable } from '@angular/core';
 import { createEffect, ofType, Actions } from '@ngrx/effects';
-import { withLatestFrom, map, switchMapTo, skip } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import { withLatestFrom, map, switchMap, catchError } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
+
 import AppState from '@states/app';
 import * as fromCalendarSelectors from '@selectors/calendar';
 import * as fromAuthSelectors from '@selectors/auth';
-import { LoadMonthDays } from '@actions/calendar';
-import { selectedRoutedYear, selectedRoutedDay, selectedRoutedMonth, selectedRoutedItemId, selectedRoutedMode } from '@selectors/router';
-import { selectedDate } from '@selectors/calendar';
-import { of, merge } from 'rxjs';
+import { InitMonth } from '@actions/calendar';
+import { selectCalendarParamsFromUrl } from '@selectors/router';
+import { CALENDAR_DEFAULT_MONTH, CALENDAR_DEFAULT_YEAR } from '@states/calendar';
+import { Go } from '@actions/router';
+import { TodoService } from 'app/to-dos/services/todo.service';
+import { of } from 'rxjs';
 
 @Injectable()
 export class CalendarEffects {
     constructor(
         private actions$ : Actions,
-        private store$ : Store<AppState>    ) {}
+        private store$ : Store<AppState>,
+        private todoService : TodoService) {}
 
     public NavigateAfterDaySelected$ = createEffect(() => this.actions$.pipe(
         ofType(fromCalendarActions.SelectDayToAdd),
-        map((payload) => fromRouterActions.go({ path : [
+        map((payload) => fromRouterActions.Go({ path : [
                 'calendar', 
                 payload.date.getFullYear(),
                 payload.date.getMonth() + 1,
@@ -36,7 +39,7 @@ export class CalendarEffects {
         ofType(fromCalendarActions.SelectItemForEdit),
         withLatestFrom(this.store$.select(fromCalendarSelectors.featureSelector)),
         map(([payload]) => { 
-            return fromRouterActions.go({ path : [
+            return fromRouterActions.Go({ path : [
                 'calendar', 
                 payload.item.Date.getFullYear(), 
                 payload.item.Date.getMonth() + 1, 
@@ -50,7 +53,7 @@ export class CalendarEffects {
     public NavigateAfterDayForViewChanged$ = createEffect(() => this.actions$.pipe(
         ofType(fromCalendarActions.SelectDayToView),
         withLatestFrom(this.store$.select(fromCalendarSelectors.featureSelector)),
-        map(([payload]) => fromRouterActions.go({ path : [
+        map(([payload]) => fromRouterActions.Go({ path : [
                 'calendar', 
                 payload.date.getFullYear(), 
                 payload.date.getMonth() + 1, 
@@ -68,7 +71,7 @@ export class CalendarEffects {
             this.store$.select(fromCalendarSelectors.featureSelector), 
             this.store$.select(fromAuthSelectors.isAuthenticated),
             (action, calendarState) => {
-                return fromRouterActions.go({ path : [
+                return fromRouterActions.Go({ path : [
                     'calendar', 
                     calendarState.selectedYear, 
                     calendarState.selectedMonth,
@@ -76,65 +79,65 @@ export class CalendarEffects {
             })
     ));  
 
-    public InitFromUrlSuccess$ = createEffect(() => this.actions$.pipe(
-        ofType(fromCalendarActions.InitFromUrlSuccess),
-        withLatestFrom(
-            this.store$.select(selectedDate),
-            ((action, date) => {
-                console.log(action);
-                
-                if (date == null) {
-                    return LoadMonthDays({ month : 5, year: 1999 });
-                } else {
-                    return LoadMonthDays({ month : date.getMonth() + 1, year: date.getFullYear() });
-                } 
-            })
-        )
-    ));
-    
+    // implements default Router logic for empty paths
+    // when some of route segments missing, it navigates to defaults (current date)
     public InitFromUrl$ = createEffect(() => this.actions$.pipe(
         ofType(fromCalendarActions.InitFromUrl),
-        switchMapTo(merge(
-            // ignore first value of router selectors which is always null
-            // TODO find a better soultion
-            this.store$.select(selectedRoutedYear).pipe(skip(1)), 
-            this.store$.select(selectedRoutedMonth).pipe(skip(1)),
-            this.store$.select(selectedRoutedDay).pipe(skip(1)),
-            this.store$.select(selectedRoutedItemId).pipe(skip(1)),
-            this.store$.select(selectedRoutedMode).pipe(skip(1))
-        )),
-        map((v) => {
-            console.log(v);
-            return of(0);
+        withLatestFrom(
+            this.store$.select(selectCalendarParamsFromUrl),
+            (action, params) => params
+        ),
+        // if item is specified in URL, retrieve it from service and add to params
+        switchMap((params) => {
+            if (params.itemId > 0) {
+                return this.todoService.Get(params.itemId).pipe(
+                    map((todo) => {
+                        let paramsWithTodo = Object.create(params);
+
+                        if (todo) {
+                            paramsWithTodo.todo = todo;
+                        }
+
+                        return paramsWithTodo;
+                    }),
+                    catchError(() => {
+                        return of(params)
+                    })
+                )
+            } else {
+                return of(params);
+            }
+        }),
+        switchMap((params) => {
+            // conditional routing
+            // replaces default Angular Router logic in routing.module.ts since it doesn't work with dynamic params
+            if (!params.year && !params.month) {
+                return [ 
+                    InitMonth({ year : CALENDAR_DEFAULT_YEAR, month : CALENDAR_DEFAULT_MONTH }), 
+                    Go({ path : [ 'calendar', CALENDAR_DEFAULT_YEAR, CALENDAR_DEFAULT_MONTH ] }) 
+                ];
+            } 
+            else if (params.year && !params.month ) {
+                return [ 
+                    InitMonth({ year : params.year, month : CALENDAR_DEFAULT_MONTH }), 
+                    Go({ path : [ 'calendar', params.year, CALENDAR_DEFAULT_MONTH ] }) 
+                ];
+            } 
+            else if (params.year && params.month ) {
+                let path = [ 'calendar', params.year, params.month ];
+
+                if (params.day) {
+                    path.push(params.day);
+                }
+                if (params.itemId != null) {
+                    path.push('edit', params.itemId);
+                }
+
+                return [ 
+                    InitMonth({ year : params.year, month : params.month, day : params.day, mode : params.mode, todo : params.todo }), 
+                    Go({ path }) 
+                ];
+            }
         })
-        // withLatestFrom(
-        //     this.store$.select(selectedRoutedItemId),
-        //     this.store$.select(selectedRoutedYear),
-        //     this.store$.select(selectedRoutedMonth),
-        //     this.store$.select(selectedRoutedDay),
-        //     this.store$.select(selectedRoutedMode),
-        //     (result) => { 
-        //         console.log(result);
-        //         return result;
-        //     }
-        // ),
-        // switchMap((v) => {
-        //     console.log(v);
-        //     return of(0);
-        // })
-        // map((result) => {
-
-        //     // if (!year || !month) {
-        //     //     return GoDefaultMonth();
-        //     // }
-        //     console.log('params obtained:');
-        //     console.log(result);
-            
-        //     // console.log(itemId, year, month, day, mode);
-        //     return of(3);
-            
-        //     // return InitFromUrlSuccess({ year, day, itemId, month, mode });
-        // })
-    ), { dispatch : false });
-
+    ), { dispatch : true });
 }

@@ -5,13 +5,18 @@ import * as fromCalendarActions from '@actions/calendar';
 import * as fromDateFunctions from '@shared-functions/date';
 import { Todo } from '@todo-models';
 import { CalendarModes } from '@states/calendar';
+import { CreateTodoSuccess, UpdateTodoFail, UpdateTodoSuccess } from '@actions/todo';
+import { CreateTodoFail } from '@actions/todo';
 
 const reducer = createReducer(
 	fromCalendarState.CALENDAR_INITIAL_STATE,
-	on(fromCalendarActions.LoadMonthDays, (state : CalendarState, payload : { month : number, year : number }) => {
+	on(fromCalendarActions.InitMonth, (state : CalendarState, payload : { month : number, year : number, day? : number, todo? : Todo, mode? : CalendarModes }) => {
 		return { ...state,
 			selectedMonth : payload.month,
 			selectedYear : payload.year,
+			selectedDate : payload.day === null ? null : new Date(payload.year, payload.month, payload.day),
+			selectedItem : payload.todo,
+			mode : payload.mode != null ? payload.mode : CalendarModes.Start,
 			currentDates : fromDateFunctions.GetMonthDates(payload.year, payload.month),
 			previousDates : fromDateFunctions.GetPreviousMonthLastDates(payload.year, payload.month),
 			nextDates : fromDateFunctions.GetNextMonthFirstDates(payload.year, payload.month),
@@ -35,6 +40,7 @@ const reducer = createReducer(
 		return {
 			...state,
 			selectedItem : null,
+			selectedDate : null,
 			selectedMonth : newMonth,
 			selectedYear: newYear,
 			currentDates : fromDateFunctions.GetMonthDates(newYear, newMonth),
@@ -50,6 +56,7 @@ const reducer = createReducer(
 		return {
 			...state,
 			selectedItem : null,
+			selectedDate : null,
 			selectedMonth : newMonth,
 			selectedYear: newYear,
 			currentDates : fromDateFunctions.GetMonthDates(newYear, newMonth),
@@ -64,6 +71,7 @@ const reducer = createReducer(
 		return {
 			...state,
 			selectedItem : null,
+			selectedDate : null,
 			selectedMonth : month,
 			selectedYear: year,
 			currentDates : fromDateFunctions.GetMonthDates(year, month),
@@ -75,7 +83,7 @@ const reducer = createReducer(
 		return {
 			...state,
 			selectedItem : null,
-			mode : fromCalendarState.CalendarModes.ViewingItems,
+			mode : fromCalendarState.CalendarModes.ViewingDayItems,
 			selectedDate : payload.date,
 		}
 	}),
@@ -93,14 +101,18 @@ const reducer = createReducer(
 			loading : true
 		}
 	}),
-	on(fromCalendarActions.InitFromUrlSuccess, (state : CalendarState, payload : { day : number, itemId : number, year : number, month : number, mode : CalendarModes }) => {
+	on(CreateTodoSuccess, CreateTodoFail, (state : CalendarState) => {
 		return { 
 			...state,
-			selectedItem : null,
-			selectedYear : payload.year,
-			selectedMonth : payload.month,
-			selectedDate : new Date(payload.year, payload.month - 1, payload.day),
-			mode : payload.mode,
+			loading : false,
+			selectedDate : null
+		}
+	}),
+	on(UpdateTodoFail, UpdateTodoSuccess, (state : CalendarState) => {
+		return { 
+			...state,
+			loading : false,
+			selectedItem : null
 		}
 	})
 );

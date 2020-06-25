@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import * as fromCalendarActions from '@actions/calendar';
 import { Store, select } from '@ngrx/store';
 import AppState from '@states/app';
 import { Observable } from 'rxjs';
 import { daysLoaded } from '@selectors/calendar';
+import { InitFromUrl } from '@actions/calendar';
 
 @Component({
     selector: 'app-calendar',
@@ -18,7 +18,7 @@ export class CalendarComponent implements OnInit {
         this.DaysLoaded$ = this.store$.pipe(select(daysLoaded));
     }
 
-    ngOnInit() {
-        this.store$.dispatch(fromCalendarActions.InitFromUrl());
+    ngOnInit() : void {
+        this.store$.dispatch(InitFromUrl());
     }
 }

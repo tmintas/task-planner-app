@@ -2,11 +2,10 @@
 
 .month {
     border: #8EB1D9 8px solid;
-    border-radius: 0;
     display: flex;
-    flex-direction: row;
     font-family: 'Lora', serif;
-    height: 101%;
+    padding: 5px 0 20px 0;
+    max-height: 950px;
 
     .notes-area {
         background-color: $gray;

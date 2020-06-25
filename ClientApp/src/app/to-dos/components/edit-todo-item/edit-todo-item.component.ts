@@ -1,20 +1,17 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
-import { takeUntil, switchMapTo, withLatestFrom, map } from 'rxjs/operators';
 import { NgbDate, NgbDateStruct, NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
-import { Store, select } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import * as fromTodoSelectors from '@selectors/todo';
-import * as fromRouterSelectors from '@selectors/router';
-import *  as fromCalendarSelectors from '@selectors/calendar';
 
 import { Importance } from '@todo-enums';
 import { Todo } from '@todo-models';
 import { DropdownOption } from 'app/shared/models/dropdown-option.model';
-import { Observable, Subject, combineLatest, of } from 'rxjs';
+import { Observable, Subject, combineLatest } from 'rxjs';
 import AppState from '@states/app';
+import { selectedDate, selectedTodo } from '@selectors/calendar';
 import { SubmitTodo } from '@actions/todo';
-import { selectedYear, selectedMonth, selectedDate, selectedTodo } from '@selectors/calendar';
 
 @Component({
 	selector: 'app-edit-todo-item',
@@ -89,16 +86,15 @@ export class EditTodoItemComponent implements OnInit, OnDestroy {
 
 		const date : Date = new Date(ngbDate.year, ngbDate.month - 1, ngbDate.day, hour, minute);
 		
-		// const item : Todo = {
-		// 	Name : this.ToDoForm.get('Name').value,
-		// 	HasTime : ngbTime != null,
-		// 	Description : this.ToDoForm.get('Description').value,
-		// 	Date : date,
-		// 	Importance : +this.ToDoForm.get('Importance').value,
-		// 	IsDone : false
-		// }
+		const item : Todo = new Todo(
+			date,
+			this.ToDoForm.get('Name').value,
+			ngbTime != null,
+			this.ToDoForm.get('Description').value,
+			+this.ToDoForm.get('Importance').value
+		);
 
-		// this.store.dispatch(SubmitTodo({ item }));
+		this.store.dispatch(SubmitTodo({ item }));
 	}
 
 	public HasError(controlName : string) : boolean {

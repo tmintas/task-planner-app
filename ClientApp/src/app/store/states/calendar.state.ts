@@ -5,24 +5,11 @@ export const CALENDAR_DEFAULT_MONTH : number = new Date().getMonth() + 1; // mon
 export const CALENDAR_DEFAULT_YEAR : number = new Date().getFullYear();
 
 export enum CalendarModes {
-	Start,
-	EditTodo,
-	AddTodo,
-	ViewingItems
+	Start = 0,
+	EditTodo = 1,
+	AddTodo = 2,
+	ViewingDayItems = 3
 }
-
-export const CALENDAR_INITIAL_STATE = {
-	selectedMonth: null,
-	selectedYear: null,
-	selectedItem : null,
-	mode : CalendarModes.Start,
-	loading : null,
-
-	selectedDate : null,
-	previousDates : [],
-	currentDates : [],
-	nextDates : [],
-};
 
 export default class CalendarState {
 	selectedMonth : number;
@@ -37,3 +24,15 @@ export default class CalendarState {
 	nextDates : Date[];
 }
 
+export const CALENDAR_INITIAL_STATE = {
+	selectedMonth: null,
+	selectedYear: null,
+	selectedItem : null,
+	mode : null,
+	loading : null,
+
+	selectedDate : null,
+	previousDates : [],
+	currentDates : [],
+	nextDates : [],
+};

@@ -1,11 +1,12 @@
-import { createFeatureSelector, createSelector, select } from '@ngrx/store';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
+import * as fromRouter from '@ngrx/router-store';
+
 import * as fromRouterState from '@states/router';
 import { CalendarModes } from '@states/calendar';
-import { CustomRouterReducerState, CustomRouterState } from '@states/router';
-import { skip } from 'rxjs/internal/operators/skip';
-import { pipe } from 'rxjs';
+import { CustomRouterState } from '@states/router';
+import AppState from '@states/app';
 
-export const selectFeature = createFeatureSelector<CustomRouterReducerState>(fromRouterState.ROUTER_FEATURE_KEY);
+export const selectFeature = createFeatureSelector<AppState, fromRouter.RouterReducerState<any>>(fromRouterState.ROUTER_FEATURE_KEY);
 
 export const selectState = createSelector(
     selectFeature,
@@ -23,20 +24,35 @@ export const selectedRoutedMonth = createSelector(
 )
 export const selectedRoutedYear = createSelector(
     selectState,
-    (state) => state && toNullOrNumber(state, 'year')
+    (state) => {
+        if(state) return toNullOrNumber(state, 'year');
+    }
 )
 export const selectedRoutedItemId = createSelector(
     selectState,
     (state) => state && toNullOrNumber(state, 'itemId')
 )
+
+
 export const selectedRoutedMode = createSelector(
     selectedRoutedDay,
     selectedRoutedItemId,
     (day, itemId) => {
         if (itemId === 0 && day) return CalendarModes.AddTodo;
-        if (itemId === null && day) return CalendarModes.ViewingItems;
+        if (itemId === null && day) return CalendarModes.ViewingDayItems;
         if (itemId === null && day === null) return CalendarModes.Start;
         if (itemId && day) return CalendarModes.EditTodo;
+    }
+)
+
+export const selectCalendarParamsFromUrl = createSelector(
+    selectedRoutedYear,
+    selectedRoutedMonth,
+    selectedRoutedDay,
+    selectedRoutedItemId,
+    selectedRoutedMode,
+    (year, month, day, itemId, mode) => {
+        return { year, month, day, itemId, mode }
     }
 )
 

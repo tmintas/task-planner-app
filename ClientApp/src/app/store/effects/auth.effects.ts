@@ -25,7 +25,7 @@ export class AuthEffects {
         withLatestFrom(
             this.store$.select(fromCalendarSelectors.selectedMonth), 
             this.store$.select(fromCalendarSelectors.selectedYear), (action, month, year) => {
-            return fromRouterActions.go({ path : [
+            return fromRouterActions.Go({ path : [
                 'calendar', 
                 year,
                 month,
@@ -39,7 +39,7 @@ export class AuthEffects {
         withLatestFrom(
             this.store$.select(fromCalendarSelectors.selectedMonth), 
             this.store$.select(fromCalendarSelectors.selectedYear), (action, month, year) => {
-            return fromRouterActions.go({ path : [
+            return fromRouterActions.Go({ path : [
                 'calendar', 
                 year,
                 month,
@@ -102,7 +102,7 @@ export class AuthEffects {
                     return fromRouterActions.goByUrl({ url : backUrl })
                 }
 
-                return fromRouterActions.go({ path : [
+                return fromRouterActions.Go({ path : [
                     'calendar', 
                     year,
                     month,
@@ -118,7 +118,7 @@ export class AuthEffects {
             this.store$.select(fromCalendarSelectors.selectedYear), (token, month, year) => {
                 
             localStorage.removeItem('user');
-            return fromRouterActions.go({ path : [
+            return fromRouterActions.Go({ path : [
                 'calendar', 
                 year,
                 month,
