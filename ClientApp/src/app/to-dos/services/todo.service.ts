@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map, delay } from 'rxjs/operators';
+import { map, delay, take } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Todo } from '@todo-models';
 import { DropdownOption } from 'app/shared/models/dropdown-option.model';
@@ -28,7 +28,9 @@ export class TodoService {
 					d.Visible = true;
 				});
 				return todos;
-			}));
+			}),
+			take(1)
+		);
 	}
 
 	public CreateTodo(item : Todo) : Observable<Todo> {

@@ -107,6 +107,9 @@ const toDoReducer = createReducer(
 	}),
 	on(fromTodoActions.UpdateVisibility, 
 		(state : TodosState, payload : { items : Update<Todo>[] }) => adapter.updateMany(payload.items, state)
+	),
+	on(fromTodoActions.ClearTodos,
+		(state : TodosState) => adapter.removeAll(state)
 	)
 );
 

@@ -1,4 +1,4 @@
-import { Component, Input, ViewEncapsulation, OnChanges } from '@angular/core';
+import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import * as fromCalendarActions from '@actions/calendar';
 import * as fromCalendarSelectors from '@selectors/calendar';
@@ -7,9 +7,8 @@ import * as fromTodoActions from '@actions/todo';
 import { Todo } from '@todo-models';
 import { TodosState } from '@states/todo';
 import { Subject, Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { CalendarModes } from '@states/calendar';
-import { selectedMode } from '@selectors/calendar';
 
 @Component({
 	selector: 'app-day',
@@ -17,30 +16,18 @@ import { selectedMode } from '@selectors/calendar';
 	styleUrls: ['./day.component.scss'],
 	encapsulation: ViewEncapsulation.None
 })
-export class DayComponent implements OnChanges {
+export class DayComponent {
 	private toggleClickSubj = new Subject<string>();
 
-	public IsCurrentMonth$ : Observable<boolean>;
-	
 	@Input()
 	public Date : Date;
 	@Input()
 	public Items : Todo[];
 
-	public get DayNumber() : number {
-		return this.Date ? this.Date.getDate() : 0
-	}
-
+	public IsCurrentMonth$ : Observable<boolean>;
+	
 	public get VisibleItems() : Todo[] {
 		return this.Items.filter(i => i.Visible);
-	}
-
-	public get selMode() {
-		return this.store.select(selectedMode) ;
-	}
-
-	public get selDate() {
-		return this.store.select(fromCalendarSelectors.selectedDate) ;
 	}
 
 	public get InvisibleItems() : Todo[] {
@@ -48,6 +35,7 @@ export class DayComponent implements OnChanges {
 	}
 
 	constructor(private store : Store<TodosState>) {
+		this.Date = new Date();
 		this.toggleClickSubj.pipe(
 			tap((id : string) => this.store.dispatch(fromTodoActions.ToggleDone({ id })))
 		).subscribe();
@@ -63,14 +51,12 @@ export class DayComponent implements OnChanges {
 		return this.store.pipe(select(fromCalendarSelectors.isDayInMode, { mode, date : this.Date }));
 	}
 
+	// TODO can be replaced with directive
 	public IsItemEditing$(id : number) : Observable<boolean> {
-		// return this.store.select(fromCalendarSelectors.selectedTodo).pipe(
-		// 	map(selectedTodo => selectedTodo && selectedTodo.id === id)
-		// )
-
 		return this.store.select(fromCalendarSelectors.isItemEditing, { id });
 	}	
 	
+	// TODO can be replaced with directive
 	public ToggleIcon(isDone : boolean) : string[] {
 		return isDone ? ['fas', 'check-circle'] : ['far', 'circle'];
 	}

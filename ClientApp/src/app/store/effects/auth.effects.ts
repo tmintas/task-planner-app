@@ -2,15 +2,18 @@ import { Injectable } from '@angular/core';
 import AppState from '@states/app';
 import { Store } from '@ngrx/store';
 import { createEffect, ofType, Actions } from '@ngrx/effects';
-import { withLatestFrom, map, mergeMap, catchError, mergeMapTo, switchMap } from 'rxjs/operators';
+import { withLatestFrom, map, catchError, switchMap } from 'rxjs/operators';
 import * as fromAuthActions from '@actions/auth';
 import * as fromCalendarSelectors from '@selectors/calendar';
 import * as fromRouterActions from '@actions/router';
+import * as fromTodoAtions from '@actions/todo';
 import { AuthService } from 'app/auth/services/auth.service';
 import { SignInSuccess, SignInFail, InitUser, InitUserSuccess, InitUserFail } from '@actions/auth';
 import { of } from 'rxjs';
 import { User } from 'app/auth/models/user.model';
-import { backUrl } from '@selectors/auth';
+import { backUrl, currentUser } from '@selectors/auth';
+import { LoadTodosAll } from '@actions/todo';
+import { Go, goByUrl } from '@actions/router';
 
 @Injectable()
 export class AuthEffects {
@@ -87,43 +90,40 @@ export class AuthEffects {
     public SignInSuccess$ = createEffect(() => this.actions$.pipe(
         ofType(fromAuthActions.SignInSuccess),
         withLatestFrom(
+            this.store$.select(currentUser), 
             this.store$.select(backUrl), 
             this.store$.select(fromCalendarSelectors.selectedMonth), 
-            this.store$.select(fromCalendarSelectors.selectedYear), 
-            (action, backUrl, month, year) => {
-                localStorage.setItem('user', JSON.stringify(action.user));
+            this.store$.select(fromCalendarSelectors.selectedYear),
+            (action, user, backUrl, month, year) => {
+                return { user, backUrl, month, year };
+            }
+        ),
+        switchMap((params) => {
+            localStorage.setItem('user', JSON.stringify(params.user));
 
-                if (backUrl) {
-                    let pathItems = [];
+            if (params.backUrl) {
+                let pathItems = [];
 
-                    pathItems = Object.values(backUrl);
-                    console.log(pathItems);
-                    
-                    return fromRouterActions.goByUrl({ url : backUrl })
-                }
+                pathItems = Object.values(params.backUrl);
+                console.log(pathItems);
+                
+                return [ goByUrl({ url : params.backUrl }), LoadTodosAll() ];
+            }
 
-                return fromRouterActions.Go({ path : [
-                    'calendar', 
-                    year,
-                    month,
-                    'home',
-                ]})
-         })
-    ));
+            return [ Go({ path : [ 'calendar', params.year, params.month, 'home', ]}), LoadTodosAll() ]
+        })
+    ), { dispatch : true });
 
     public SignOut$ = createEffect(() => this.actions$.pipe(
         ofType(fromAuthActions.SignOut),
         withLatestFrom(
             this.store$.select(fromCalendarSelectors.selectedMonth), 
             this.store$.select(fromCalendarSelectors.selectedYear), (token, month, year) => {
-                
+                return { month, year };
+            }),
+        switchMap((params) => {
             localStorage.removeItem('user');
-            return fromRouterActions.Go({ path : [
-                'calendar', 
-                year,
-                month,
-                'login',
-            ]})
-         })
+            return [ fromRouterActions.Go({ path : [ 'calendar', params.year, params.month, 'login' ]}), fromTodoAtions.ClearTodos() ];
+        })
     ));
 }

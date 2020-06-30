@@ -1,7 +1,7 @@
 <div class="day" [ngClass]="{'not-current-month' : !(IsCurrentMonth$ | async) }">
 	<div class="day-header">
 		<span>
-			{{ DayNumber }}
+			{{ Date | date: 'd' }}
 		</span> 
 		<span class="day-actions">
 			<button 

@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 import AppState from '@states/app';
@@ -11,6 +11,8 @@ import { selectedMonth, selectedYear, selectedMonthName, selectedMonthDaysWithNe
 import { isAuthenticated, currentUser, authError } from '@selectors/auth';
 import { GoPreviousMonth, GoNextMonth } from '@actions/calendar';
 import { User } from 'app/auth/models/user.model';
+import * as fromAuthSelectors from '@selectors/auth';
+import { tap, filter } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-month',
@@ -32,8 +34,14 @@ export class MonthComponent implements OnInit {
 	public AuthError$ : Observable<string> = this.store.select(authError);
 
 	public ngOnInit() : void {
-		this.store.dispatch(LoadImportanceOptions());
-		this.store.dispatch(LoadTodosAll());
+		this.store.pipe(
+			select(fromAuthSelectors.isAuthenticated),
+			filter((isAuth : boolean) => isAuth),
+			tap(() => {
+				this.store.dispatch(LoadImportanceOptions());
+				this.store.dispatch(LoadTodosAll());
+			})
+		).subscribe();
 	}
 
 	public GoPreviousMonth() : void {

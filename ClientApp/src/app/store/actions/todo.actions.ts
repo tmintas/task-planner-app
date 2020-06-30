@@ -4,7 +4,7 @@ import { Todo } from '@todo-models';
 import { Update } from '@ngrx/entity';
 
 export const enum TodoActionTypes {
-	LOAD_TODOS_ALL_START = '[Month Component] Load All Todos Start',
+	LOAD_TODOS_ALL = '[Todo Effect Action] Load All Todos Start',
 	LOAD_TODOS_ALL_SUCCESS = '[Todo Effect Action] Load All Todos Success',
 	LOAD_TODOS_ALL_FAIL = '[Todo Effect Action] LoadAllFail',
 	DELETE_TODO_START = '[Todo Effect Action] Delete Todo Start',
@@ -23,14 +23,14 @@ export const enum TodoActionTypes {
 	TOGGLE_DONE = '[Calendar User Action] Toggle done',
 	TOGGLE_DONE_SUCCESS = '[Todo Effect Action] Toggle done success',
 	TOGGLE_DONE_FAIL = '[Todo Effect Action] Toggle done fail',
-	UPDATE_TODOS_VISIBILITY = '[Calendar Effect Action] Update Todos Visibility'
+	UPDATE_TODOS_VISIBILITY = '[Calendar Effect Action] Update Todos Visibility',
+	CLEAR_TODOS = '[Auth Effect Action] Clear Todos'
 }
 
-export const test = 5;
 export const LoadImportanceOptions = createAction(TodoActionTypes.LOAD_IMPORTANCE_START);
 export const LoadImportanceOptionsSuccess = createAction(TodoActionTypes.LOAD_IMPORTANCE_SUCCESS, props<{ options : DropdownOption[] }>());
 
-export const LoadTodosAll = createAction(TodoActionTypes.LOAD_TODOS_ALL_START);
+export const LoadTodosAll = createAction(TodoActionTypes.LOAD_TODOS_ALL);
 export const LoadTodosAllSuccess = createAction(TodoActionTypes.LOAD_TODOS_ALL_SUCCESS, props<{items : Todo[]}>());
 export const LoadTodosAllFail = createAction(TodoActionTypes.LOAD_TODOS_ALL_FAIL, props<{ err : any }>());
 
@@ -45,6 +45,8 @@ export const UpdateTodoFail = createAction(TodoActionTypes.UPDATE_TODO_FAIL, pro
 export const DeleteTodoStart = createAction(TodoActionTypes.DELETE_TODO_START , props<{ id : number }>());
 export const DeleteTodoSuccess = createAction(TodoActionTypes.DELETE_TODO_SUCCESS , props<{ id : number }>());
 export const DeleteTodoFail = createAction(TodoActionTypes.DELETE_TODO_FAIL , props<{ err : any }>());
+
+export const ClearTodos = createAction(TodoActionTypes.CLEAR_TODOS);
 
 export const ToggleDone = createAction(TodoActionTypes.TOGGLE_DONE, props<{ id : string }>());
 export const ToggleDoneSuccess = createAction(TodoActionTypes.TOGGLE_DONE_SUCCESS);
