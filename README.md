@@ -1,4 +1,4 @@
-# calendar
+# Сalendar
 A simple calendar app allowing users to write down short todo items and view them in a form of calendar by months and days.  
 Features include CRUD operations on todo items, routing and navigation across calendar months.
 
