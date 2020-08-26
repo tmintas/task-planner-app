@@ -1,24 +1,23 @@
 using Infrastructure;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
-using System.IO;
-using Web.Repositories;
-using Web.Repositories.Contracts;
-using UserManagement.Models;
-using Microsoft.EntityFrameworkCore.Internal;
-using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Text;
+using System.Threading.Tasks;
+using UserManagement.Models;
+using Web.Repositories;
+using Web.Repositories.Contracts;
+using Web.Services;
+using Web.Services.Contracts;
 
 namespace Calendar
 {
@@ -48,9 +47,11 @@ namespace Calendar
 
             services.AddScoped(typeof(IDatabaseRepository<>), typeof(SqlRepository<>));
 
-            services.AddDefaultIdentity<IdentityUser>()
+            services.AddDefaultIdentity<ApplicationUser>()
                 .AddEntityFrameworkStores<AppDbContext>();
 
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IAuthService, AuthService>();
             services.Configure<IdentityOptions>(
                 options =>
                 {
@@ -87,8 +88,13 @@ namespace Calendar
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseCors(builder => builder.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyOrigin().AllowAnyHeader());
+            // app.UseCors(builder => builder.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyOrigin().AllowAnyHeader());
 
+           app.UseCors(x => x
+                .SetIsOriginAllowed(origin => true)
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials());
 
             //app.UseExceptionHandler(a => a.Run(async context =>
             //{
@@ -100,6 +106,7 @@ namespace Calendar
 
             //    await context.Response.WriteAsync(result);
             //}));
+
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();

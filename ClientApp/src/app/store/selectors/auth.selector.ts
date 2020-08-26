@@ -15,7 +15,7 @@ export const currentUser = createSelector(
 
 export const token = createSelector(
     currentUser,
-    user => user && user.Token
+    user => user && user.AccessToken
 )
 
 export const currentUserName = createSelector(

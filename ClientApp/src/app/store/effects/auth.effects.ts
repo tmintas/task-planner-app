@@ -2,18 +2,20 @@ import { Injectable } from '@angular/core';
 import AppState from '@states/app';
 import { Store } from '@ngrx/store';
 import { createEffect, ofType, Actions } from '@ngrx/effects';
-import { withLatestFrom, map, catchError, switchMap } from 'rxjs/operators';
+import { withLatestFrom, map, catchError, switchMap, tap, mergeMap } from 'rxjs/operators';
 import * as fromAuthActions from '@actions/auth';
 import * as fromCalendarSelectors from '@selectors/calendar';
 import * as fromRouterActions from '@actions/router';
 import * as fromTodoAtions from '@actions/todo';
 import { AuthService } from 'app/auth/services/auth.service';
 import { SignInSuccess, SignInFail, InitUser, InitUserSuccess, InitUserFail } from '@actions/auth';
-import { of } from 'rxjs';
+import { of, timer, interval } from 'rxjs';
 import { User } from 'app/auth/models/user.model';
 import { backUrl, currentUser } from '@selectors/auth';
 import { LoadTodosAll } from '@actions/todo';
 import { Go, goByUrl } from '@actions/router';
+import { LoginResponse } from '@auth-models';
+import { LoginModel } from 'app/auth/models/login.model';
 
 @Injectable()
 export class AuthEffects {
@@ -61,7 +63,7 @@ export class AuthEffects {
             {
                 user = JSON.parse(userStr) as User;
 
-                if (user.UserName && user.Token)
+                if (user.UserName && user.AccessToken)
                 {
                     return InitUserSuccess({ user })
                 }
@@ -73,12 +75,20 @@ export class AuthEffects {
         })
     ));
 
+    public LoadItemsAfterSuccessfulUserInit$ = createEffect(() => this.actions$.pipe(
+        ofType(fromAuthActions.InitUserSuccess),
+        map(() => LoadTodosAll())
+    ));
+
     public SignIn$ = createEffect(() => this.actions$.pipe(
         ofType(fromAuthActions.SignIn),
-        switchMap((action) => {
+        mergeMap((action) => {
             return this.authService.Login(action.user).pipe(
-                map((res : { token : string, error? : string, userName : string }) => {
-                    return SignInSuccess({ user : new User(res.userName, res.token) })
+                switchMap((res : LoginResponse) => {
+                    return [ 
+                        fromAuthActions.SignInSuccess({ user : new User(res.Username, res.AccessToken) }), 
+                        fromAuthActions.InitRefreshTimer()
+                    ]
                 }),
                 catchError((err) => {
                     return of(SignInFail(err))
@@ -98,19 +108,19 @@ export class AuthEffects {
                 return { user, backUrl, month, year };
             }
         ),
-        switchMap((params) => {
-            localStorage.setItem('user', JSON.stringify(params.user));
+        switchMap((state) => {
+            localStorage.setItem('user', JSON.stringify(state.user));
 
-            if (params.backUrl) {
+            if (state.backUrl) {
                 let pathItems = [];
 
-                pathItems = Object.values(params.backUrl);
+                pathItems = Object.values(state.backUrl);
                 console.log(pathItems);
                 
-                return [ goByUrl({ url : params.backUrl }), LoadTodosAll() ];
+                return [ goByUrl({ url : state.backUrl }), LoadTodosAll() ];
             }
 
-            return [ Go({ path : [ 'calendar', params.year, params.month, 'home', ]}), LoadTodosAll() ]
+            return [ Go({ path : [ 'calendar', state.year, state.month, 'home', ]}), LoadTodosAll() ]
         })
     ), { dispatch : true });
 
@@ -126,4 +136,44 @@ export class AuthEffects {
             return [ fromRouterActions.Go({ path : [ 'calendar', params.year, params.month, 'login' ]}), fromTodoAtions.ClearTodos() ];
         })
     ));
+
+    public InitRefreshTimer$ = createEffect(() => this.actions$.pipe(
+        ofType(fromAuthActions.InitRefreshTimer),
+        map(() => {
+            // call refresh 10 sec before access token expires
+            const accessTokenLifeTimeMins = 0.5; // 30 sec
+
+            const checkTime = new Date(new Date().getTime() + accessTokenLifeTimeMins * 60 * 1000 - 10 * 1000);
+
+            timer(checkTime).pipe(
+                tap(() => {
+                    this.store$.dispatch(fromAuthActions.RefreshToken());
+                })
+            ).subscribe();            
+        })
+    ), { dispatch : false });
+
+    public RefreshToken$ = createEffect(() => this.actions$.pipe(
+        ofType(fromAuthActions.RefreshToken),
+        switchMap(() => {
+            console.log('refresh token action called');
+            
+            return this.authService.RefreshToken().pipe(
+                map((newAccessToken) => {
+                    console.log('refresh token service method called');
+
+                    return fromAuthActions.RefreshTokenSuccess({ newAccessToken });
+                })
+            );
+        })
+    ));
+
+    public RefreshTokenSuccess$ = createEffect(() => this.actions$.pipe(
+        ofType(fromAuthActions.RefreshTokenSuccess),
+        tap((payload) => {
+            console.log('refresh success. saving token in localstorage');
+            console.log(document.cookie);
+            localStorage.setItem('user', JSON.stringify(new User('test', payload.newAccessToken)))
+        })
+    ), { dispatch : false });
 }

@@ -1,9 +1,9 @@
 export class User {
     UserName : string;
-    Token : string;
+    AccessToken : string;
 
-    constructor(userName : string, token : string) {
+    constructor(userName : string, accessToken : string) {
         this.UserName = userName;
-        this.Token = token;
+        this.AccessToken = accessToken;
     }
 }

@@ -39,7 +39,7 @@ export class MonthComponent implements OnInit {
 			filter((isAuth : boolean) => isAuth),
 			tap(() => {
 				this.store.dispatch(LoadImportanceOptions());
-				this.store.dispatch(LoadTodosAll());
+				// this.store.dispatch(LoadTodosAll());
 			})
 		).subscribe();
 	}

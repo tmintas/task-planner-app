@@ -44,7 +44,7 @@ export class MonthComponent implements OnInit {
 	}
 
 	public ngOnInit() : void {
-
+		// TODO replace with store actions and state 
 		this.route.params.pipe(
 			map((prms : Params) => {
 				if (!prms || !prms.month || !prms.year) return; 
@@ -52,12 +52,7 @@ export class MonthComponent implements OnInit {
 				this.month = +prms.month;
 				this.year = +prms.year;
 
-				this.store.dispatch(fromCalendarActions.LoadMonthDays(
-				{ 
-					month : this.month, 
-					year : this.year 
-				}));
-
+				this.store.dispatch(fromCalendarActions.LoadMonthDays({ month : this.month, year : this.year }));
 				this.store.dispatch(fromTodoActions.LoadMonthTodos());
 
 				this.CurrentDays$ = this.store.select(fromCalendarSelectors.currentMonthDays);
@@ -66,20 +61,9 @@ export class MonthComponent implements OnInit {
 				this.IsLoading$ = this.store.select(fromTodoSelectors.itemsLoading);
 			})
 		).subscribe();
-
-		this.store.pipe(
-			map(s => {
-				console.log(s);
-				
-			})
-		).subscribe();
 	}
 
 	public TodosByDay(dayIndex : number, month: number) : Observable<ToDoItem[]> {
-		return this.store.select(fromTodoSelectors.selectTodosByMonthAndDay, 
-		{
-			month: month,
-			day : dayIndex
-		})
+		return this.store.select(fromTodoSelectors.selectTodosByMonthAndDay, { month: month, day : dayIndex })
 	}
 }

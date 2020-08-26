@@ -44,7 +44,20 @@ export const reducer = createReducer(
             authError : payload.reason,
             backUrl : payload.backUrl
         }
-    })
+    }),
+    // on(RefreshTokenSuccess, (state: AuthState, payload : { newAccessToken : string }) => {
+    //     return { 
+    //         ...state,  
+    //         currentUser : { ...state.currentUser, AccessToken : payload.newAccessToken }
+    //     }
+    // })
+    // on(InitRefreshTimer, () => {
+    //     const timerId = setTimeout(this.)
+    //     return { ...state,
+    //         authError : payload.reason,
+    //         backUrl : payload.backUrl
+    //     }
+    // })
 );
 
 export function authReducer(state : AuthState | undefined, action : Action) {

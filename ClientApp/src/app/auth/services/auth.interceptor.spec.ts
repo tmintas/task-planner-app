@@ -42,6 +42,6 @@ describe('AuthInterceptor', () => {
         const httpRequest = httpMock.expectOne(apiUrl);
 
         expect(httpRequest.request.headers.has('Authorization')).toEqual(true);
-        expect(httpRequest.request.headers.get('Authorization')).toEqual(`Bearer ${initialState.auth.currentUser.Token}`);
+        expect(httpRequest.request.headers.get('Authorization')).toEqual(`Bearer ${initialState.auth.currentUser.AccessToken}`);
     });
 })

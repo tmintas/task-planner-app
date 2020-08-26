@@ -80,7 +80,7 @@ export class CalendarEffects {
     ));  
 
     // implements default Router logic for empty paths
-    // when some of route segments missing, it navigates to defaults (current date)
+    // when some of route segments missing, it navigates to default month and year (current oness)
     // replaces default Angular Router logic in routing.module.ts since it doesn't work with dynamic params
     // I would love to know if there's a better way to do this :)
     public InitFromUrl$ = createEffect(() => this.actions$.pipe(

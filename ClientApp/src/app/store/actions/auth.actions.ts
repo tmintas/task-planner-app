@@ -12,7 +12,10 @@ export const enum AuthActionTypes {
     SIGN_OUT = '[Auth User Action] Sign Out',
     INIT_USER = '[Auth Auto Action] Init User',
     INIT_USER_SUCCESS = '[Auth Auto Action] Init User Success',
-    INIT_USER_FAIL = '[Auth Auto Action] Init User Fail'
+    INIT_USER_FAIL = '[Auth Auto Action] Init User Fail',
+    INIT_REFRESH_TIMER = '[Auth Auto Action] Init Refresh Token Timer',
+    REFRESH_TOKEN = '[Auth Auto Action] Refresh Token',
+    REFRESH_TOKEN_SUCCESS = '[Auth Auto Action] Refresh Token Success'
 }
 
 export const SignUpSuccess = createAction(
@@ -58,4 +61,17 @@ export const InitUserSuccess = createAction(
 
 export const InitUserFail = createAction(
     AuthActionTypes.INIT_USER_FAIL
+);
+
+export const InitRefreshTimer = createAction(
+    AuthActionTypes.INIT_REFRESH_TIMER
+);
+
+export const RefreshToken = createAction(
+    AuthActionTypes.REFRESH_TOKEN
+);
+
+export const RefreshTokenSuccess = createAction(
+    AuthActionTypes.REFRESH_TOKEN_SUCCESS,
+    props<{ newAccessToken : string }>()
 );

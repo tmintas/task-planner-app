@@ -1,8 +1,8 @@
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import AppState from '@states/app';
 import { Store, select } from '@ngrx/store';
-import { mergeMap } from 'rxjs/operators';
+import { mergeMap, catchError } from 'rxjs/operators';
 import { token } from '@selectors/auth';
 import { Injectable } from '@angular/core';
 
@@ -20,7 +20,11 @@ export class AuthInterceptor implements HttpInterceptor {
                     ? request.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
                     : request;
 
-                return requestHandler.handle(authRequest);
+                return requestHandler.handle(authRequest).pipe(catchError((err) => {
+                    console.log('auth error');
+                    
+                    return of(err);
+                }));
             })
         );
     }
