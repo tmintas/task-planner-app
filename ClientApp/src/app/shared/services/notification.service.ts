@@ -1,7 +1,9 @@
 import { Notifier } from '../utils/notifier';
 
 import { Notification, NotificationType } from '../models/notification.model';
+import { Injectable } from "@angular/core";
 
+@Injectable()
 export class NotificationService {
     private notifier : Notifier;
 

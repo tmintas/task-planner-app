@@ -3,6 +3,10 @@
     "codelyzer"
   ],
   "rules": {
+    "deprecation": {
+      "severity": "warning"
+    }
+
   
   }
 }
