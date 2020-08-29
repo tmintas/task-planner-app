@@ -1,21 +1,21 @@
 import { Injectable } from '@angular/core';
-import AppState from '@states/app';
+import { withLatestFrom, map, catchError, switchMap, mergeMap } from 'rxjs/operators';
+import { of } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { createEffect, ofType, Actions } from '@ngrx/effects';
-import { withLatestFrom, map, catchError, switchMap, tap, mergeMap } from 'rxjs/operators';
+
+import { LoginResponse, User } from '@auth-models';
+
+import AppState from '@states/app';
 import * as fromAuthActions from '@actions/auth';
 import * as fromCalendarSelectors from '@selectors/calendar';
 import * as fromRouterActions from '@actions/router';
 import * as fromTodoAtions from '@actions/todo';
 import { AuthService } from 'app/auth/services/auth.service';
-import { SignInSuccess, SignInFail, InitUser, InitUserSuccess, InitUserFail } from '@actions/auth';
-import { of, timer, interval } from 'rxjs';
-import { User } from 'app/auth/models/user.model';
-import { backUrl, currentUser } from '@selectors/auth';
+import { SignInFail, InitUser, InitUserSuccess, InitUserFail } from '@actions/auth';
+import { backUrl, currentUser, refreshTokenTimerId } from '@selectors/auth';
 import { LoadTodosAll } from '@actions/todo';
 import { Go, goByUrl } from '@actions/router';
-import { LoginResponse } from '@auth-models';
-import { LoginModel } from 'app/auth/models/login.model';
 
 @Injectable()
 export class AuthEffects {
@@ -57,11 +57,10 @@ export class AuthEffects {
         ofType(InitUser),
         map(() => {
             const userStr = localStorage.getItem('user');
-            let user : User;
 
             if (userStr) 
             {
-                user = JSON.parse(userStr) as User;
+                const user = JSON.parse(userStr) as User;
 
                 if (user.UserName && user.AccessToken)
                 {
@@ -82,12 +81,11 @@ export class AuthEffects {
 
     public SignIn$ = createEffect(() => this.actions$.pipe(
         ofType(fromAuthActions.SignIn),
-        mergeMap((action) => {
+        switchMap((action) => {
             return this.authService.Login(action.user).pipe(
                 switchMap((res : LoginResponse) => {
                     return [ 
-                        fromAuthActions.SignInSuccess({ user : new User(res.Username, res.AccessToken) }), 
-                        fromAuthActions.InitRefreshTimer()
+                        fromAuthActions.SignInSuccess({ user : new User(res.Username, res.AccessToken) })
                     ]
                 }),
                 catchError((err) => {
@@ -120,7 +118,11 @@ export class AuthEffects {
                 return [ goByUrl({ url : state.backUrl }), LoadTodosAll() ];
             }
 
-            return [ Go({ path : [ 'calendar', state.year, state.month, 'home', ]}), LoadTodosAll() ]
+                return [ 
+                    Go({ path : [ 'calendar', state.year, state.month, 'home', ]}), 
+                    LoadTodosAll(), 
+                    fromAuthActions.InitRefreshTimer() 
+                ];
         })
     ), { dispatch : true });
 
@@ -133,47 +135,57 @@ export class AuthEffects {
             }),
         switchMap((params) => {
             localStorage.removeItem('user');
-            return [ fromRouterActions.Go({ path : [ 'calendar', params.year, params.month, 'login' ]}), fromTodoAtions.ClearTodos() ];
+
+            return [ 
+                fromRouterActions.Go({ path : [ 'calendar', params.year, params.month, 'login' ]}), 
+                fromTodoAtions.ClearTodos(), 
+                fromAuthActions.ClearRefreshTokenTimer() 
+            ];
         })
     ));
 
     public InitRefreshTimer$ = createEffect(() => this.actions$.pipe(
         ofType(fromAuthActions.InitRefreshTimer),
         map(() => {
+            // TODO to app settings
+            const accessTokenLifeTimeMins = 1; 
+
             // call refresh 10 sec before access token expires
-            const accessTokenLifeTimeMins = 0.5; // 30 sec
+            const checkTime = accessTokenLifeTimeMins * 60 * 1000 - 10 * 1000;
+            const timerId = setTimeout(() => { this.store$.dispatch(fromAuthActions.RefreshToken()); }, checkTime);
 
-            const checkTime = new Date(new Date().getTime() + accessTokenLifeTimeMins * 60 * 1000 - 10 * 1000);
-
-            timer(checkTime).pipe(
-                tap(() => {
-                    this.store$.dispatch(fromAuthActions.RefreshToken());
-                })
-            ).subscribe();            
+            return fromAuthActions.InitRefreshTimerSuccess({ refreshTokenTimerId : timerId });
         })
-    ), { dispatch : false });
+    ), { dispatch : true });
 
     public RefreshToken$ = createEffect(() => this.actions$.pipe(
         ofType(fromAuthActions.RefreshToken),
-        switchMap(() => {
-            console.log('refresh token action called');
-            
+        mergeMap(() => {
             return this.authService.RefreshToken().pipe(
-                map((newAccessToken) => {
-                    console.log('refresh token service method called');
-
-                    return fromAuthActions.RefreshTokenSuccess({ newAccessToken });
+                map((response : { accessToken: string }) => {
+                    return fromAuthActions.RefreshTokenSuccess({ newAccessToken : response.accessToken });
                 })
             );
         })
-    ));
+    ), { dispatch : true });
 
     public RefreshTokenSuccess$ = createEffect(() => this.actions$.pipe(
         ofType(fromAuthActions.RefreshTokenSuccess),
-        tap((payload) => {
-            console.log('refresh success. saving token in localstorage');
-            console.log(document.cookie);
-            localStorage.setItem('user', JSON.stringify(new User('test', payload.newAccessToken)))
+        map((payload : { newAccessToken : string }) => {
+            localStorage.setItem('user', JSON.stringify(new User('test', payload.newAccessToken)));
+
+            return fromAuthActions.InitRefreshTimer();
         })
-    ), { dispatch : false });
+    ), { dispatch : true });
+
+    public ClearRefreshTokenTimer$ = createEffect(() => this.actions$.pipe(
+        ofType(fromAuthActions.ClearRefreshTokenTimer),
+        withLatestFrom(this.store$.select(refreshTokenTimerId)),
+        map(([action, timerId]) => {
+            clearInterval(timerId)
+
+            return fromAuthActions.ClearRefreshTokenTimerSuccess();
+
+        })
+    ), { dispatch : true });
 }

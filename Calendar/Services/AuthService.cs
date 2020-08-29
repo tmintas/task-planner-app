@@ -25,7 +25,7 @@ namespace Web.Services
         private readonly IUserService userService;
         private readonly UserManager<ApplicationUser> userManager;
 
-        private const int ACCESS_TOKEN_LIFETIME_MINUTES = 15;
+        private const int ACCESS_TOKEN_LIFETIME_MINUTES = 1;
 
         public AuthService(IUserService userService, UserManager<ApplicationUser> userManager)
         {

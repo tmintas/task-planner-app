@@ -12,11 +12,15 @@ export class RouterEffects {
 
     public Go$ = createEffect(() => this.actions$.pipe(
         ofType(Go),
-        tap((payload) => this.router.navigate(payload.path, payload.extras))
+        tap((payload) => {
+            this.router.navigate(payload.path, payload.extras);
+        })
     ), { dispatch : false });
     
     public GoByUrl$ = createEffect(() => this.actions$.pipe(
 		ofType(goByUrl),
         tap((payload) => this.router.navigateByUrl(payload.url))
     ), { dispatch : false });
+
+    // TODO Add additional routing
 }

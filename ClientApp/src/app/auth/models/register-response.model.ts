@@ -1,4 +1,4 @@
-import { RegisterError } from './register-error.model';
+import { RegisterError } from '@auth-models';
 
 export class RegisterResponse {
     Succeeded? : boolean;

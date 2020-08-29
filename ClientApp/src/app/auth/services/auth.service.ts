@@ -1,11 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { RegisterModel } from '../models/register.model';
 import { Observable } from 'rxjs';
-import { RegisterResponse } from '../models/register-response.model';
-import { LoginModel } from '../models/login.model';
 import { take } from 'rxjs/operators';
-import { LoginResponse } from '@auth-models';
+import { LoginResponse, LoginModel, RegisterResponse, RegisterModel } from '@auth-models';
 import { environment } from 'environments/environment';
 
 @Injectable()
@@ -22,8 +19,8 @@ export class AuthService {
         return this.http.post<LoginResponse>(`${this.apiEndpoint}/login`, model, { withCredentials : true }).pipe(take(1));
     }
 
-    public RefreshToken() : Observable<string> {
-        return this.http.get<string>(`${this.apiEndpoint}/refresh-token`, { withCredentials : true }).pipe(take(1));
+    public RefreshToken() : Observable<{ accessToken : string }> {
+        return this.http.get<{ accessToken : string }>(`${this.apiEndpoint}/refresh-token`, { withCredentials : true }).pipe(take(1));
     }
 
     public IsAuthencticated() : boolean {

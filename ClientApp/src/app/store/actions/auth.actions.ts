@@ -1,6 +1,6 @@
 import { createAction, props } from '@ngrx/store';
-import { LoginModel } from 'app/auth/models/login.model';
 import { User } from 'app/auth/models/user.model';
+import { LoginModel } from '@auth-models';
 
 export const enum AuthActionTypes {
     SIGN_UP_SUCCESS = '[Auth Auto Action] Sign Up Success',
@@ -14,8 +14,12 @@ export const enum AuthActionTypes {
     INIT_USER_SUCCESS = '[Auth Auto Action] Init User Success',
     INIT_USER_FAIL = '[Auth Auto Action] Init User Fail',
     INIT_REFRESH_TIMER = '[Auth Auto Action] Init Refresh Token Timer',
+    INIT_REFRESH_TIMER_SUCCESS = '[Auth Auto Action] Init Refresh Token Timer Success',
+    CLEAR_REFRESH_TIMER = '[Auth Auto Action] Clear Refresh Token Timer',
+    CLEAR_REFRESH_TIMER_SUCCESS = '[Auth Auto Action] Clear Refresh Token Timer Success',
     REFRESH_TOKEN = '[Auth Auto Action] Refresh Token',
-    REFRESH_TOKEN_SUCCESS = '[Auth Auto Action] Refresh Token Success'
+    REFRESH_TOKEN_SUCCESS = '[Auth Auto Action] Refresh Token Success',
+    TEST_ACTION = 'TEST ACTUIB',
 }
 
 export const SignUpSuccess = createAction(
@@ -67,6 +71,11 @@ export const InitRefreshTimer = createAction(
     AuthActionTypes.INIT_REFRESH_TIMER
 );
 
+export const InitRefreshTimerSuccess = createAction(
+    AuthActionTypes.INIT_REFRESH_TIMER_SUCCESS,
+    props<{ refreshTokenTimerId : number }>()
+);
+
 export const RefreshToken = createAction(
     AuthActionTypes.REFRESH_TOKEN
 );
@@ -74,4 +83,12 @@ export const RefreshToken = createAction(
 export const RefreshTokenSuccess = createAction(
     AuthActionTypes.REFRESH_TOKEN_SUCCESS,
     props<{ newAccessToken : string }>()
+);
+
+export const ClearRefreshTokenTimer = createAction(
+    AuthActionTypes.CLEAR_REFRESH_TIMER
+);
+
+export const ClearRefreshTokenTimerSuccess = createAction(
+    AuthActionTypes.CLEAR_REFRESH_TIMER_SUCCESS
 );

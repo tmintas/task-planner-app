@@ -1,4 +1,5 @@
 import { User } from 'app/auth/models/user.model';
+import { Subscription } from 'rxjs';
 
 export const AUTH_FEATURE_KEY = 'auth';
 
@@ -13,7 +14,8 @@ export interface AuthState {
     isAuthenticated: boolean;
     currentUser : User,
     authError : string,
-    backUrl : string
+    backUrl : string,
+    refreshTokenTimerId : number
 }
 
 export const AUTH_INITIAL_STATE: AuthState = {
@@ -22,7 +24,8 @@ export const AUTH_INITIAL_STATE: AuthState = {
     isAuthenticated: false,
     currentUser : null,
     authError : null,
-    backUrl : null
+    backUrl : null,
+    refreshTokenTimerId : null
 };
 
 

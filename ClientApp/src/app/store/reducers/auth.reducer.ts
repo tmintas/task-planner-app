@@ -1,7 +1,8 @@
 import { createReducer, on, Action } from '@ngrx/store';
 import { AuthState, AUTH_INITIAL_STATE } from '@states/auth';
 import { User } from 'app/auth/models/user.model';
-import { SignUpSuccess, SignInSuccess, SignOut, SignIn, InitUser, GoDenied, InitUserSuccess, InitUserFail } from '@actions/auth';
+import { SignUpSuccess, SignInSuccess, SignOut, SignIn, InitUser, GoDenied, InitUserSuccess, InitUserFail, RefreshTokenSuccess, InitRefreshTimer, InitRefreshTimerSuccess, ClearRefreshTokenTimer, ClearRefreshTokenTimerSuccess } from '@actions/auth';
+import { Subscription } from 'rxjs';
 
 export const reducer = createReducer(
     AUTH_INITIAL_STATE,
@@ -20,7 +21,14 @@ export const reducer = createReducer(
         };
     }),
     on(SignOut, (state : AuthState) => {
-        return { ...state, ...AUTH_INITIAL_STATE };
+        return { ...state, 
+            isLoading : null,
+            signUpSuccessMessage : null,
+            isAuthenticated: null,
+            currentUser : null,
+            authError : null,
+            backUrl : null,
+        };
     }),
     on(SignIn, (state : AuthState) => {
         return { ...state, 
@@ -44,20 +52,17 @@ export const reducer = createReducer(
             authError : payload.reason,
             backUrl : payload.backUrl
         }
+    }) ,
+    on(InitRefreshTimerSuccess, (state : AuthState, payload : { refreshTokenTimerId : number }) => {
+        return { ...state,
+            refreshTokenTimerId : payload.refreshTokenTimerId
+        }
     }),
-    // on(RefreshTokenSuccess, (state: AuthState, payload : { newAccessToken : string }) => {
-    //     return { 
-    //         ...state,  
-    //         currentUser : { ...state.currentUser, AccessToken : payload.newAccessToken }
-    //     }
-    // })
-    // on(InitRefreshTimer, () => {
-    //     const timerId = setTimeout(this.)
-    //     return { ...state,
-    //         authError : payload.reason,
-    //         backUrl : payload.backUrl
-    //     }
-    // })
+    on(ClearRefreshTokenTimerSuccess, (state : AuthState) => {
+        return { ...state,
+            refreshTokenTimerId : null
+        }
+    }),
 );
 
 export function authReducer(state : AuthState | undefined, action : Action) {

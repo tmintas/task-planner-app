@@ -1,14 +1,13 @@
 import { Component } from '@angular/core';
-import { RegisterModel } from 'app/auth/models/register.model';
 import { NgForm } from '@angular/forms';
 import { AuthService } from 'app/auth/services/auth.service';
 import { map, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { RegisterResponse } from 'app/auth/models/register-response.model';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import AppState from '@states/app';
 import * as fromAuthActions from '@actions/auth';
+import { RegisterResponse, RegisterModel } from '@auth-models';
 
 @Component({
     selector: 'app-register-form',

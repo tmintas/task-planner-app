@@ -58,7 +58,7 @@ namespace Web.Controllers
             // store refresh token in cookies
             setTokenCookie(response.RefreshToken);
 
-            return Ok(response.AccessToken);
+            return Ok(new { accessToken = response.AccessToken });
         }
 
         private void setTokenCookie(string token)

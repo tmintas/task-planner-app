@@ -13,11 +13,6 @@ export const currentUser = createSelector(
     state => state.currentUser
 )
 
-export const token = createSelector(
-    currentUser,
-    user => user && user.AccessToken
-)
-
 export const currentUserName = createSelector(
     currentUser,
     user => user && user.UserName
@@ -36,4 +31,9 @@ export const authError = createSelector(
 export const backUrl = createSelector(
     featureSelector,
     state => state.backUrl
+)
+
+export const refreshTokenTimerId = createSelector(
+    featureSelector,
+    state => state.refreshTokenTimerId
 )

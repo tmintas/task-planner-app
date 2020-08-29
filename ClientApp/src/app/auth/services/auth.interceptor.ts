@@ -1,31 +1,20 @@
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import AppState from '@states/app';
-import { Store, select } from '@ngrx/store';
-import { mergeMap, catchError } from 'rxjs/operators';
-import { token } from '@selectors/auth';
+import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
+import { User } from '../models/user.model';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-    constructor(private store$ : Store<AppState>) { }
+    constructor() { }
 
     intercept(request : HttpRequest<any>, requestHandler : HttpHandler) : Observable<HttpEvent<any>> {
-      
+        const user : User = JSON.parse(localStorage.getItem('user'));
+        const accessToken : string = user == null ? '' : user.AccessToken;
 
-        return this.store$.pipe(
-            select(token),
-            mergeMap((token : string) => {
-                const authRequest = !!token 
-                    ? request.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
-                    : request;
+        const authRequest = !!accessToken 
+            ? request.clone({ setHeaders: { Authorization: `Bearer ${accessToken}` } })
+            : request;
 
-                return requestHandler.handle(authRequest).pipe(catchError((err) => {
-                    console.log('auth error');
-                    
-                    return of(err);
-                }));
-            })
-        );
+        return requestHandler.handle(authRequest);
     }
 }
