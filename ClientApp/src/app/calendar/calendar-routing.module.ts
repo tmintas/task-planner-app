@@ -15,6 +15,15 @@ const routes: Routes = [
 		path: '',
 		component: CalendarComponent,
 		children: [
+			// {
+			// 	path: '',
+			// 	redirectTo: '0/0',
+			// 	pathMatch: 'full'
+			// },
+			// {
+			// 	path: ':year',
+			// 	redirectTo: ':year/0'
+			// },
 			{
 				path: ':year/:month',
 				component: MonthComponent,

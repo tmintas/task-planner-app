@@ -26,14 +26,9 @@ export class DayTodoListComponent implements OnInit {
 
 	public ngOnInit() : void {
 		this.Todos$ = this.store.pipe(
-			// select(selectedMode),
 			filter(state => state.calendar.mode === CalendarModes.ViewingDayItems),
-			tap((state) => console.log(state)),
 			select(selectedDate),
 			switchMap((date : Date) => {
-				console.log('date changed');
-				console.log(date);
-			
 				return this.store.select(fromTodoSelectors.selectTodosByDate, { date })
 			})
 		);

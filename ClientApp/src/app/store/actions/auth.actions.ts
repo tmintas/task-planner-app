@@ -19,7 +19,6 @@ export const enum AuthActionTypes {
     CLEAR_REFRESH_TIMER_SUCCESS = '[Auth Auto Action] Clear Refresh Token Timer Success',
     REFRESH_TOKEN = '[Auth Auto Action] Refresh Token',
     REFRESH_TOKEN_SUCCESS = '[Auth Auto Action] Refresh Token Success',
-    TEST_ACTION = 'TEST ACTUIB',
 }
 
 export const SignUpSuccess = createAction(

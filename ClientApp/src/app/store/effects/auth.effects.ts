@@ -28,8 +28,7 @@ export class AuthEffects {
     public GoDenied$ = createEffect(() => this.actions$.pipe(
         ofType(fromAuthActions.GoDenied),
         withLatestFrom(
-            this.store$.select(fromCalendarSelectors.selectedMonth), 
-            this.store$.select(fromCalendarSelectors.selectedYear), (action, month, year) => {
+            this.store$, (month, year) => {
             return fromRouterActions.Go({ path : [
                 'calendar', 
                 year,

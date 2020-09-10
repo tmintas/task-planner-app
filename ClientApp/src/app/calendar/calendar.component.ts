@@ -19,6 +19,5 @@ export class CalendarComponent implements OnInit {
     }
 
     ngOnInit() : void {
-        this.store$.dispatch(InitFromUrl());
     }
 }

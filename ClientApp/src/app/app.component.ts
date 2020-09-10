@@ -14,6 +14,7 @@ import { InitUser } from '@actions/auth';
 })
 export class AppComponent {
 	constructor(private notificationService : NotificationService, private store : Store<AppState>) {
+		// TODO remove, replace with router effects
 		this.store.pipe(
 			select(fromRouterSelectors.selectFeature),
 			map(() => this.notificationService.RemoveAllNotifications())

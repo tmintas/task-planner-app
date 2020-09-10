@@ -16,11 +16,8 @@ export const enum CalendarActionTypes {
     
     // actions called in effects 
     INIT_MONTH = '[Calendar Effect Action] Init Month',
-    INIT_FROM_URL_SUCCESS = '[Calendar Effect Action] Init From URL Success',
 }
 
-// month number should be 1-based, e.g. - march is 3
-// export const InitMonthToView = createAction(CalendarActionTypes.INIT_MONTH_TO_VIEW, props<{ month : number, year : number }>());
 export const SelectDayToAdd = createAction(CalendarActionTypes.SELECT_DAY_TO_ADD_ITEM, props<{ date : Date }>());
 export const SelectDayToView = createAction(CalendarActionTypes.SELECT_DAY_TO_VIEW, props<{ date : Date }>());
 export const SelectItemForEdit = createAction(CalendarActionTypes.SELECT_ITEM_FOR_EDIT, props<{ item : Todo }>());
@@ -29,4 +26,4 @@ export const GoPreviousMonth = createAction(CalendarActionTypes.MOVE_PREVIOUS_MO
 export const GoDefaultMonth = createAction(CalendarActionTypes.MOVE_DEFAULT_MONTH);
 
 export const InitFromUrl = createAction(CalendarActionTypes.INIT_FROM_URL);
-export const InitMonth = createAction(CalendarActionTypes.INIT_MONTH, props<{ year : number, month : number, day? : number, todo? : Todo, mode? : CalendarModes }>());
+export const InitMonth = createAction(CalendarActionTypes.INIT_MONTH, props<{ year : number, month : number, day? : number, item? : Todo, mode? : CalendarModes }>());
