@@ -8,7 +8,7 @@ import { SignOut } from '@actions/auth';
 import { itemsLoading, selectTodosByDate } from '@selectors/todo';
 import { LoadImportanceOptions, LoadTodosAll } from '@actions/todo';
 import { selectedMonth, selectedYear, selectedMonthName, selectedMonthDaysWithNeighbors } from '@selectors/calendar';
-import { isAuthenticated, currentUser, authError } from '@selectors/auth';
+import { isAuthenticated, currentUser, authError, currentUserName } from '@selectors/auth';
 import { GoPreviousMonth, GoNextMonth } from '@actions/calendar';
 import { User } from 'app/auth/models/user.model';
 import * as fromAuthSelectors from '@selectors/auth';
@@ -30,7 +30,7 @@ export class MonthComponent implements OnInit {
 	public MonthName$ : Observable<string> = this.store.select(selectedMonthName);
 	public Dates$ : Observable<Date[]> = this.store.select(selectedMonthDaysWithNeighbors);
 	public IsAuthenticated$ : Observable<boolean> = this.store.select(isAuthenticated);
-	public User$ : Observable<User> = this.store.select(currentUser);
+	public Username$ : Observable<string> = this.store.select(currentUserName);
 	public AuthError$ : Observable<string> = this.store.select(authError);
 
 	public ngOnInit() : void {

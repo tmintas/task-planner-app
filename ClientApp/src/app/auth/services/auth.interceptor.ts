@@ -11,6 +11,13 @@ export class AuthInterceptor implements HttpInterceptor {
         const user : User = JSON.parse(localStorage.getItem('user'));
         const accessToken : string = user == null ? '' : user.AccessToken;
 
+        if (!user || !user.AccessToken) {
+            return requestHandler.handle(request);
+        }
+
+        const expirationDate = JSON.parse(atob(accessToken.split('.')[1])).exp;
+        console.log(new Date(expirationDate).toDateString());
+
         const authRequest = !!accessToken 
             ? request.clone({ setHeaders: { Authorization: `Bearer ${accessToken}` } })
             : request;

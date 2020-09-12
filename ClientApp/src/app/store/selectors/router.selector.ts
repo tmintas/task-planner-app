@@ -32,7 +32,10 @@ export const selectedRoutedItemId = createSelector(
     selectState,
     (state) => state && toNullOrNumber(state, 'itemId')
 )
-
+export const backUrl = createSelector(
+    selectState,
+    (state : CustomRouterState) => state && state.queryParams['backUrl']
+)
 
 export const selectedRoutedMode = createSelector(
     selectedRoutedDay,

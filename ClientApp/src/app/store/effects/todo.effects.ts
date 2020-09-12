@@ -107,11 +107,12 @@ export class TodoEffect {
 			if (!item) {
 				return fromTodoActions.CreateTodo({ item : action.item });
 			} else {
-				const todoUpdate : Update<Todo> = {
+				const updatedItem : Update<Todo> = {
 					id : item.id,
 					changes : action.item
 				}
-				return fromTodoActions.UpdateTodo({ item : todoUpdate });
+				
+				return fromTodoActions.UpdateTodo({ item : updatedItem });
 			}
 		})
 	));

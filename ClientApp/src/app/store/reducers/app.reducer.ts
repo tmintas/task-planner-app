@@ -1,5 +1,4 @@
 import { ActionReducerMap } from '@ngrx/store';
-import { routerReducer} from "@ngrx/router-store";
 
 import AppState from '@states/app';
 import * as fromTodoState from '@states/todo';
@@ -9,6 +8,7 @@ import * as fromAuthState from '@states/auth';
 import { authReducer } from '@reducers/auth';
 import { todoReducer } from '@reducers/todo';
 import { calendarReducer } from '@reducers/calendar'
+import { routerReducer } from '@ngrx/router-store';
 
 export const appReducers : ActionReducerMap<AppState> = {
 	[fromCalendarState.CALENDAR_FEATURE_KEY] : calendarReducer,

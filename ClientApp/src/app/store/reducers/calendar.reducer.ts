@@ -7,7 +7,6 @@ import { Todo } from '@todo-models';
 import { CalendarModes } from '@states/calendar';
 import { CreateTodoSuccess, UpdateTodoFail, UpdateTodoSuccess } from '@actions/todo';
 import { CreateTodoFail } from '@actions/todo';
-import * as fromRouterActions from '@actions/router';
 
 const reducer = createReducer(
 	fromCalendarState.CALENDAR_INITIAL_STATE,
@@ -115,16 +114,7 @@ const reducer = createReducer(
 			loading : false,
 			selectedItem : null
 		}
-	}),
-	on(fromRouterActions.InitFromUrlSuccess, (state : CalendarState, payload : { year : number, month : number, day : number, itemId : number }) => {
-        return { 
-            ...state,
-			selectedYear : payload.year,
-			selectedMonth : payload.month,
-			selectedDate : new Date(payload.year, payload.month, payload.day),
-			// selectedItem : payload.itemId
-        };
-    })
+	})
 );
 
 export function calendarReducer(

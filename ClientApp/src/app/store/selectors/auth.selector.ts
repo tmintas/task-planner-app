@@ -28,11 +28,6 @@ export const authError = createSelector(
     state => state.authError
 )
 
-export const backUrl = createSelector(
-    featureSelector,
-    state => state.backUrl
-)
-
 export const refreshTokenTimerId = createSelector(
     featureSelector,
     state => state.refreshTokenTimerId

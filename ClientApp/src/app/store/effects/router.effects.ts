@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { createEffect, ofType, Actions } from '@ngrx/effects';
-import { tap, withLatestFrom, map, switchMap, catchError, take } from 'rxjs/operators';
-import { Go, goByUrl } from '@actions/router';
+import { tap, withLatestFrom, map, switchMap, catchError, take, mapTo } from 'rxjs/operators';
+import { Go, GoByUrl, GoLanding } from '@actions/router';
 import { Store } from '@ngrx/store';
 import { selectCalendarParamsFromUrl } from '@selectors/router';
 import AppState from '@states/app';
@@ -12,6 +12,7 @@ import { of } from 'rxjs';
 import { TodoService } from 'app/to-dos/services/todo.service';
 import { InitMonth } from '@actions/calendar';
 import { CalendarRoutedParams } from '@shared-models';
+import { selectedYear, selectedMonth} from '@selectors/calendar';
 
 @Injectable()
 export class RouterEffects {
@@ -24,12 +25,12 @@ export class RouterEffects {
     public Go$ = createEffect(() => this.actions$.pipe(
         ofType(Go),
         tap((payload) => {
-            this.router.navigate(payload.path, payload.extras);
+            this.router.navigate(payload.path, { queryParams : payload.queryParams });
         })
     ), { dispatch : false });
     
     public GoByUrl$ = createEffect(() => this.actions$.pipe(
-		ofType(goByUrl),
+		ofType(GoByUrl),
         tap((payload) => this.router.navigateByUrl(payload.url))
     ), { dispatch : false });
 
@@ -99,4 +100,20 @@ export class RouterEffects {
             return InitMonth({ year : params.year, month: params.month, day: params.day, mode, item : params.item });
         })
     ), { dispatch : true });
+
+    public GoLanding$ = createEffect(() => this.actions$.pipe(
+            ofType(GoLanding),
+            withLatestFrom(
+                this.store$.select(selectedYear),
+                this.store$.select(selectedMonth),
+                (action, year, month) => {
+                    console.log(year);
+                    console.log(month);
+                    
+                    return { year, month }
+                }
+            ),
+            map(({year, month }) => GoByUrl({ url: `calendar/${year}/${month}/landing`}))
+        )
+    );
 }
