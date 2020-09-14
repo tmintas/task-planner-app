@@ -10,29 +10,28 @@ const toDoReducer = createReducer(
 	// load all
 	on(fromTodoActions.LoadTodosAll, (state : TodosState) => {
 		return { ...state,
-			itemsLoading : true,
-			itemsLoaded : false
+			isLoading : true,
+			loadingMessage : 'Loading your items...',
 		};
 	}),
 	on(fromTodoActions.LoadTodosAllSuccess, (state : TodosState, payload : { items : Todo[] }) => {
-		return adapter.addAll(payload.items, { ...state, 
-			itemsLoading: false,
-			itemsLoaded: true
+		return adapter.setAll(payload.items, { ...state, 
+			isLoading: false,
+			loadingMessage : null,
 		})
 	}),
 	on(fromTodoActions.LoadTodosAllFail, (state : TodosState, payload : { err : any }) => {
 		return { ...state,
 			items : [],
-			itemsLoading: false,
-			itemsLoaded: true,
+			isLoading: false,
 			error : payload.err
 		};
 	}),
 	// create
 	on(fromTodoActions.CreateTodo, (state : TodosState) => {
 		return { ...state,
-			itemsLoaded: false,
-			itemsLoading: true
+			isLoading: true,
+			loadingMessage : 'Creating a new item...',
 		};
 	}),
 	on(fromTodoActions.CreateTodoSuccess, (state : TodosState, payload : { item : Todo }) => {
@@ -40,14 +39,13 @@ const toDoReducer = createReducer(
 		payload.item.Visible = true;
 
 		return { ...adapter.addOne(payload.item, state),
-			itemsLoaded: true,
-			itemsLoading: false
+			isLoading: false,
+			loadingMessage : null
 		};
 	}),
 	on(fromTodoActions.CreateTodoFail, (state : TodosState, payload : { err : any }) => {
 		return { ...state,
-			itemsLoaded: true,
-			itemsLoading: false,
+			isLoading: false,
 			error : payload.err
 		};
 	}),
@@ -59,42 +57,40 @@ const toDoReducer = createReducer(
 	// delete
 	on(fromTodoActions.DeleteTodoStart, (state : TodosState) => {
 		return { ...state,
-			itemsLoading: true,
-			itemsLoaded: false
+			isLoading: true,
+			loadingMessage : 'Deleting your item...'
 		};
 	}),
 	on(fromTodoActions.DeleteTodoSuccess, (state : TodosState, payload : { id : number })  => {
 		return { ...adapter.removeOne(payload.id, state),
-			itemsLoaded: true,
-			itemsLoading: false
+			isLoading: false,
+			loadingMessage : null
 		}
 		// TODO probably better to use effects for that - repeatable logic
 	}),
 	on(fromTodoActions.DeleteTodoFail, (state : TodosState, payload : { err : any })  => {
 		return { ...state,
-			itemsLoaded: true,
-			itemsLoading: false,
+			isLoading: false,
 			error : payload.err
 		};
 	}),
 	// update
 	on(fromTodoActions.UpdateTodo, (state : TodosState) => {
 		return { ...state,
-			itemsLoaded: false,
-			itemsLoading: true,
+			isLoading: true,
+			loadingMessage: 'Updating your item...'
 		};
 	}),
 	on(fromTodoActions.UpdateTodoSuccess, (state : TodosState, payload : { item : Update<Todo> }) => {
 		return { ...adapter.updateOne(payload.item, state),
-			itemsLoaded: true,
-			itemsLoading: false,
+			isLoading: false,
+			loadingMessage: null
 		};
 	}),
 	on(fromTodoActions.UpdateTodoFail, (state : TodosState, payload : { err : any }) => {
 		return { ...state,
 			error : payload.err,
-			itemsLoaded: true,
-			itemsLoading: false,
+			isLoading: false,
 		};	
 	}),
 	on(fromTodoActions.ToggleDone, (state : TodosState, payload : { id : string }) => {

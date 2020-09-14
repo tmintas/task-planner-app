@@ -21,14 +21,16 @@ export const adapter : EntityAdapter<Todo> = createEntityAdapter<Todo>();
 
 export interface TodosState extends EntityState<Todo> {
 	importanceOptions : DropdownOption[];
-	itemsLoading : boolean;
+	isLoading : boolean;
+	loadingMessage : string,
 	itemsLoaded : boolean;
 	error : HandledError;
 }
 
 export const initialTodosState : TodosState = adapter.getInitialState({
 	importanceOptions : [],
-	itemsLoading : false,
+	loadingMessage : null,
+	isLoading : false,
 	itemsLoaded : false,
 	error : null
 });

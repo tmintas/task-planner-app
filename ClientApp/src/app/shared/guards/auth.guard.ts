@@ -18,19 +18,11 @@ export class AuthGuard implements CanActivate {
         return this.store$.pipe(
             select(isAuthenticated),
             map(isAuth => {
-                console.log('router state');                
-                console.log(state);
-
-                console.log('next');                
-                console.log(next);
-                
-
                 if (next.data.requiresToBeAuthenticated) {
                     if (isAuth) {
                         return true;
                     } else {
                         const backUrl = next.params;
-                        console.log(backUrl);
                         
                         this.store$.dispatch(GoDenied({ reason : next.data.error, backUrl: state.url }));
                         return false;

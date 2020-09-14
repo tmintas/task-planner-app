@@ -4,6 +4,7 @@ import { Store } from '@ngrx/store';
 import AppState from '@states/app';
 import { SignIn } from '@actions/auth';
 import { LoginModel } from '@auth-models';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'app-login-form',
@@ -14,11 +15,11 @@ export class LoginFormComponent {
 
     public Model : LoginModel = new LoginModel();
     public ErrorMessage : string;
+    public LoadingMessage$ : Observable<string> ;
+    public IsLoading$ : Observable<boolean>;
 
     constructor(
         private store$ : Store<AppState>) { 
-            console.log('logi');
-            
         }
 
     public OnSubmit(f: NgForm): void {
@@ -28,26 +29,6 @@ export class LoginFormComponent {
         }
 
         this.store$.dispatch(SignIn({ user : f.value }));
-
-        // this.authService.Login(f.value).pipe(
-        //     map(
-        //         (res : { token : string, error : string }) => {
-        //             if (res.error) {
-        //                 this.ErrorMessage = res.error;
-        //             }
-        //             if (res.token) {
-        //                 this.store$.dispatch(LoginSuccess({ token : res.token }));
-        //             }
-        //         },
-        //         (err: any) => {
-        //             if (err.status && err.status === 400) {
-        //                 console.log(err);
-
-        //             } else {
-        //                 console.log(err);
-        //             }
-        //         })
-        // ).subscribe();
     }
 
 }

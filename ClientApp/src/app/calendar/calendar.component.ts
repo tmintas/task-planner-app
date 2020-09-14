@@ -3,7 +3,6 @@ import { Store, select } from '@ngrx/store';
 import AppState from '@states/app';
 import { Observable } from 'rxjs';
 import { daysLoaded } from '@selectors/calendar';
-import { InitFromUrl } from '@actions/calendar';
 
 @Component({
     selector: 'app-calendar',

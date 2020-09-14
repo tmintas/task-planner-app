@@ -17,6 +17,7 @@ export default class CalendarState {
 	selectedItem : Todo;
 	mode : CalendarModes;
 	loading : boolean;
+	loadingMessage: string;
 
 	selectedDate : Date;
 	previousDates : Date[];
@@ -30,6 +31,7 @@ export const CALENDAR_INITIAL_STATE = {
 	selectedItem : null,
 	mode : null,
 	loading : null,
+	loadingMessage: null,
 
 	selectedDate : null,
 	previousDates : [],

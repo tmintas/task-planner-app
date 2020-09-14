@@ -6,14 +6,15 @@
         width: 80px;
         height: 80px;
         animation: spin 700ms linear infinite;
-        // top:50%;
-        // left:50%;
-        // position: absolute;
     }
     
       @keyframes spin {
         0% { transform: rotate(0deg) }
         100% { transform: rotate(-360deg) }
+    }
+
+    .loading-message {
+        font-style: italic;
     }
 
     position: absolute;
@@ -22,6 +23,7 @@
     bottom: 0;
     top: 0;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     z-index: 1000;

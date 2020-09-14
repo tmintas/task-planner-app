@@ -11,9 +11,20 @@ export const selectedMonth = createSelector(
 	state => state.selectedMonth
 );
 
+// TODO remove
 export const daysLoaded = createSelector(
 	featureSelector,
 	state => state.loading === false
+);
+
+export const isLoading = createSelector(
+	featureSelector,
+	state => state.loading
+);
+
+export const loadingMessage = createSelector(
+	featureSelector,
+	state => state.loadingMessage
 );
 
 export const isMonthSelected = createSelector(

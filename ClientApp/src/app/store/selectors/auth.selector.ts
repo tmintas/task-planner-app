@@ -32,3 +32,13 @@ export const refreshTokenTimerId = createSelector(
     featureSelector,
     state => state.refreshTokenTimerId
 )
+
+export const isLoading = createSelector(
+    featureSelector,
+    state => state.isLoading
+)
+
+export const loadingMessage = createSelector(
+    featureSelector,
+    state => state.loadingMessage
+)

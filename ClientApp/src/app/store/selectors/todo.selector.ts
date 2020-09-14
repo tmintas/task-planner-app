@@ -46,9 +46,14 @@ export const selectById = createSelector(
 	(items : Todo[], props : { id : number }) => items.find(i => i.id === props.id)
 );
 
-export const itemsLoading = createSelector(
+export const isLoading = createSelector(
 	selectFeature,
-	(state : TodosState) => state.itemsLoading
+	(state : TodosState) => state.isLoading
+);
+
+export const loadingMessage = createSelector(
+	selectFeature,
+	(state : TodosState) => state.loadingMessage
 );
 
 export const selectImportanceOptions = createSelector(

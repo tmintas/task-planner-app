@@ -28,8 +28,6 @@ export class AuthEffects {
     public GoDenied$ = createEffect(() => this.actions$.pipe(
         ofType(fromAuthActions.GoDenied),
         map((payload) => {
-            console.clear();
-            console.log(payload);
             return fromRouterActions.Go({ path : ['calendar', 2020, 5, 'login'], queryParams : { backUrl : payload.backUrl } })
         })
     ), { dispatch: true });
@@ -74,6 +72,7 @@ export class AuthEffects {
         switchMap(() => {
             return [
                 fromTodoActions.LoadTodosAll(),
+                fromTodoActions.LoadImportanceOptions(),
                 fromAuthActions.InitRefreshTimer()
             ];
         })
@@ -113,15 +112,16 @@ export class AuthEffects {
                 let pathItems = [];
 
                 pathItems = Object.values(state.backUrl);
-                console.log(pathItems);
                 
                 return [ 
                     fromRouterActions.GoByUrl({ url : state.backUrl }), 
+                    fromTodoActions.LoadImportanceOptions(),
                     fromTodoActions.LoadTodosAll() ];
             }
 
                 return [ 
                     fromRouterActions.Go({ path : [ 'calendar', state.year, state.month, 'home', ]}), 
+                    fromTodoActions.LoadImportanceOptions(),
                     fromTodoActions.LoadTodosAll(), 
                     fromAuthActions.InitRefreshTimer() 
                 ];
@@ -135,7 +135,7 @@ export class AuthEffects {
             this.store$.select(fromCalendarSelectors.selectedYear), (token, month, year) => {
                 return { month, year };
             }),
-        switchMap((params) => {
+        switchMap(() => {
             localStorage.removeItem('user');
 
             return [ 

@@ -95,12 +95,6 @@ const reducer = createReducer(
 			mode : fromCalendarState.CalendarModes.EditTodo
 		}
 	}),
-	on(fromCalendarActions.InitFromUrl, (state : CalendarState) => {
-		return { 
-			...state,
-			loading : true
-		}
-	}),
 	on(CreateTodoSuccess, CreateTodoFail, (state : CalendarState) => {
 		return { 
 			...state,

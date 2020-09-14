@@ -27,7 +27,6 @@ export class TodoEffect {
 
 	public LoadTodosAll$ = createEffect(() => this.actions$.pipe(
 		ofType(fromTodoActions.LoadTodosAll),
-		tap(console.log),
 		mergeMap(() => {			
 			return this.todoService.GetAll().pipe(
 				map((items : Todo[]) => fromTodoActions.LoadTodosAllSuccess({items})),

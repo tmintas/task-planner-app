@@ -25,5 +25,4 @@ export const GoNextMonth = createAction(CalendarActionTypes.MOVE_NEXT_MONTH);
 export const GoPreviousMonth = createAction(CalendarActionTypes.MOVE_PREVIOUS_MONTH);
 export const GoDefaultMonth = createAction(CalendarActionTypes.MOVE_DEFAULT_MONTH);
 
-export const InitFromUrl = createAction(CalendarActionTypes.INIT_FROM_URL);
 export const InitMonth = createAction(CalendarActionTypes.INIT_MONTH, props<{ year : number, month : number, day? : number, item? : Todo, mode? : CalendarModes }>());

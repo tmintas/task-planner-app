@@ -71,8 +71,6 @@ export class RouterEffects {
         }),
         // conditional routing to default values, if not specified in url
         map((params) => {
-            console.log(params.item);
-            
             // TODO add tests
             const mode = params.itemId > 0 
                 ? CalendarModes.EditTodo
@@ -107,8 +105,6 @@ export class RouterEffects {
                 this.store$.select(selectedYear),
                 this.store$.select(selectedMonth),
                 (action, year, month) => {
-                    console.log(year);
-                    console.log(month);
                     
                     return { year, month }
                 }

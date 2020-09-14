@@ -1,8 +1,7 @@
 import { createReducer, on, Action } from '@ngrx/store';
 import { AuthState, AUTH_INITIAL_STATE } from '@states/auth';
 import { User } from 'app/auth/models/user.model';
-import { SignUpSuccess, SignInSuccess, SignOut, SignIn, InitUser, GoDenied, InitUserSuccess, InitUserFail, RefreshTokenSuccess, InitRefreshTimer, InitRefreshTimerSuccess, ClearRefreshTokenTimer, ClearRefreshTokenTimerSuccess } from '@actions/auth';
-import { Subscription } from 'rxjs';
+import { SignUpSuccess, SignInSuccess, SignOut, SignIn, GoDenied, InitUserSuccess, InitUserFail, InitRefreshTimerSuccess, ClearRefreshTokenTimerSuccess } from '@actions/auth';
 
 export const reducer = createReducer(
     AUTH_INITIAL_STATE,
@@ -14,6 +13,7 @@ export const reducer = createReducer(
     on(SignInSuccess, (state : AuthState, payload : { user : User }) => {
         return { ...state, 
             signUpSuccessMessage : null,
+            loadingMessage : null,
             isLoading : false,
             isAuthenticated : true,
             currentUser : payload.user,
@@ -32,7 +32,8 @@ export const reducer = createReducer(
     }),
     on(SignIn, (state : AuthState) => {
         return { ...state, 
-            isLoading : true
+            isLoading : true,
+            loadingMessage : 'Singing you in...'
         };
     }),
     on(InitUserSuccess, (state : AuthState, payload : { user : User }) => {
