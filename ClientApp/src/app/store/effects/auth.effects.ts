@@ -27,23 +27,21 @@ export class AuthEffects {
 
     public GoDenied$ = createEffect(() => this.actions$.pipe(
         ofType(fromAuthActions.GoDenied),
-        map((payload) => {
-            return fromRouterActions.Go({ path : ['calendar', 2020, 5, 'login'], queryParams : { backUrl : payload.backUrl } })
-        })
-    ), { dispatch: true });
+        withLatestFrom(
+            this.store$.select(fromCalendarSelectors.selectedMonth), 
+            this.store$.select(fromCalendarSelectors.selectedYear), (action, month, year) => {
+
+            return fromRouterActions.Go({ path : [ 'calendar', year, month, 'login' ], queryParams : { backUrl : action.backUrl }})
+         })
+    ));
 
     public GoStart$ = createEffect(() => this.actions$.pipe(
         ofType(fromAuthActions.GoStart),
         withLatestFrom(
             this.store$.select(fromCalendarSelectors.selectedMonth), 
             this.store$.select(fromCalendarSelectors.selectedYear), (action, month, year) => {
-            return fromRouterActions.Go({ path : [
-                'calendar', 
-                year,
-                month,
-                'home',
-            ]})
-         })
+            return fromRouterActions.Go({ path : [ 'calendar', year, month, 'home' ]})
+        })
     ));
 
     public InitUser$ = createEffect(() => this.actions$.pipe(
@@ -51,19 +49,24 @@ export class AuthEffects {
         map(() => {
             const userStr = localStorage.getItem('user');
 
-            if (userStr) 
-            {
-                const user = JSON.parse(userStr) as User;
-
-                if (user.UserName && user.AccessToken)
-                {
-                    return InitUserSuccess({ user })
-                }
-
+            if (!userStr) {
                 return InitUserFail();
             }
 
-            return InitUserFail();
+            const user = JSON.parse(userStr) as User;
+
+            if (!user || !user.AccessToken || !user.AccessToken) {
+                return InitUserFail();
+            }
+
+            const decodedJwt = JSON.parse((atob(user.AccessToken.split('.')[1])));
+            const expired = new Date() > new Date(decodedJwt.exp * 1000);
+
+            if (expired) {
+                return InitUserFail();
+            }
+
+            return InitUserSuccess({ user })
         })
     ));
 
