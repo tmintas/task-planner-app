@@ -152,7 +152,6 @@ export class AuthEffects {
             const user : User = JSON.parse(localStorage.getItem('user'));
             const tokenExpirationTimeMs = JSON.parse(atob(user.AccessToken.split('.')[1])).exp * 1000;
 
-            
             // call refresh 10 sec before access token expires            
             const checkTime = tokenExpirationTimeMs - new Date().getTime() - 10 * 1000;
             console.log('refresh in ' + checkTime);

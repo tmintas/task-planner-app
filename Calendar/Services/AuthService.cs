@@ -5,6 +5,7 @@ using Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -15,24 +16,21 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using UserManagement.Models;
-using Web.Repositories.Contracts;
 using Web.Services.Contracts;
 
 namespace Web.Services
 {
     public class AuthService : IAuthService
     {
-        private readonly IUserService userService;
+        private readonly IConfiguration configuration;
         private readonly UserManager<ApplicationUser> userManager;
 
-        private const int ACCESS_TOKEN_LIFETIME_MINUTES = 1;
-
-        public AuthService(IUserService userService, UserManager<ApplicationUser> userManager)
+        public AuthService(UserManager<ApplicationUser> userManager, IConfiguration configuration)
         {
-            this.userService = userService;
             this.userManager = userManager;
+            this.configuration = configuration;
         }
-        
+
         public async Task<AuthenticateResponse> Login(LoginRequest model)
         {
             var user = userManager.Users.Include(u => u.RefreshTokens).FirstOrDefault(u => u.UserName == model.UserName);
@@ -99,9 +97,14 @@ namespace Web.Services
         private string generateAccessToken(ApplicationUser user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            // TODO replace from appsettings
-            var key = Encoding.ASCII.GetBytes("1234567890123456");
+
+            var key = Encoding.UTF8.GetBytes(this.configuration["AuthSettings:JWT_Secret"].ToString());
             var securityKey = new SymmetricSecurityKey(key);
+
+            if (!int.TryParse(this.configuration["AuthSettings:AccessTokenLifeTimeMinutes"], out int accessTokenLifetimeMinutes))
+            {
+                throw new Exception("Invalid settings value: AccessTokenLifeTimeMinutes");
+            }
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -109,8 +112,7 @@ namespace Web.Services
                 {
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
                 }),
-                // TODO replace from appsettings
-                Expires = DateTime.UtcNow.AddMinutes(ACCESS_TOKEN_LIFETIME_MINUTES),
+                Expires = DateTime.UtcNow.AddMinutes(accessTokenLifetimeMinutes),
                 SigningCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature)
             };
 

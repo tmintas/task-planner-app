@@ -17,9 +17,9 @@ export class AuthGuard implements CanActivate {
     canActivate(next: ActivatedRouteSnapshot, state : RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
         return this.store$.pipe(
             select(isAuthenticated),
-            map(isAuth => {
+            map(isAuthenticated => {
                 if (next.data.requiresToBeAuthenticated) {
-                    if (isAuth) {
+                    if (isAuthenticated) {
                         return true;
                     } else {
                         const backUrl = next.params;
@@ -28,7 +28,7 @@ export class AuthGuard implements CanActivate {
                         return false;
                     }
                 } else {
-                    if (isAuth) {
+                    if (isAuthenticated) {
                         this.store$.dispatch(Go({ path : [
                             'calendar',
                             next.params.year,

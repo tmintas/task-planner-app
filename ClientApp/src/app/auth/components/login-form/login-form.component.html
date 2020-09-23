@@ -2,6 +2,7 @@
     <div class="form-group">
         <label for="exampleInputPassword1">User name</label>
         <input 
+        id="t"
             class="form-control" 
             placeholder="User name"
             [(ngModel)]="Model.Username"
@@ -36,4 +37,4 @@
     </button>
 </form>
 
-<p class="error-text">{{ErrorMessage}}</p>
+<p class="error-text">{{ErrorMessage$ | async}}</p>
