@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { withLatestFrom, map, catchError, switchMap, mergeMap, tap } from 'rxjs/operators';
+import { withLatestFrom, map, catchError, switchMap, mergeMap, tap, switchMapTo } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { createEffect, ofType, Actions } from '@ngrx/effects';
@@ -112,24 +112,20 @@ export class AuthEffects {
             localStorage.setItem('user', JSON.stringify(state.user));
             
             if (state.backUrl) {
-                let pathItems = [];
-
-                pathItems = Object.values(state.backUrl);
-                
                 return [ 
                     fromRouterActions.GoByUrl({ url : state.backUrl }), 
                     fromTodoActions.LoadImportanceOptions(),
                     fromTodoActions.LoadTodosAll() ];
             }
 
-                return [ 
-                    fromRouterActions.Go({ path : [ 'calendar', state.year, state.month, 'home', ]}), 
-                    fromTodoActions.LoadImportanceOptions(),
-                    fromTodoActions.LoadTodosAll(), 
-                    fromAuthActions.InitRefreshTimer() 
-                ];
+            return [ 
+                fromRouterActions.Go({ path : [ 'calendar', state.year, state.month, 'home', ]}), 
+                fromTodoActions.LoadImportanceOptions(),
+                fromTodoActions.LoadTodosAll(), 
+                fromAuthActions.InitRefreshTimer() 
+            ];
         })
-    ), { dispatch : true });
+    ));
 
     public SignOut$ = createEffect(() => this.actions$.pipe(
         ofType(fromAuthActions.SignOut),
@@ -149,6 +145,30 @@ export class AuthEffects {
         })
     ));
 
+    public SignUp$ = createEffect(() => this.actions$.pipe(
+        ofType(fromAuthActions.SignUp),
+        switchMap((payload) => {
+            return this.authService.Register(payload.model).pipe(
+                map(() => { 
+                    return fromAuthActions.SignUpSuccess()
+                }),
+                catchError(() => {
+                    return of(fromAuthActions.SignUpFail());
+                })
+            )
+        })
+    ));
+
+    public SignUpSuc$ = createEffect(() => this.actions$.pipe(
+        ofType(fromAuthActions.SignUpSuccess),
+        map(() => fromRouterActions.GoLanding())
+    ));
+
+    public SignUpF$ = createEffect(() => this.actions$.pipe(
+        ofType(fromAuthActions.SignUpFail),
+        tap(() => console.log('sign up fail'))
+    ), { dispatch : false });
+
     public InitRefreshTimer$ = createEffect(() => this.actions$.pipe(
         ofType(fromAuthActions.InitRefreshTimer),
         map(() => {
@@ -163,7 +183,7 @@ export class AuthEffects {
 
             return fromAuthActions.InitRefreshTimerSuccess({ refreshTokenTimerId : timerId });
         })
-    ), { dispatch : true });
+    ));
 
     public RefreshToken$ = createEffect(() => this.actions$.pipe(
         ofType(fromAuthActions.RefreshToken),
@@ -174,7 +194,7 @@ export class AuthEffects {
                 })
             );
         })
-    ), { dispatch : true });
+    ));
 
     public RefreshTokenSuccess$ = createEffect(() => this.actions$.pipe(
         ofType(fromAuthActions.RefreshTokenSuccess),
@@ -183,7 +203,7 @@ export class AuthEffects {
 
             return fromAuthActions.InitRefreshTimer();
         })
-    ), { dispatch : true });
+    ));
 
     public ClearRefreshTokenTimer$ = createEffect(() => this.actions$.pipe(
         ofType(fromAuthActions.ClearRefreshTokenTimer),
@@ -194,5 +214,5 @@ export class AuthEffects {
             return fromAuthActions.ClearRefreshTokenTimerSuccess();
 
         })
-    ), { dispatch : true });
+    ));
 }

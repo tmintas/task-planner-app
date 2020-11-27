@@ -32,7 +32,12 @@ namespace Calendar
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllPolicy",
+                p => p.SetIsOriginAllowed(o => o == "http://localhost:4200").AllowAnyMethod().AllowAnyHeader().AllowCredentials());
+            });
+
             services.AddControllers();
 
             services.AddMvc()
@@ -87,11 +92,9 @@ namespace Calendar
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-           app.UseCors(x => x
-                .SetIsOriginAllowed(origin => true)
-                .AllowAnyMethod()
-                .AllowAnyHeader()
-                .AllowCredentials());
+            //app.UseHttpsRedirection();
+
+           app.UseCors("AllowAllPolicy");
 
             //app.UseExceptionHandler(a => a.Run(async context =>
             //{

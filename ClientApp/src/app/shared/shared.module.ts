@@ -16,8 +16,8 @@ import { IfHasItemsDirective } from './directives/has-items.directive';
 import { ColoredTodoDirective } from 'app/to-dos/directives/colored-todo.directive';
 
 import { DisplayTimePipe } from './pipes/display-time.pipe';
-import { SafePipe } from './pipes/safe.pipe';
 import { EqualValidatorDirective } from './directives/equal-validator.directive';
+import { FocusFirstInvalidOnsubmitDirective } from './directives/focus-first-invalid-onsubmit.directive';
 
 @NgModule({
 	declarations: [
@@ -25,10 +25,10 @@ import { EqualValidatorDirective } from './directives/equal-validator.directive'
 		ColoredTodoDirective,
 		DisplayTimePipe,
 		IfHasItemsDirective,
-		SafePipe,
 		HomeComponent,
 		LandingPageComponent,
 		EqualValidatorDirective,
+		FocusFirstInvalidOnsubmitDirective,
 	],
 	imports: [
 		CommonModule,
@@ -43,8 +43,8 @@ import { EqualValidatorDirective } from './directives/equal-validator.directive'
 		ColoredTodoDirective,
 		IfHasItemsDirective,
 		DisplayTimePipe,
-		SafePipe,
-		EqualValidatorDirective
+		EqualValidatorDirective,
+		FocusFirstInvalidOnsubmitDirective,
 	]
 })
 export class SharedModule { }

@@ -1,9 +1,11 @@
 import { createAction, props } from '@ngrx/store';
 import { User } from 'app/auth/models/user.model';
-import { LoginModel } from '@auth-models';
+import { LoginModel, RegisterModel } from '@auth-models';
 
 export const enum AuthActionTypes {
+    SIGN_UP = '[Auth User Action] Sign Up',
     SIGN_UP_SUCCESS = '[Auth Auto Action] Sign Up Success',
+    SIGN_UP_FAIL = '[Auth Auto Action] Sign Up Fail',
     SIGN_IN = '[Auth User Action] Sign In',
     SIGN_IN_SUCCESS = '[Auth Auto Action] Sign In Success',
     SIGN_IN_FAIL = '[Auth Auto Action] Sign In Fail',
@@ -21,8 +23,15 @@ export const enum AuthActionTypes {
     REFRESH_TOKEN_SUCCESS = '[Auth Auto Action] Refresh Token Success',
 }
 
+export const SignUp = createAction(
+    AuthActionTypes.SIGN_UP,
+    props<{ model : RegisterModel }>()
+);
 export const SignUpSuccess = createAction(
     AuthActionTypes.SIGN_UP_SUCCESS
+);
+export const SignUpFail = createAction(
+    AuthActionTypes.SIGN_UP_FAIL
 );
 
 export const SignIn = createAction(

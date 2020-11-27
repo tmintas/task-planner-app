@@ -3,9 +3,9 @@ import { AuthState, AUTH_FEATURE_KEY } from '@states/auth';
 
 export const featureSelector = createFeatureSelector<AuthState>(AUTH_FEATURE_KEY);
 
-export const getSignupSuccessMessage = createSelector(
+export const statusMessage = createSelector(
     featureSelector,
-    state => state.signUpSuccessMessage
+    state => state.statusMessage
 )
 
 export const currentUser = createSelector(

@@ -11,7 +11,7 @@ import AppState from '@states/app';
 })
 export class LandingPageComponent {
 
-    public SuccessMessage$ : Observable<string> = this.store$.pipe(select(fromAuthSelectors.getSignupSuccessMessage));
+    public SuccessMessage$ : Observable<string> = this.store$.pipe(select(fromAuthSelectors.statusMessage));
 
     constructor(private store$ : Store<AppState>) { 
         var a = 5;

@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import AppState from '@states/app';
-import { SignIn } from '@actions/auth';
-import { LoginModel } from '@auth-models';
 import { Observable } from 'rxjs';
+
+import AppState from '@states/app';
+import * as fromAuthActions from '@actions/auth';
+import { LoginModel } from '@auth-models';
 import * as fromAuthSelectors from '@selectors/auth';
 
 @Component({
@@ -13,11 +14,8 @@ import * as fromAuthSelectors from '@selectors/auth';
     styleUrls: ['./login-form.component.scss']
 })
 export class LoginFormComponent implements OnInit {
-
     public Model : LoginModel = new LoginModel();
     public ErrorMessage$ : Observable<string>;
-    public LoadingMessage$ : Observable<string> ;
-    public IsLoading$ : Observable<boolean>;
 
     constructor(private store$ : Store<AppState>) { }
 
@@ -26,17 +24,12 @@ export class LoginFormComponent implements OnInit {
     }
 
     public OnSubmit(f: NgForm): void {
-        if (f.invalid) { 
-            Object.values(f.controls).forEach(ctrl => {
-                ctrl.markAsTouched();
-            });
-
-            (<HTMLInputElement> document.querySelector('input.ng-invalid')).focus();
-
-            return; 
+        if (f.invalid) {
+            Object.values(f.controls).forEach(ctrl => ctrl.markAsTouched());
+            
+            return;
         }
 
-        this.store$.dispatch(SignIn({ user : f.value }));
+        this.store$.dispatch(fromAuthActions.SignIn({ user : f.value }));
     }
-
 }

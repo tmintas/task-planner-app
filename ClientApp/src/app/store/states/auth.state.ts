@@ -10,7 +10,7 @@ export const enum AuthFlowState {
 export interface AuthState {
     isLoading : boolean,
     loadingMessage : string,
-    signUpSuccessMessage : string,
+    statusMessage : string,
     isAuthenticated: boolean;
     currentUser : User,
     authError : string,
@@ -20,7 +20,7 @@ export interface AuthState {
 export const AUTH_INITIAL_STATE: AuthState = {
     isLoading : null,
     loadingMessage : null,
-    signUpSuccessMessage : null,
+    statusMessage : null,
     isAuthenticated: false,
     currentUser : null,
     authError : null,

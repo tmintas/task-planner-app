@@ -1,13 +1,10 @@
+import { Store } from '@ngrx/store';
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { AuthService } from 'app/auth/services/auth.service';
-import { map, catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
-import { Router, ActivatedRoute } from '@angular/router';
-import { Store } from '@ngrx/store';
+
 import AppState from '@states/app';
 import * as fromAuthActions from '@actions/auth';
-import { RegisterResponse, RegisterModel } from '@auth-models';
+import { RegisterModel } from '@auth-models';
 
 @Component({
     selector: 'app-register-form',
@@ -15,38 +12,17 @@ import { RegisterResponse, RegisterModel } from '@auth-models';
     styleUrls: ['./register-form.component.scss']
 })
 export class RegisterFormComponent {
-
     public Model : RegisterModel = new RegisterModel();
-    public Status : string;
 
-    get diagnostic() { return JSON.stringify(this.Model); }
-
-    constructor(
-        private authService : AuthService,
-        private router : Router,
-        private route : ActivatedRoute,
-        private store$ : Store<AppState>
-    ) { }
+    constructor(private store$ : Store<AppState>) { }
 
     public OnSubmit(f : NgForm) : void {
         if (f.invalid) {
-            f.form.disable();
+            Object.values(f.controls).forEach(ctrl => ctrl.markAsTouched());
+
             return;
         }
 
-        this.authService.Register(f.value).pipe(
-            map((r : RegisterResponse) => {
-                if (r.Succeeded) {
-                    this.store$.dispatch(fromAuthActions.SignUpSuccess());
-                    this.router.navigate(['../landing'], { relativeTo : this.route });
-                }
-                return r;
-            }),
-            catchError(err => {
-                console.log('err');
-                console.log(err);
-                return of(err);
-            })
-        ).subscribe();
+        this.store$.dispatch(fromAuthActions.SignUp({ model : this.Model }));
     }
 }

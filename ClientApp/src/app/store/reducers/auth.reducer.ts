@@ -1,29 +1,39 @@
 import { createReducer, on, Action } from '@ngrx/store';
-import { AuthState, AUTH_INITIAL_STATE } from '@states/auth';
+
 import { User } from 'app/auth/models/user.model';
-import { SignUpSuccess, SignInSuccess, SignOut, SignIn, GoDenied, InitUserSuccess, InitUserFail, InitRefreshTimerSuccess, ClearRefreshTokenTimerSuccess } from '@actions/auth';
+import { AuthState, AUTH_INITIAL_STATE } from '@states/auth';
+import { SignUpSuccess, SignInSuccess, SignOut, SignIn, GoDenied, InitUserSuccess, InitUserFail, InitRefreshTimerSuccess, 
+        ClearRefreshTokenTimerSuccess, SignInFail, SignUpFail, SignUp } from '@actions/auth';
 
 export const reducer = createReducer(
     AUTH_INITIAL_STATE,
-    on(SignUpSuccess, (state : AuthState) => {
-        return { ...state, 
-            signUpSuccessMessage : 'Sign up succeeded. You can login now' 
-        };
+    on(SignIn, SignUp, (state : AuthState) => {
+        return { ...state, isLoading: true }
     }),
     on(SignInSuccess, (state : AuthState, payload : { user : User }) => {
         return { ...state, 
-            signUpSuccessMessage : null,
+            statusMessage : null,
             loadingMessage : null,
-            isLoading : false,
             isAuthenticated : true,
             currentUser : payload.user,
             authError : null
         };
     }),
+    on(SignUpSuccess, (state : AuthState) => {
+        return { ...state, statusMessage : 'Sign up succeeded. You can login now' };
+    }),
+    on(SignInFail, (state : AuthState) => {
+        return { ...state, statusMessage : 'Sign in failed, please try again later..' };
+    }),
+    on(SignUpFail, (state : AuthState) => {
+        return { ...state, statusMessage : 'Sign up failed, please try again later..' };
+    }),
+    on(SignInFail, SignUpFail, SignUpSuccess, SignInSuccess, (state : AuthState) => {
+        return { ...state, isLoading: false, loadingMessage: null }
+    }),
     on(SignOut, (state : AuthState) => {
         return { ...state, 
-            isLoading : null,
-            signUpSuccessMessage : null,
+            statusMessage : null,
             isAuthenticated: null,
             currentUser : null,
             authError : null,
@@ -31,10 +41,10 @@ export const reducer = createReducer(
         };
     }),
     on(SignIn, (state : AuthState) => {
-        return { ...state, 
-            isLoading : true,
-            loadingMessage : 'Singing you in...'
-        };
+        return { ...state, loadingMessage : 'Singing you in...' };
+    }),
+    on(SignUp, (state : AuthState) => {
+        return { ...state, loadingMessage : 'Creating a user...' };
     }),
     on(InitUserSuccess, (state : AuthState, payload : { user : User }) => {
         return { ...state, 
