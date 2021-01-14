@@ -8,7 +8,7 @@ using UserManagement.Models;
 
 namespace Infrastructure
 {
-    public class AppDbContext : IdentityDbContext
+    public class AppDbContext : IdentityDbContext<ApplicationUser>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
@@ -16,7 +16,7 @@ namespace Infrastructure
 
         public DbSet<ImportanceType> ImportanceTypes { get; set; }
         
-        public DbSet<IdentityUser> ApplicationUsers { get; set; }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -49,9 +49,10 @@ namespace Infrastructure
                  .HasColumnName("ReplacedByToken")
                  .HasDefaultValue(null);
 
-            // modelBuilder.Entity<ApplicationUser>()
-            //      .HasMany(u => u.RefreshTokens)
-            //      .WithOne(t => t.User);
+            modelBuilder.Entity<ToDoItem>()
+                 .HasOne(t => t.User)
+                 .WithMany(u => u.Todos)
+                 .HasForeignKey(t => t.UserId);
 
             modelBuilder.Entity<RefreshToken>(rt => 
             {

@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using UserManagement.Models;
 
 namespace Domain
 {
@@ -23,5 +24,9 @@ namespace Domain
 
         [Required]
         public bool IsDone { get; set; }
+
+        public string UserId { get; set; }
+
+        public ApplicationUser User { get; set; }
     }
 }

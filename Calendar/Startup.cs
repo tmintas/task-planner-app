@@ -35,7 +35,7 @@ namespace Calendar
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowAllPolicy",
-                p => p.SetIsOriginAllowed(o => o == "http://localhost:4200").AllowAnyMethod().AllowAnyHeader().AllowCredentials());
+                p => p.WithOrigins("http://localhost:4200/").SetIsOriginAllowed(o => true).AllowAnyMethod().AllowAnyHeader().AllowCredentials());
             });
 
             services.AddControllers();
@@ -48,7 +48,7 @@ namespace Calendar
 
             services.AddDbContextPool<AppDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DevConnection")));
-
+            services.AddScoped<UserManager<ApplicationUser>>();
             services.AddScoped(typeof(IDatabaseRepository<>), typeof(SqlRepository<>));
 
             services.AddDefaultIdentity<ApplicationUser>()
@@ -87,14 +87,15 @@ namespace Calendar
                     ClockSkew = TimeSpan.Zero
                 };
             });
+
+            services.AddHttpContextAccessor();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<ApplicationUser> userManager)
         {
             //app.UseHttpsRedirection();
 
-           app.UseCors("AllowAllPolicy");
 
             //app.UseExceptionHandler(a => a.Run(async context =>
             //{
@@ -108,6 +109,8 @@ namespace Calendar
             //}));
 
             app.UseRouting();
+            app.UseCors("AllowAllPolicy");
+
             app.UseAuthentication();
             app.UseAuthorization();
 

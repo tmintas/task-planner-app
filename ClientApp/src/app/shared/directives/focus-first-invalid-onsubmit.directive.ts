@@ -9,6 +9,8 @@ export class FocusFirstInvalidOnsubmitDirective {
         const firstInvalid = Object.values(this.host.nativeElement)
             .find(el => el instanceof HTMLInputElement && (el as HTMLInputElement).classList.contains('ng-invalid'));
 
-        (firstInvalid as HTMLInputElement).focus();
+        if (firstInvalid) {
+            (firstInvalid as HTMLInputElement).focus();
+        }
     }
 }

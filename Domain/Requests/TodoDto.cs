@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Requests
 {
-    public class ToDoItemUpdateDto
+    public class TodoDto
     {
         public DateTime Date { get; set; }
 

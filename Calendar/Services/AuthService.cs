@@ -2,6 +2,7 @@
 using Domain.Requests;
 using Domain.Responses;
 using Infrastructure;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
@@ -25,7 +26,7 @@ namespace Web.Services
         private readonly IConfiguration configuration;
         private readonly UserManager<ApplicationUser> userManager;
 
-        public AuthService(UserManager<ApplicationUser> userManager, IConfiguration configuration)
+        public AuthService(UserManager<ApplicationUser> userManager, IConfiguration configuration, IHttpContextAccessor accessor)
         {
             this.userManager = userManager;
             this.configuration = configuration;

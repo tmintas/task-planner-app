@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map, delay, take } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Todo } from '@todo-models';
 import { DropdownOption } from 'app/shared/models/dropdown-option.model';
@@ -19,9 +19,9 @@ export class TodoService {
 
 	constructor(private http : HttpClient) {}
 
-	public GetAll() : Observable<Todo[]> {
+	public GetUserTodos() : Observable<Todo[]> {
 		// Todo get viewmodels instead of dtos
-		return this.http.get<Todo[]>(this.apiEndpoint).pipe(
+		return this.http.get<Todo[]>(this.apiEndpoint + '/UserTodos').pipe(
 			map(todos => {
 				todos.map(d => {
 					d.Date = new Date(d.Date);

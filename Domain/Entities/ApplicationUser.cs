@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Domain;
+using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -13,5 +14,8 @@ namespace UserManagement.Models
 
         [JsonIgnore]
         public ICollection<RefreshToken> RefreshTokens { get; set; }
+
+        [JsonIgnore]
+        public ICollection<ToDoItem> Todos { get; set; }
     }
 }

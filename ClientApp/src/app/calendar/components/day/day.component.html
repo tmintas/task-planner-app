@@ -6,12 +6,12 @@
 		<span class="day-actions">
 			<button 
 				(click)="OnDaySelectedToAdd()"
-				[ngClass]="{ 'viewed' : IsDayInMode$(2) | async }">
+				[ngClass]="{ 'viewed' : IsDayInAddMode$ | async }">
 				<fa-icon [icon]="['fas', 'plus-circle']"></fa-icon>
 			</button>
 			<button 
 				(click)="OnDaySelectedToView()"
-				[ngClass]="{ 'viewed' : IsDayInMode$(3) | async }">
+				[ngClass]="{ 'viewed' : IsDayInViewMode$ | async }">
 				<fa-icon [icon]="['fas', 'list-alt']"></fa-icon>
 			</button>
 		</span>

@@ -19,6 +19,8 @@
     <Compile Remove="Migrations\20200709091504_AddRefreshToken.Designer.cs" />
     <Compile Remove="Migrations\20200729081728_test.cs" />
     <Compile Remove="Migrations\20200729081728_test.Designer.cs" />
+    <Compile Remove="Migrations\20210113132528_AddUserIdToTodoTable.cs" />
+    <Compile Remove="Migrations\20210113132528_AddUserIdToTodoTable.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

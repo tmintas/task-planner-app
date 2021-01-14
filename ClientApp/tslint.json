@@ -5,6 +5,9 @@
   "rules": {
     "deprecation": {
       "severity": "warning"
+    },
+    "no-unused-variable": {
+      "severity": "error"
     }
 
   

@@ -28,7 +28,7 @@ export class TodoEffect {
 	public LoadTodosAll$ = createEffect(() => this.actions$.pipe(
 		ofType(fromTodoActions.LoadTodosAll),
 		mergeMap(() => {			
-			return this.todoService.GetAll().pipe(
+			return this.todoService.GetUserTodos().pipe(
 				map((items : Todo[]) => fromTodoActions.LoadTodosAllSuccess({items})),
 				catchError(err => {
 					return of(fromTodoActions.LoadTodosAllFail({ err }));

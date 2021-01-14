@@ -6,9 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Web.Repositories.Contracts;
-using Microsoft.AspNetCore.Cors;
-using System;
 using Microsoft.AspNetCore.Authorization;
+using Web.Services.Contracts;
 
 namespace Web.Controllers
 {
@@ -17,20 +16,25 @@ namespace Web.Controllers
     public class ToDoController : ControllerBase
     {
         private readonly IDatabaseRepository<ToDoItem> _todoRepository;
+        private readonly IUserService _userService;
 
-        public ToDoController(IDatabaseRepository<ToDoItem> todoRepository)
+        public ToDoController(IDatabaseRepository<ToDoItem> todoRepository, IUserService userService)
         {
             _todoRepository = todoRepository;
+            _userService = userService;
         }
 
-        // GET: api/Todo
+        // GET: api/UserTodos
         [HttpGet]
         [Authorize]
-        public async Task<ActionResult<IEnumerable<ToDoItem>>> GetAllTodos()
+        [Route("UserTodos")]
+        public async Task<ActionResult<IEnumerable<ToDoItem>>> GetUserTodos()
         {
             var items = await _todoRepository.GetAllAsync();
+            var user = await _userService.GetCurrentUser();
+            var userItems = items.Where(i => i.UserId == user.Id);
 
-            return Ok(items);
+            return Ok(userItems);
         }
 
         // GET: api/Todo/5
@@ -47,7 +51,7 @@ namespace Web.Controllers
 
         // GET: api/Todo/5
         [HttpPost]
-        public async Task<ActionResult<ToDoItem>> PostToDoItem([FromBody] ToDoItemUpdateDto itemUpdateDto)
+        public async Task<ActionResult<ToDoItem>> PostToDoItem([FromBody] TodoDto itemUpdateDto)
         {
             if (itemUpdateDto == null)
             {
@@ -65,12 +69,17 @@ namespace Web.Controllers
                 return BadRequest("Wrong importance type");
             }
 
-            var newItem = new ToDoItem();
-            newItem.Date = itemUpdateDto.Date.ToLocalTime();
-            newItem.Description = itemUpdateDto.Description;
-            newItem.ImportanceTypeId = itemUpdateDto.Importance;
-            newItem.Name = itemUpdateDto.Name;
-            newItem.HasTime = itemUpdateDto.HasTime;
+            var currentUser = await _userService.GetCurrentUser();
+
+            var newItem = new ToDoItem()
+            {
+                Date = itemUpdateDto.Date.ToLocalTime(),
+                Description = itemUpdateDto.Description,
+                ImportanceTypeId = itemUpdateDto.Importance,
+                Name = itemUpdateDto.Name,
+                HasTime = itemUpdateDto.HasTime,
+                UserId = currentUser.Id
+            };
 
             await _todoRepository.AddAsync(newItem);
 
@@ -79,7 +88,7 @@ namespace Web.Controllers
 
         //PUT: api/Todo/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateToDoItem(int id, [FromBody] ToDoItemUpdateDto itemUpdateDto)
+        public async Task<IActionResult> UpdateToDoItem(int id, [FromBody] TodoDto itemUpdateDto)
         {
             if (!ModelState.IsValid)
             {

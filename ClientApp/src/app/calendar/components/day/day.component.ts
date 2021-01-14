@@ -1,4 +1,4 @@
-import { Component, Input, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import * as fromCalendarActions from '@actions/calendar';
 import * as fromCalendarSelectors from '@selectors/calendar';
@@ -14,18 +14,19 @@ import { CalendarModes } from '@states/calendar';
 	selector: 'app-day',
 	templateUrl: './day.component.html',
 	styleUrls: ['./day.component.scss'],
-	encapsulation: ViewEncapsulation.None
+	encapsulation: ViewEncapsulation.None,
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DayComponent {
-	private toggleClickSubj = new Subject<string>();
-
 	@Input()
 	public Date : Date;
 	@Input()
 	public Items : Todo[];
 
 	public IsCurrentMonth$ : Observable<boolean>;
-	
+	public IsDayInViewMode$ : Observable<boolean>;
+	public IsDayInAddMode$ : Observable<boolean>;
+
 	public get VisibleItems() : Todo[] {
 		return this.Items.filter(i => i.Visible);
 	}
@@ -35,27 +36,19 @@ export class DayComponent {
 	}
 
 	constructor(private store : Store<TodosState>) {
-		this.Date = new Date();
-		this.toggleClickSubj.pipe(
-			tap((id : string) => this.store.dispatch(fromTodoActions.ToggleDone({ id })))
-		).subscribe();
 	}
 
-	public ngOnChanges() : void {
-		this.IsCurrentMonth$ = this.store.pipe(
-			select(fromCalendarSelectors.isMonthSelected, { month : this.Date.getMonth() })
-		)
-	}
-
-	public IsDayInMode$(mode : CalendarModes) : Observable<boolean> {
-		return this.store.pipe(select(fromCalendarSelectors.isDayInMode, { mode, date : this.Date }));
+	public ngOnInit() : void {
+		this.IsCurrentMonth$ = this.store.pipe(select(fromCalendarSelectors.isMonthSelected, { month : this.Date.getMonth() }));
+		this.IsDayInViewMode$ = this.store.select(fromCalendarSelectors.isDayInMode, { mode: CalendarModes.ViewingDayItems, date: this.Date });
+		this.IsDayInAddMode$ = this.store.select(fromCalendarSelectors.isDayInMode, { mode: CalendarModes.AddTodo, date: this.Date });
 	}
 
 	// TODO can be replaced with directive
 	public IsItemEditing$(id : number) : Observable<boolean> {
 		return this.store.select(fromCalendarSelectors.isItemEditing, { id });
-	}	
-	
+	}
+
 	// TODO can be replaced with directive
 	public ToggleIcon(isDone : boolean) : string[] {
 		return isDone ? ['fas', 'check-circle'] : ['far', 'circle'];
@@ -66,7 +59,7 @@ export class DayComponent {
 	}
 
 	public ToggleDone(id : string) {
-		this.toggleClickSubj.next(id)
+		this.store.dispatch(fromTodoActions.ToggleDone({ id }))
 	}
 
 	public OnDaySelectedToAdd() : void {
@@ -76,7 +69,7 @@ export class DayComponent {
 	public OnDaySelectedToView() : void {
 		this.store.dispatch(fromCalendarActions.SelectDayToView({ date : this.Date }));
 	}
-	
+
 	public OnDeleteClick(id : number) : void {
 		this.store.dispatch(fromTodoActions.DeleteTodoStart({ id }));
 	}
