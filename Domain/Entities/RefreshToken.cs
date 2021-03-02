@@ -26,9 +26,5 @@ namespace Domain.Entities
         public ApplicationUser User { get; set; }
 
         public string UserId { get; set; }
-
-        //public bool IsExpired => DateTime.Now >= ExpirationDate;
-
-        //public bool IsValid => RevokationDate == null && !IsExpired;
     }
 }

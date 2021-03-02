@@ -5,7 +5,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Todo } from '@todo-models';
 import { DropdownOption } from 'app/shared/models/dropdown-option.model';
 import { Importance } from '../enums/importance.enum';
-import { environment } from 'environments/environment';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type':  'application/json' })
@@ -15,7 +14,7 @@ const httpOptions = {
 	providedIn: 'root'
 })
 export class TodoService {
-	private apiEndpoint : string = environment.apiUrl + '/api/Todo';
+	private apiEndpoint : string = '/api/Todo';
 
 	constructor(private http : HttpClient) {}
 
@@ -34,7 +33,7 @@ export class TodoService {
 	}
 
 	public CreateTodo(item : Todo) : Observable<Todo> {
-		
+
 		return this.http.post<Todo>(this.apiEndpoint, item, httpOptions).pipe(
 			map((item : Todo) => {
 				//for some reason item.Date is string, so map to date is needed
@@ -47,7 +46,7 @@ export class TodoService {
 
 	public DeleteTodo(id : number) : Observable<{}> {
 		const url = `${this.apiEndpoint}/${id}`;
-			
+
 		return this.http.delete(url);
 	}
 
@@ -71,7 +70,7 @@ export class TodoService {
 
 	public Get(id : number) : Observable<Todo> {
 		return this.http.get<Todo>(`${this.apiEndpoint}/${id}`).pipe(
-			map(item => { 
+			map(item => {
 				// string to Date
 				item.Date = new Date(item.Date);
 				return item;

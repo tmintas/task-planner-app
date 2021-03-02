@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "concurrently \"ng serve --open --port 4000\" \"json-server --watch db.json\" ",
+    "dev": "ng serve --o --port 4200 --proxy-config proxy-dev.config.json",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",

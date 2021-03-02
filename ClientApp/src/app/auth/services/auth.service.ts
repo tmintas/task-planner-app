@@ -3,12 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { LoginResponse, LoginModel, RegisterResponse, RegisterModel } from '@auth-models';
-import { environment } from 'environments/environment';
 
 @Injectable()
 export class AuthService {
-    private apiEndpoint : string = environment.apiUrl + '/api/auth';
-    
+    private apiEndpoint : string = '/api/auth';
+
     constructor(private http: HttpClient) { }
 
     public Register(model: RegisterModel) : Observable<RegisterResponse> {

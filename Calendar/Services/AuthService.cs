@@ -97,11 +97,9 @@ namespace Web.Services
 
         private string generateAccessToken(ApplicationUser user)
         {
-            var tokenHandler = new JwtSecurityTokenHandler();
-
             var key = Encoding.UTF8.GetBytes(this.configuration["AuthSettings:JWT_Secret"].ToString());
             var securityKey = new SymmetricSecurityKey(key);
-
+  
             if (!int.TryParse(this.configuration["AuthSettings:AccessTokenLifeTimeMinutes"], out int accessTokenLifetimeMinutes))
             {
                 throw new Exception("Invalid settings value: AccessTokenLifeTimeMinutes");
@@ -117,6 +115,7 @@ namespace Web.Services
                 SigningCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature)
             };
 
+            var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
             return tokenHandler.WriteToken(token);

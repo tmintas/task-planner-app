@@ -1,4 +1,3 @@
-import { environment } from "environments/environment"
 import { TestBed, getTestBed, fakeAsync, inject } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TodoService } from 'app/to-dos/services/todo.service';
@@ -10,7 +9,7 @@ import { Store } from '@ngrx/store';
 import { User } from '../models/user.model';
 
 describe('AuthInterceptor', () => {
-    const apiUrl = environment.apiUrl + '/api/Todo';
+    const apiUrl = '/api/Todo';
     let todoService: TodoService;
     let httpMock: HttpTestingController;
     let storeMock: MockStore<AppState>;

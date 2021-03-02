@@ -28,7 +28,7 @@ export class AuthEffects {
     public GoDenied$ = createEffect(() => this.actions$.pipe(
         ofType(fromAuthActions.GoDenied),
         withLatestFrom(
-            this.store$.select(fromCalendarSelectors.selectedMonth), 
+            this.store$.select(fromCalendarSelectors.selectedMonth),
             this.store$.select(fromCalendarSelectors.selectedYear), (action, month, year) => {
 
             return fromRouterActions.Go({ path : [ 'calendar', year, month, 'login' ], queryParams : { backUrl : action.backUrl }})
@@ -38,7 +38,7 @@ export class AuthEffects {
     public GoStart$ = createEffect(() => this.actions$.pipe(
         ofType(fromAuthActions.GoStart),
         withLatestFrom(
-            this.store$.select(fromCalendarSelectors.selectedMonth), 
+            this.store$.select(fromCalendarSelectors.selectedMonth),
             this.store$.select(fromCalendarSelectors.selectedYear), (action, month, year) => {
             return fromRouterActions.Go({ path : [ 'calendar', year, month, 'home' ]})
         })
@@ -86,7 +86,7 @@ export class AuthEffects {
         switchMap((action) => {
             return this.authService.Login(action.user).pipe(
                 switchMap((res : LoginResponse) => {
-                    return [ 
+                    return [
                         fromAuthActions.SignInSuccess({ user : new User(res.Username, res.AccessToken) })
                     ]
                 }),
@@ -100,9 +100,9 @@ export class AuthEffects {
     public SignInSuccess$ = createEffect(() => this.actions$.pipe(
         ofType(fromAuthActions.SignInSuccess),
         withLatestFrom(
-            this.store$.select(currentUser), 
-            this.store$.select(fromRouterSelectors.backUrl), 
-            this.store$.select(fromCalendarSelectors.selectedMonth), 
+            this.store$.select(currentUser),
+            this.store$.select(fromRouterSelectors.backUrl),
+            this.store$.select(fromCalendarSelectors.selectedMonth),
             this.store$.select(fromCalendarSelectors.selectedYear),
             (action, user, backUrl, month, year) => {
                 return { user, backUrl, month, year };
@@ -110,19 +110,19 @@ export class AuthEffects {
         ),
         switchMap((state) => {
             localStorage.setItem('user', JSON.stringify(state.user));
-            
+
             if (state.backUrl) {
-                return [ 
-                    fromRouterActions.GoByUrl({ url : state.backUrl }), 
+                return [
+                    fromRouterActions.GoByUrl({ url : state.backUrl }),
                     fromTodoActions.LoadImportanceOptions(),
                     fromTodoActions.LoadTodosAll() ];
             }
 
-            return [ 
-                fromRouterActions.Go({ path : [ 'calendar', state.year, state.month, 'home', ]}), 
+            return [
+                fromRouterActions.Go({ path : [ 'calendar', state.year, state.month, 'home', ]}),
                 fromTodoActions.LoadImportanceOptions(),
-                fromTodoActions.LoadTodosAll(), 
-                fromAuthActions.InitRefreshTimer() 
+                fromTodoActions.LoadTodosAll(),
+                fromAuthActions.InitRefreshTimer()
             ];
         })
     ));
@@ -130,17 +130,17 @@ export class AuthEffects {
     public SignOut$ = createEffect(() => this.actions$.pipe(
         ofType(fromAuthActions.SignOut),
         withLatestFrom(
-            this.store$.select(fromCalendarSelectors.selectedMonth), 
+            this.store$.select(fromCalendarSelectors.selectedMonth),
             this.store$.select(fromCalendarSelectors.selectedYear), (token, month, year) => {
                 return { month, year };
             }),
         switchMap(() => {
             localStorage.removeItem('user');
 
-            return [ 
-                fromRouterActions.GoLanding(), 
-                fromTodoAtions.ClearTodos(), 
-                fromAuthActions.ClearRefreshTokenTimer() 
+            return [
+                fromRouterActions.GoLanding(),
+                fromTodoAtions.ClearTodos(),
+                fromAuthActions.ClearRefreshTokenTimer()
             ];
         })
     ));
@@ -149,7 +149,7 @@ export class AuthEffects {
         ofType(fromAuthActions.SignUp),
         switchMap((payload) => {
             return this.authService.Register(payload.model).pipe(
-                map(() => { 
+                map(() => {
                     return fromAuthActions.SignUpSuccess()
                 }),
                 catchError(() => {
@@ -175,11 +175,11 @@ export class AuthEffects {
             const user : User = JSON.parse(localStorage.getItem('user'));
             const tokenExpirationTimeMs = JSON.parse(atob(user.AccessToken.split('.')[1])).exp * 1000;
 
-            // call refresh 10 sec before access token expires            
-            const checkTime = tokenExpirationTimeMs - new Date().getTime() - 10 * 1000;
-            console.log('refresh in ' + checkTime);
+            // call refresh 10 sec before access token expires
+            const timeBeforeRefreshMs = tokenExpirationTimeMs - new Date().getTime() - 10 * 1000;
+            console.log('refresh in ' + timeBeforeRefreshMs);
 
-            const timerId = setTimeout(() => { this.store$.dispatch(fromAuthActions.RefreshToken()); }, checkTime);
+            const timerId = setTimeout(() => { this.store$.dispatch(fromAuthActions.RefreshToken()); }, timeBeforeRefreshMs);
 
             return fromAuthActions.InitRefreshTimerSuccess({ refreshTokenTimerId : timerId });
         })
