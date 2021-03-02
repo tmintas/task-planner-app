@@ -3,9 +3,6 @@ import { Todo } from '@todo-models';
 import { CalendarModes } from '@states/calendar';
 
 export const enum CalendarActionTypes {
-    // angular components initiated actions 
-    INIT_FROM_URL = '[Calendar Auto Action] Init From URL',
-    
     // user initiated actions
     SELECT_DAY_TO_ADD_ITEM = '[Calendar User Action] Select Day to Add Item',
     SELECT_DAY_TO_VIEW = '[Calendar User Action] Select Day to View Items',
@@ -13,8 +10,8 @@ export const enum CalendarActionTypes {
     MOVE_NEXT_MONTH = '[Calendar User Action] Move to Next Month',
     MOVE_PREVIOUS_MONTH = '[Calendar User Action] Move to Previous Month',
     MOVE_DEFAULT_MONTH = '[Calendar Effect Action] Move to Default Month',
-    
-    // actions called in effects 
+
+    // actions called in effects
     INIT_MONTH = '[Calendar Effect Action] Init Month',
 }
 

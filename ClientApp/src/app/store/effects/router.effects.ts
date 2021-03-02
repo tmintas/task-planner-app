@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { createEffect, ofType, Actions } from '@ngrx/effects';
-import { tap, withLatestFrom, map, switchMap, catchError, take, mapTo } from 'rxjs/operators';
+import { tap, withLatestFrom, map, switchMap, catchError, take } from 'rxjs/operators';
 import { Go, GoByUrl, GoLanding } from '@actions/router';
 import { Store } from '@ngrx/store';
 import { selectCalendarParamsFromUrl } from '@selectors/router';
 import AppState from '@states/app';
-import { ROUTER_NAVIGATED } from '@ngrx/router-store';
+import { ROUTER_NAVIGATION } from '@ngrx/router-store';
 import { CalendarModes, CALENDAR_DEFAULT_YEAR, CALENDAR_DEFAULT_MONTH } from '@states/calendar';
 import { of } from 'rxjs';
 import { TodoService } from 'app/to-dos/services/todo.service';
@@ -28,7 +28,7 @@ export class RouterEffects {
             this.router.navigate(payload.path, { queryParams : payload.queryParams });
         })
     ), { dispatch : false });
-    
+
     public GoByUrl$ = createEffect(() => this.actions$.pipe(
 		ofType(GoByUrl),
         tap((payload) => this.router.navigateByUrl(payload.url))
@@ -36,11 +36,11 @@ export class RouterEffects {
 
     // init state after page reload, called only once
     public InitFromUrl$ = createEffect(() => this.actions$.pipe(
-        ofType(ROUTER_NAVIGATED),
+        ofType(ROUTER_NAVIGATION),
         take(1),
         withLatestFrom(
             this.store$.select(selectCalendarParamsFromUrl),
-            (action, params : CalendarRoutedParams) => { 
+            (_, params : CalendarRoutedParams) => {
                 const nonNegativeParams = Object.keys(params).reduce(function(result, key) {
                     result[key] = params[key] === null ? null : Math.max(params[key], 0);
                     return result;
@@ -72,9 +72,9 @@ export class RouterEffects {
         // conditional routing to default values, if not specified in url
         map((params) => {
             // TODO add tests
-            const mode = params.itemId > 0 
+            const mode = params.itemId > 0
                 ? CalendarModes.EditTodo
-                : params.itemId === 0 
+                : params.itemId === 0
                     ? CalendarModes.AddTodo
                     : params.day > 0
                         ? CalendarModes.ViewingDayItems
@@ -105,7 +105,7 @@ export class RouterEffects {
                 this.store$.select(selectedYear),
                 this.store$.select(selectedMonth),
                 (action, year, month) => {
-                    
+
                     return { year, month }
                 }
             ),

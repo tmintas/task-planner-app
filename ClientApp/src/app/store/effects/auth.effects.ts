@@ -16,6 +16,7 @@ import { currentUser, refreshTokenTimerId } from '@selectors/auth';
 import * as fromRouterSelectors from '@selectors/router';
 import * as fromTodoActions from '@actions/todo';
 import * as fromRouterActions from '@actions/router';
+import { CalendarRoutedParams } from '@shared-models';
 
 @Injectable()
 export class AuthEffects {
@@ -28,10 +29,9 @@ export class AuthEffects {
     public GoDenied$ = createEffect(() => this.actions$.pipe(
         ofType(fromAuthActions.GoDenied),
         withLatestFrom(
-            this.store$.select(fromCalendarSelectors.selectedMonth),
-            this.store$.select(fromCalendarSelectors.selectedYear), (action, month, year) => {
-
-            return fromRouterActions.Go({ path : [ 'calendar', year, month, 'login' ], queryParams : { backUrl : action.backUrl }})
+            this.store$.select(fromRouterSelectors.selectCalendarParamsFromUrl),
+            (action, params: CalendarRoutedParams) => {
+              return fromRouterActions.Go({ path : [ 'calendar', params.year, params.month, 'login' ], queryParams : { backUrl : action.backUrl }})
          })
     ));
 
@@ -39,7 +39,8 @@ export class AuthEffects {
         ofType(fromAuthActions.GoStart),
         withLatestFrom(
             this.store$.select(fromCalendarSelectors.selectedMonth),
-            this.store$.select(fromCalendarSelectors.selectedYear), (action, month, year) => {
+            this.store$.select(fromCalendarSelectors.selectedYear),
+            (_, month, year) => {
             return fromRouterActions.Go({ path : [ 'calendar', year, month, 'home' ]})
         })
     ));
