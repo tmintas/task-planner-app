@@ -1,4 +1,5 @@
 ﻿using Domain.Requests;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -45,6 +46,7 @@ namespace Web.Controllers
         }
 
         [HttpGet("refresh-token")]
+        [Authorize]
         public async Task<IActionResult> RefreshToken()
         {
             var oldRefreshToken = Request.Cookies["refreshToken"];

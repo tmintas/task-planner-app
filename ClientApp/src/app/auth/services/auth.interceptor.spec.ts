@@ -36,7 +36,7 @@ describe('AuthInterceptor', () => {
     });
 
     it('should add a correct Authorization header', () => {
-        todoService.GetAll().subscribe(res => expect(res).toBeTruthy());
+        todoService.GetUserTodos().subscribe(res => expect(res).toBeTruthy());
 
         const httpRequest = httpMock.expectOne(apiUrl);
 

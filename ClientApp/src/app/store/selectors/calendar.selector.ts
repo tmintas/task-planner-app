@@ -1,6 +1,6 @@
 import { createSelector, createFeatureSelector } from '@ngrx/store';
 
-import CalendarState, { CALENDAR_FEATURE_KEY } from '@states/calendar';
+import CalendarState, { CalendarModes, CALENDAR_FEATURE_KEY } from '@states/calendar';
 import * as fromDateFunctions from '@shared-functions/date';
 import { Todo } from '@todo-models';
 
@@ -73,12 +73,12 @@ export const selectedMonthDaysWithNeighbors = createSelector(
 )
 
 export const selectedTodo = createSelector(
-    featureSelector, 
+    featureSelector,
 	(state : CalendarState) => state.selectedItem
 );
 
 export const isItemEditing = createSelector(
-    selectedTodo, 
+    selectedTodo,
 	(item : Todo, props) => item && props && item.id === props.id
 );
 
@@ -100,7 +100,8 @@ export const selectedMode = createSelector(
 export const isDayInMode = createSelector(
 	selectedMode,
 	selectedDate,
-	(mode, date, props) => {
-		return date && props.date && mode == props.mode && date.getDate() == props.date.getDate()
+	(mode: CalendarModes, date: Date, props: { date : Date, mode : CalendarModes }) => {
+    // ignore time, compare by date string
+		return date && props.date && mode == props.mode && date.toDateString() === props.date.toDateString()
 	}
 )

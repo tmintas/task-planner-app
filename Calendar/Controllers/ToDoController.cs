@@ -39,7 +39,7 @@ namespace Web.Controllers
 
         // GET: api/Todo/5
         [HttpGet("{id}")]
-        //[Authorize]
+        [Authorize]
         public async Task<ActionResult<ToDoItem>> GetToDoItem(int id)
         {
             var item = await _todoRepository.GetByIdAsync(id);
@@ -49,8 +49,9 @@ namespace Web.Controllers
             return Ok(item);
         }
 
-        // GET: api/Todo/5
+        // POST: api/Todo/5
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<ToDoItem>> PostToDoItem([FromBody] TodoDto itemUpdateDto)
         {
             if (itemUpdateDto == null)
@@ -88,6 +89,7 @@ namespace Web.Controllers
 
         //PUT: api/Todo/5
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> UpdateToDoItem(int id, [FromBody] TodoDto itemUpdateDto)
         {
             if (!ModelState.IsValid)
@@ -119,6 +121,7 @@ namespace Web.Controllers
 
         //PUT: api/toggle-done/5
         [HttpPut("toggle-done/{id}")]
+        [Authorize]
         public async Task<IActionResult> ToggleDone(int id)
         {
             var todo = await _todoRepository.GetByIdAsync(id);
@@ -135,6 +138,7 @@ namespace Web.Controllers
 
         // DELETE: api/Todo/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<ActionResult<ToDoItem>> DeleteToDoItem(int id)
         {
             var toDoItem = await _todoRepository.GetByIdAsync(id);
