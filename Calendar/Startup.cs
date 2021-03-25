@@ -1,27 +1,23 @@
-using Domain.Models;
 using Infrastructure;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using System.Text;
 using UserManagement.Models;
+using Web.Middleware;
 using Web.Repositories;
 using Web.Repositories.Contracts;
 using Web.Services;
 using Web.Services.Contracts;
+using Web.Settings;
 
 namespace Calendar
 {
@@ -36,7 +32,7 @@ namespace Calendar
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        { 
+        {
             //services.AddOptions();
             //services
             //     .AddOptions<AuthSettings>()
@@ -80,10 +76,18 @@ namespace Calendar
             services.AddDefaultIdentity<ApplicationUser>()
                 .AddEntityFrameworkStores<AppDbContext>();
 
-            // configure stronly typed settings object
-            //services.Configure<AuthSettings>(Configuration.GetSection("AuthSettings"));
+            // register filter to add runtime settings object validation
+            // if this is not done, incorrect settings object will still be allowed for app to startup
+            services.AddTransient<IStartupFilter, SettingValidationStartupFilter>();
 
- 
+            // configure stronly typed settings object
+            services.Configure<AuthSettings>(Configuration.GetSection("AuthSettings"));
+
+            // explicitly registed the settings object to avoid using IOptions<T> while injecting
+            services.AddSingleton(resolver => resolver.GetRequiredService<IOptions<AuthSettings>>().Value);
+
+            // register as an IValidatable
+            services.AddSingleton<IValidatable>(resolver => resolver.GetRequiredService<IOptions<AuthSettings>>().Value);
 
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthService, AuthService>();

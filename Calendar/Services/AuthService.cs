@@ -2,13 +2,10 @@
 using Domain.Models;
 using Domain.Requests;
 using Domain.Responses;
-using Infrastructure;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -20,6 +17,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UserManagement.Models;
 using Web.Services.Contracts;
+using Web.Settings;
 
 namespace Web.Services
 {
@@ -29,11 +27,11 @@ namespace Web.Services
         private readonly UserManager<ApplicationUser> userManager;
         private readonly AuthSettings appSettings;
 
-        public AuthService(UserManager<ApplicationUser> userManager, IConfiguration configuration, IOptions<AuthSettings> appSettings)
+        public AuthService(UserManager<ApplicationUser> userManager, IConfiguration configuration, AuthSettings appSettings)
         {
             this.userManager = userManager;
             this.configuration = configuration;
-            this.appSettings = appSettings.Value;
+            this.appSettings = appSettings;
         }
 
         public async Task<AuthenticateResponse> Login(LoginRequest model)
