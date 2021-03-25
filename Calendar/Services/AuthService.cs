@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Models;
 using Domain.Requests;
 using Domain.Responses;
 using Infrastructure;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -25,15 +27,19 @@ namespace Web.Services
     {
         private readonly IConfiguration configuration;
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly AuthSettings appSettings;
 
-        public AuthService(UserManager<ApplicationUser> userManager, IConfiguration configuration, IHttpContextAccessor accessor)
+        public AuthService(UserManager<ApplicationUser> userManager, IConfiguration configuration, IOptions<AuthSettings> appSettings)
         {
             this.userManager = userManager;
             this.configuration = configuration;
+            this.appSettings = appSettings.Value;
         }
 
         public async Task<AuthenticateResponse> Login(LoginRequest model)
         {
+            var secret = this.appSettings.AccessTokenLifeTimeMinutes;
+
             var user = userManager.Users.Include(u => u.RefreshTokens).FirstOrDefault(u => u.UserName == model.UserName);
 
             if (user == null || !await userManager.CheckPasswordAsync(user, model.Password))

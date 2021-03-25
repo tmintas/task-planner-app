@@ -1,8 +1,10 @@
-﻿using Domain.Requests;
+﻿using Domain.Models;
+using Domain.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using System;
 using System.Threading.Tasks;
 using Web.Services.Contracts;
@@ -20,8 +22,17 @@ namespace Web.Controllers
         {
             this.authServce = authServce;
             this.configuration = configuration;
-        }
 
+            //try
+            //{
+            //    this.authSettings = authSettings.Value;
+            //}
+            //catch (Exception ex)
+            //{
+            //    throw ex;
+            //}
+        }
+        
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest model)

@@ -1,3 +1,4 @@
+using Domain.Models;
 using Infrastructure;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -9,8 +10,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text;
 using UserManagement.Models;
 using Web.Repositories;
@@ -31,7 +36,26 @@ namespace Calendar
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
+        { 
+            //services.AddOptions();
+            //services
+            //     .AddOptions<AuthSettings>()
+            //     .Bind(Configuration.GetSection("AuthSettings"))
+            //     //.PostConfigure(x =>
+            //     //{
+            //     //    var validationResults = new List<ValidationResult>();
+            //     //    var context = new ValidationContext(x);
+            //     //    var isValid = Validator.TryValidateObject(x, context, validationResults);
+
+            //     //    if (isValid) return;
+
+            //     //    var msg = string.Join("\n", validationResults.Select(vr => vr.ErrorMessage));
+
+            //     //    throw new Exception("inval");
+
+            //     //});
+            //     .ValidateDataAnnotations();
+
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowAllPolicy",
@@ -40,9 +64,11 @@ namespace Calendar
 
             services.AddControllers();
 
+            // cancel transforming to camelCase. Pascal case is used in Angular models
             services.AddMvc()
                 .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
 
+            // this line allows to pass null object to controller methods instead of validation errors
             services.Configure<ApiBehaviorOptions>(options =>
                 options.SuppressModelStateInvalidFilter = true);
 
@@ -53,6 +79,11 @@ namespace Calendar
 
             services.AddDefaultIdentity<ApplicationUser>()
                 .AddEntityFrameworkStores<AppDbContext>();
+
+            // configure stronly typed settings object
+            //services.Configure<AuthSettings>(Configuration.GetSection("AuthSettings"));
+
+ 
 
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthService, AuthService>();
@@ -67,7 +98,7 @@ namespace Calendar
                 });
 
             // JWT Auth
-            var key = Encoding.UTF8.GetBytes(Configuration["AuthSettings:JWT_Secret"].ToString());
+            var key = Encoding.UTF8.GetBytes(Configuration["AuthSettings:JWTSecret"].ToString());
 
             services.AddAuthentication(x =>
             {

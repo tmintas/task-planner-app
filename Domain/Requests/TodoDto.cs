@@ -5,6 +5,8 @@ namespace Domain.Requests
 {
     public class TodoDto
     {
+        [DataType(DataType.Date)]
+        [Range(typeof(DateTime), "01/01/1900", "01/01/2100", ErrorMessage = "Date is out of range. Should be between 01.01.1900 and 01.01.2100")]
         public DateTime Date { get; set; }
 
         public bool HasTime { get; set; }

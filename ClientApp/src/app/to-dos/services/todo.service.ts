@@ -20,7 +20,7 @@ export class TodoService {
 
 	public GetUserTodos() : Observable<Todo[]> {
 		// Todo get viewmodels instead of dtos
-		return this.http.get<Todo[]>(this.apiEndpoint + '/UserTodos').pipe(
+		return this.http.get<Todo[]>(this.apiEndpoint + '/user-todos').pipe(
 			map(todos => {
 				todos.map(d => {
 					d.Date = new Date(d.Date);

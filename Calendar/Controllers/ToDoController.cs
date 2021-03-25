@@ -24,10 +24,10 @@ namespace Web.Controllers
             _userService = userService;
         }
 
-        // GET: api/UserTodos
+        // GET: api/user-todos
         [HttpGet]
         [Authorize]
-        [Route("UserTodos")]
+        [Route("user-todos")]
         public async Task<ActionResult<IEnumerable<ToDoItem>>> GetUserTodos()
         {
             var items = await _todoRepository.GetAllAsync();
