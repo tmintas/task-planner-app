@@ -7,10 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using System;
 using Microsoft.EntityFrameworkCore;
-using System.Text;
 using UserManagement.Models;
 using Web.Middleware;
 using Web.Repositories;
@@ -33,25 +30,23 @@ namespace Calendar
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddOptions();
-            //services
-            //     .AddOptions<AuthSettings>()
-            //     .Bind(Configuration.GetSection("AuthSettings"))
-            //     //.PostConfigure(x =>
-            //     //{
-            //     //    var validationResults = new List<ValidationResult>();
-            //     //    var context = new ValidationContext(x);
-            //     //    var isValid = Validator.TryValidateObject(x, context, validationResults);
+            // configure stronly typed settings object to be used as an injected AuthSettings type object globally across the app
+            services.Configure<AuthSettings>(Configuration.GetSection("AuthSettings"));
+            services.Configure<ConnectionStringSettings>(Configuration.GetSection("ConnectionStrings"));
 
-            //     //    if (isValid) return;
+            // register filter to add runtime settings object validation
+            // this is done to prevent app from startup if any of config validation errors happens
+            services.AddTransient<IStartupFilter, SettingValidationStartupFilter>();
 
-            //     //    var msg = string.Join("\n", validationResults.Select(vr => vr.ErrorMessage));
+            // explicitly register the settings objects to avoid using IOptions<T> while injecting
+            services.AddSingleton(resolver => resolver.GetRequiredService<IOptions<AuthSettings>>().Value);
+            services.AddSingleton(resolver => resolver.GetRequiredService<IOptions<ConnectionStringSettings>>().Value);
 
-            //     //    throw new Exception("inval");
+            // register as an IValidatable
+            services.AddSingleton<IValidatable>(resolver => resolver.GetRequiredService<IOptions<AuthSettings>>().Value);
+            services.AddSingleton<IValidatable>(resolver => resolver.GetRequiredService<IOptions<ConnectionStringSettings>>().Value);
 
-            //     //});
-            //     .ValidateDataAnnotations();
-
+            // add core
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowAllPolicy",
@@ -61,36 +56,19 @@ namespace Calendar
             services.AddControllers();
 
             // cancel transforming to camelCase. Pascal case is used in Angular models
-            services.AddMvc()
+            services
+                .AddMvc()
                 .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
 
             // this line allows to pass null object to controller methods instead of validation errors
-            services.Configure<ApiBehaviorOptions>(options =>
-                options.SuppressModelStateInvalidFilter = true);
+            services.Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true);
 
-            services.AddDbContextPool<AppDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DevConnection")));
+            // configure identity
             services.AddScoped<UserManager<ApplicationUser>>();
-            services.AddScoped(typeof(IDatabaseRepository<>), typeof(SqlRepository<>));
-
-            services.AddDefaultIdentity<ApplicationUser>()
+            services
+                .AddDefaultIdentity<ApplicationUser>()
                 .AddEntityFrameworkStores<AppDbContext>();
 
-            // register filter to add runtime settings object validation
-            // if this is not done, incorrect settings object will still be allowed for app to startup
-            services.AddTransient<IStartupFilter, SettingValidationStartupFilter>();
-
-            // configure stronly typed settings object
-            services.Configure<AuthSettings>(Configuration.GetSection("AuthSettings"));
-
-            // explicitly registed the settings object to avoid using IOptions<T> while injecting
-            services.AddSingleton(resolver => resolver.GetRequiredService<IOptions<AuthSettings>>().Value);
-
-            // register as an IValidatable
-            services.AddSingleton<IValidatable>(resolver => resolver.GetRequiredService<IOptions<AuthSettings>>().Value);
-
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IAuthService, AuthService>();
             services.Configure<IdentityOptions>(
                 options =>
                 {
@@ -101,27 +79,28 @@ namespace Calendar
                     options.Password.RequiredLength = 4;
                 });
 
-            // JWT Auth
-            var key = Encoding.UTF8.GetBytes(Configuration["AuthSettings:JWTSecret"].ToString());
+            // add services
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped(typeof(IDatabaseRepository<>), typeof(SqlRepository<>));
 
-            services.AddAuthentication(x =>
-            {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(x =>
-            {
-                x.RequireHttpsMetadata = false;
-                x.SaveToken = false;
-                x.TokenValidationParameters = new TokenValidationParameters
+            // connection string configuration
+            services.AddDbContextPool<AppDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DevConnection")));
+
+            // auth configuration
+            services
+                .AddAuthentication(x =>
                 {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-                    ClockSkew = TimeSpan.Zero
-                };
-            });
+                    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                    x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer();
+
+            // configure JWT bearer options using separate class to inject stronly type AuthSettings object there
+            services.ConfigureOptions<ConfigureJWTBearerOptions>();
+            services.ConfigureOptions<ConnectionStringOptions>();
 
             services.AddHttpContextAccessor();
         }
@@ -130,7 +109,6 @@ namespace Calendar
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<ApplicationUser> userManager)
         {
             //app.UseHttpsRedirection();
-
 
             //app.UseExceptionHandler(a => a.Run(async context =>
             //{

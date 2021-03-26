@@ -15,13 +15,13 @@ namespace Web.Controllers
     [ApiController]
     public class ToDoController : ControllerBase
     {
-        private readonly IDatabaseRepository<ToDoItem> _todoRepository;
-        private readonly IUserService _userService;
+        private readonly IDatabaseRepository<ToDoItem> todoRepository;
+        private readonly IUserService userService;
 
         public ToDoController(IDatabaseRepository<ToDoItem> todoRepository, IUserService userService)
         {
-            _todoRepository = todoRepository;
-            _userService = userService;
+            this.todoRepository = todoRepository;
+            this.userService = userService;
         }
 
         // GET: api/user-todos
@@ -30,8 +30,8 @@ namespace Web.Controllers
         [Route("user-todos")]
         public async Task<ActionResult<IEnumerable<ToDoItem>>> GetUserTodos()
         {
-            var items = await _todoRepository.GetAllAsync();
-            var user = await _userService.GetCurrentUser();
+            var items = await todoRepository.GetAllAsync();
+            var user = await userService.GetCurrentUser();
             var userItems = items.Where(i => i.UserId == user.Id);
 
             return Ok(userItems);
@@ -42,7 +42,7 @@ namespace Web.Controllers
         [Authorize]
         public async Task<ActionResult<ToDoItem>> GetToDoItem(int id)
         {
-            var item = await _todoRepository.GetByIdAsync(id);
+            var item = await todoRepository.GetByIdAsync(id);
 
             if (item == null) return NotFound();
 
@@ -70,7 +70,7 @@ namespace Web.Controllers
                 return BadRequest("Wrong importance type");
             }
 
-            var currentUser = await _userService.GetCurrentUser();
+            var currentUser = await userService.GetCurrentUser();
 
             var newItem = new ToDoItem()
             {
@@ -82,7 +82,7 @@ namespace Web.Controllers
                 UserId = currentUser.Id
             };
 
-            await _todoRepository.AddAsync(newItem);
+            await todoRepository.AddAsync(newItem);
 
             return CreatedAtAction("PostToDoItem", newItem);
         }
@@ -103,7 +103,7 @@ namespace Web.Controllers
                 return BadRequest("Wrong importance type");
             }
 
-            ToDoItem itemToUpdate = await _todoRepository.GetByIdAsync(id);
+            ToDoItem itemToUpdate = await todoRepository.GetByIdAsync(id);
             if (itemToUpdate == null)
             {
                 return NotFound($"Item with id {id} was not found in the database");
@@ -114,7 +114,7 @@ namespace Web.Controllers
             itemToUpdate.ImportanceTypeId = itemUpdateDto.Importance;
             itemToUpdate.Name = itemUpdateDto.Name;
 
-            await _todoRepository.UpdateAsync(itemToUpdate);
+            await todoRepository.UpdateAsync(itemToUpdate);
 
             return NoContent();
         }
@@ -124,14 +124,14 @@ namespace Web.Controllers
         [Authorize]
         public async Task<IActionResult> ToggleDone(int id)
         {
-            var todo = await _todoRepository.GetByIdAsync(id);
+            var todo = await todoRepository.GetByIdAsync(id);
             if (todo == null)
             {
                 return NotFound($"Item with id {id} was not found in the database");
             }
 
             todo.IsDone = !todo.IsDone;
-            await _todoRepository.UpdateAsync(todo);
+            await todoRepository.UpdateAsync(todo);
 
             return NoContent();
         }
@@ -141,14 +141,14 @@ namespace Web.Controllers
         [Authorize]
         public async Task<ActionResult<ToDoItem>> DeleteToDoItem(int id)
         {
-            var toDoItem = await _todoRepository.GetByIdAsync(id);
+            var toDoItem = await todoRepository.GetByIdAsync(id);
                 
             if (toDoItem == null)
             {
                 return NotFound();
             }
 
-            await _todoRepository.DeleteAsync(id);
+            await todoRepository.DeleteAsync(id);
 
             return toDoItem;
         }

@@ -1,13 +1,11 @@
-﻿using Domain.Models;
-using Domain.Requests;
+﻿using Domain.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
 using System;
 using System.Threading.Tasks;
 using Web.Services.Contracts;
+using Web.Settings;
 
 namespace Web.Controllers
 {
@@ -16,21 +14,12 @@ namespace Web.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService authServce;
-        private readonly IConfiguration configuration;
+        private readonly AuthSettings authSettings;
 
-        public AuthController(IAuthService authServce, IConfiguration configuration)
+        public AuthController(IAuthService authServce, AuthSettings authSettings)
         {
             this.authServce = authServce;
-            this.configuration = configuration;
-
-            //try
-            //{
-            //    this.authSettings = authSettings.Value;
-            //}
-            //catch (Exception ex)
-            //{
-            //    throw ex;
-            //}
+            this.authSettings = authSettings;
         }
         
         [HttpPost]
@@ -76,15 +65,10 @@ namespace Web.Controllers
 
         private void setTokenCookie(string token)
         {
-            if (!int.TryParse(this.configuration["AuthSettings:RefreshTokenLifeTimeDays"], out int refreshTokenLifetimeDays))
-            {
-                throw new Exception("Invalid settings value: RefreshTokenLifeTimeDays");
-            }
-
             var cookieOptions = new CookieOptions
             {
                 HttpOnly = true,
-                Expires = DateTime.Now.AddDays(refreshTokenLifetimeDays)
+                Expires = DateTime.Now.AddDays(authSettings.RefreshTokenLifeTimeDays)
             };
 
             Response.Cookies.Append("refreshToken", token, cookieOptions);

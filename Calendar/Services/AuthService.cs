@@ -1,11 +1,9 @@
 ﻿using Domain.Entities;
-using Domain.Models;
 using Domain.Requests;
 using Domain.Responses;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -23,20 +21,18 @@ namespace Web.Services
 {
     public class AuthService : IAuthService
     {
-        private readonly IConfiguration configuration;
         private readonly UserManager<ApplicationUser> userManager;
-        private readonly AuthSettings appSettings;
+        private readonly AuthSettings authSettings;
 
-        public AuthService(UserManager<ApplicationUser> userManager, IConfiguration configuration, AuthSettings appSettings)
+        public AuthService(UserManager<ApplicationUser> userManager, AuthSettings authSettings)
         {
             this.userManager = userManager;
-            this.configuration = configuration;
-            this.appSettings = appSettings;
+            this.authSettings = authSettings;
         }
 
         public async Task<AuthenticateResponse> Login(LoginRequest model)
         {
-            var secret = this.appSettings.AccessTokenLifeTimeMinutes;
+            var secret = authSettings.AccessTokenLifeTimeMinutes;
 
             var user = userManager.Users.Include(u => u.RefreshTokens).FirstOrDefault(u => u.UserName == model.UserName);
 
@@ -101,13 +97,9 @@ namespace Web.Services
 
         private string generateAccessToken(ApplicationUser user)
         {
-            var key = Encoding.UTF8.GetBytes(this.configuration["AuthSettings:JWT_Secret"].ToString());
-            var securityKey = new SymmetricSecurityKey(key);
-  
-            if (!int.TryParse(this.configuration["AuthSettings:AccessTokenLifeTimeMinutes"], out int accessTokenLifetimeMinutes))
-            {
-                throw new Exception("Invalid settings value: AccessTokenLifeTimeMinutes");
-            }
+            var encodedKey = Encoding.UTF8.GetBytes(authSettings.JWTSecret);
+            var securityKey = new SymmetricSecurityKey(encodedKey);
+            var accessTokenLifetimeMinutes = authSettings.AccessTokenLifeTimeMinutes;
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
