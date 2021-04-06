@@ -30,27 +30,32 @@ namespace Calendar
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // configure stronly typed settings object to be used as an injected AuthSettings type object globally across the app
+            // bind settings configs to stronglt typed objects
             services.Configure<AuthSettings>(Configuration.GetSection("AuthSettings"));
             services.Configure<ConnectionStringSettings>(Configuration.GetSection("ConnectionStrings"));
+
+            // explicitly register singleton settings objects to avoid using IOptions<T> while injecting
+            services.AddSingleton(resolver => resolver.GetRequiredService<IOptions<AuthSettings>>().Value);
+            services.AddSingleton(resolver => resolver.GetRequiredService<IOptions<ConnectionStringSettings>>().Value);
+
+            // register stronlgy typed app settings as an IValidatable, so they can be validated using startup filters
+            services.AddSingleton<IValidatable>(resolver => resolver.GetRequiredService<IOptions<AuthSettings>>().Value);
+            services.AddSingleton<IValidatable>(resolver => resolver.GetRequiredService<IOptions<ConnectionStringSettings>>().Value);
 
             // register filter to add runtime settings object validation
             // this is done to prevent app from startup if any of config validation errors happens
             services.AddTransient<IStartupFilter, SettingValidationStartupFilter>();
 
-            // explicitly register the settings objects to avoid using IOptions<T> while injecting
-            services.AddSingleton(resolver => resolver.GetRequiredService<IOptions<AuthSettings>>().Value);
-            services.AddSingleton(resolver => resolver.GetRequiredService<IOptions<ConnectionStringSettings>>().Value);
-
-            // register as an IValidatable
-            services.AddSingleton<IValidatable>(resolver => resolver.GetRequiredService<IOptions<AuthSettings>>().Value);
-            services.AddSingleton<IValidatable>(resolver => resolver.GetRequiredService<IOptions<ConnectionStringSettings>>().Value);
-
-            // add core
+            // add cors policy
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowAllPolicy",
-                p => p.WithOrigins("http://localhost:4200/").SetIsOriginAllowed(o => true).AllowAnyMethod().AllowAnyHeader().AllowCredentials());
+                policyBuilder => policyBuilder
+                    .WithOrigins("http://localhost:4200/")
+                    .SetIsOriginAllowed(o => true)
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials());
             });
 
             services.AddControllers();
@@ -105,6 +110,7 @@ namespace Calendar
             services.ConfigureOptions<ConfigureJWTBearerOptions>();
             services.ConfigureOptions<ConnectionStringOptions>();
 
+            // TODO research
             services.AddHttpContextAccessor();
         }
 

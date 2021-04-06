@@ -5,6 +5,6 @@ namespace Web.Services.Contracts
 {
     public interface IUserService
     {
-        public Task<ApplicationUser> GetCurrentUser();
+        Task<ApplicationUser> GetCurrentUser();
     }
 }
