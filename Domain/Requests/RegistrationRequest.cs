@@ -1,6 +1,6 @@
-﻿namespace Domain.Requests
-{
-    public class RegistrationRequest : AuthenticateRequest
-    {
-    }
-}
+﻿//namespace Domain.Requests
+//{
+//    public class RegistrationRequest : AuthenticateRequest
+//    {
+//    }
+//}

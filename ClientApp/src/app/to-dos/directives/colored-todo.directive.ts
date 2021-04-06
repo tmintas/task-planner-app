@@ -15,7 +15,7 @@ export class ColoredTodoDirective implements OnInit {
     ngOnInit() : void {
         let color : string;
         
-        switch (this.Todo.Importance) {
+        switch (this.Todo.ImportanceTypeId) {
             case Importance.High:
                 color = "#ff9466";
                 break;

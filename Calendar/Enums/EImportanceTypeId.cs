@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Domain.Enums
+namespace Web.Enums
 {
-    public enum ImportanceType
+    public enum EImportanceTypeId
     {
         [Display(Name = "Low")]
         Low = 1,

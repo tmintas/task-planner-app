@@ -1,11 +1,10 @@
-﻿using Domain.Models;
-using Domain.Requests;
-using Infrastructure;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Web.Migrations;
+using Web.Models.Entities;
 using Web.Repositories.Contracts;
 
 namespace Web.Repositories

@@ -6,17 +6,17 @@ export class Todo extends EntityBase {
 	public HasTime : boolean = false;
 	public Name : string = null;
 	public Description : string = null;
-	public Importance : Importance = null;
+	public ImportanceTypeId : Importance = null;
 	public IsDone : boolean = false;
 
 	public Visible = true;
 
-	constructor(date : Date, name : string, hasTime : boolean, description : string, importance : Importance) {
+	constructor(date : Date, name : string, hasTime : boolean, description : string) {
 		super();
 		this.Date = date;
 		this.Name = name;
 		this.Description = this.Description;
-		this.Importance = importance;
+		this.ImportanceTypeId = Importance.High;
 		this.HasTime = hasTime;
 	}
 }

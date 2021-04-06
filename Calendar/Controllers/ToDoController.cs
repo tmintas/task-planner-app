@@ -1,6 +1,4 @@
-﻿using Domain;
-using Domain.Requests;
-using Domain.Enums;
+﻿using Domain.Requests;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +6,8 @@ using System.Threading.Tasks;
 using Web.Repositories.Contracts;
 using Microsoft.AspNetCore.Authorization;
 using Web.Services.Contracts;
+using Web.Middleware;
+using Web.Models.Entities;
 
 namespace Web.Controllers
 {
@@ -15,10 +15,10 @@ namespace Web.Controllers
     [ApiController]
     public class ToDoController : ControllerBase
     {
-        private readonly IDatabaseRepository<ToDoItem> todoRepository;
+        private readonly IDatabaseRepository<Todo> todoRepository;
         private readonly IUserService userService;
 
-        public ToDoController(IDatabaseRepository<ToDoItem> todoRepository, IUserService userService)
+        public ToDoController(IDatabaseRepository<Todo> todoRepository, IUserService userService)
         {
             this.todoRepository = todoRepository;
             this.userService = userService;
@@ -28,7 +28,7 @@ namespace Web.Controllers
         [HttpGet]
         [Authorize]
         [Route("user-todos")]
-        public async Task<ActionResult<IEnumerable<ToDoItem>>> GetUserTodos()
+        public async Task<ActionResult<IEnumerable<Todo>>> GetUserTodos()
         {
             var items = await todoRepository.GetAllAsync();
             var user = await userService.GetCurrentUser();
@@ -40,7 +40,7 @@ namespace Web.Controllers
         // GET: api/Todo/5
         [HttpGet("{id}")]
         [Authorize]
-        public async Task<ActionResult<ToDoItem>> GetToDoItem(int id)
+        public async Task<ActionResult<Todo>> GetToDoItem(int id)
         {
             var item = await todoRepository.GetByIdAsync(id);
 
@@ -49,34 +49,19 @@ namespace Web.Controllers
             return Ok(item);
         }
 
-        // POST: api/Todo/5
+        // POST: api/Todo
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult<ToDoItem>> PostToDoItem([FromBody] TodoDto itemUpdateDto)
+        [ServiceFilter(typeof(ModelValidationFilter))]
+        public async Task<ActionResult<Todo>> PostToDoItem([FromBody] TodoDto itemUpdateDto)
         {
-            if (itemUpdateDto == null)
-            {
-                return NotFound($"Item is empty");
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var availbleImportances = new[] { ImportanceType.High, ImportanceType.Middle, ImportanceType.Low };
-            if (!availbleImportances.Any(i => i == itemUpdateDto.Importance))
-            {
-                return BadRequest("Wrong importance type");
-            }
-
             var currentUser = await userService.GetCurrentUser();
 
-            var newItem = new ToDoItem()
+            var newItem = new Todo()
             {
                 Date = itemUpdateDto.Date.ToLocalTime(),
                 Description = itemUpdateDto.Description,
-                ImportanceTypeId = itemUpdateDto.Importance,
+                ImportanceTypeId = itemUpdateDto.ImportanceTypeId,
                 Name = itemUpdateDto.Name,
                 HasTime = itemUpdateDto.HasTime,
                 UserId = currentUser.Id
@@ -90,31 +75,22 @@ namespace Web.Controllers
         //PUT: api/Todo/5
         [HttpPut("{id}")]
         [Authorize]
+        [ServiceFilter(typeof(ModelValidationFilter))]
         public async Task<IActionResult> UpdateToDoItem(int id, [FromBody] TodoDto itemUpdateDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            var todoToUpdate = await todoRepository.GetByIdAsync(id);
 
-            var availbleImportances = new[] { ImportanceType.High, ImportanceType.Middle, ImportanceType.Low };
-            if (!availbleImportances.Any(i => i == itemUpdateDto.Importance))
-            {
-                return BadRequest("Wrong importance type");
-            }
-
-            ToDoItem itemToUpdate = await todoRepository.GetByIdAsync(id);
-            if (itemToUpdate == null)
+            if (todoToUpdate == null)
             {
                 return NotFound($"Item with id {id} was not found in the database");
             }
 
-            itemToUpdate.Date = itemUpdateDto.Date.ToLocalTime();
-            itemToUpdate.Description = itemUpdateDto.Description;
-            itemToUpdate.ImportanceTypeId = itemUpdateDto.Importance;
-            itemToUpdate.Name = itemUpdateDto.Name;
+            todoToUpdate.Date = itemUpdateDto.Date.ToLocalTime();
+            todoToUpdate.Description = itemUpdateDto.Description;
+            todoToUpdate.ImportanceTypeId = itemUpdateDto.ImportanceTypeId;
+            todoToUpdate.Name = itemUpdateDto.Name;
 
-            await todoRepository.UpdateAsync(itemToUpdate);
+            await todoRepository.UpdateAsync(todoToUpdate);
 
             return NoContent();
         }
@@ -139,7 +115,7 @@ namespace Web.Controllers
         // DELETE: api/Todo/5
         [HttpDelete("{id}")]
         [Authorize]
-        public async Task<ActionResult<ToDoItem>> DeleteToDoItem(int id)
+        public async Task<ActionResult<Todo>> DeleteToDoItem(int id)
         {
             var toDoItem = await todoRepository.GetByIdAsync(id);
                 

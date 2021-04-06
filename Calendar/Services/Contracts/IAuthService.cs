@@ -1,5 +1,4 @@
-﻿using Domain.Entities;
-using Domain.Requests;
+﻿using Domain.Requests;
 using Domain.Responses;
 using System.Threading.Tasks;
 

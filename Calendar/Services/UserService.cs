@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
-using UserManagement.Models;
+using Web.Models.Entities;
 using Web.Services.Contracts;
 
 namespace Web.Services

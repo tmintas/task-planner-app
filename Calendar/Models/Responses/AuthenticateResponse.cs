@@ -1,5 +1,5 @@
 ﻿using System.Text.Json.Serialization;
-using UserManagement.Models;
+using Web.Models.Entities;
 
 namespace Domain.Requests
 {

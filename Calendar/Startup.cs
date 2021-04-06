@@ -1,4 +1,3 @@
-using Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,13 +7,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
-using UserManagement.Models;
 using Web.Middleware;
 using Web.Repositories;
 using Web.Repositories.Contracts;
 using Web.Services;
 using Web.Services.Contracts;
 using Web.Settings;
+using Web.Models.Entities;
+using Web.Migrations;
 
 namespace Calendar
 {
@@ -60,8 +60,11 @@ namespace Calendar
                 .AddMvc()
                 .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
 
-            // this line allows to pass null object to controller methods instead of validation errors
+            // disable automatic http 400 resonses to be able to use custom validation filters
             services.Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true);
+
+            // add model validation middleware filter
+            services.AddScoped<ModelValidationFilter>();
 
             // configure identity
             services.AddScoped<UserManager<ApplicationUser>>();

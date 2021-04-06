@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using UserManagement.Models;
+using Web.Models.Entities;
 
 namespace Web.Services.Contracts
 {

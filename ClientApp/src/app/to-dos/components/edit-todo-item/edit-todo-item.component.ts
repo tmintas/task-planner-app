@@ -70,7 +70,7 @@ export class EditTodoItemComponent implements OnInit, OnDestroy {
 			Time: time,
 			Name: item.Name,
 			Description: item.Description,
-			Importance: item.Importance
+			Importance: item.ImportanceTypeId
 		});
 	}
 
@@ -91,7 +91,6 @@ export class EditTodoItemComponent implements OnInit, OnDestroy {
 			this.ToDoForm.get('Name').value,
 			ngbTime != null,
 			this.ToDoForm.get('Description').value,
-			+this.ToDoForm.get('Importance').value
 		);
 
 		this.store.dispatch(SubmitTodo({ item }));
