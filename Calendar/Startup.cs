@@ -71,6 +71,9 @@ namespace Calendar
             // add model validation middleware filter
             services.AddScoped<ModelValidationFilter>();
 
+            // add generic entity exists validation filter 
+            services.AddScoped<EntityExistsValidationFilter<Todo>>();
+
             // configure identity
             services.AddScoped<UserManager<ApplicationUser>>();
             services

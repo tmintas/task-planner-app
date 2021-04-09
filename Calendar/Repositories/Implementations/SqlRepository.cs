@@ -51,9 +51,8 @@ namespace Web.Repositories
             return item;
         }
 
-        public async Task<TEntity> DeleteAsync(int id)
+        public async Task<TEntity> DeleteAsync(TEntity item)
         {
-            var item = await GetByIdAsync(id);
             context.Remove(item);
             await context.SaveChangesAsync();
 

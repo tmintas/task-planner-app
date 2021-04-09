@@ -11,12 +11,12 @@ export class Todo extends EntityBase {
 
 	public Visible = true;
 
-	constructor(date : Date, name : string, hasTime : boolean, description : string) {
+	constructor(date : Date, name : string, hasTime : boolean, description : string, importance: Importance) {
 		super();
 		this.Date = date;
 		this.Name = name;
-		this.Description = this.Description;
-		this.ImportanceTypeId = Importance.High;
+		this.Description = description;
+		this.ImportanceTypeId = importance;
 		this.HasTime = hasTime;
 	}
 }

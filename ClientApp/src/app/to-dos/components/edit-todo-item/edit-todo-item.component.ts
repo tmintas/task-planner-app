@@ -91,6 +91,7 @@ export class EditTodoItemComponent implements OnInit, OnDestroy {
 			this.ToDoForm.get('Name').value,
 			ngbTime != null,
 			this.ToDoForm.get('Description').value,
+			+this.ToDoForm.get('Importance').value
 		);
 
 		this.store.dispatch(SubmitTodo({ item }));

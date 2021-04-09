@@ -40,20 +40,19 @@ namespace Web.Controllers
         // GET: api/Todo/5
         [HttpGet("{id}")]
         [Authorize]
-        public async Task<ActionResult<Todo>> GetToDoItem(int id)
+        [ServiceFilter(typeof(EntityExistsValidationFilter<Todo>))]
+        public ActionResult<Todo> GetTodo(int id)
         {
-            var item = await todoRepository.GetByIdAsync(id);
+            var todo = HttpContext.Items["entity"] as Todo;
 
-            if (item == null) return NotFound();
-
-            return Ok(item);
+            return Ok(todo);
         }
 
         // POST: api/Todo
         [HttpPost]
         [Authorize]
         [ServiceFilter(typeof(ModelValidationFilter))]
-        public async Task<ActionResult<Todo>> PostToDoItem([FromBody] TodoDto itemUpdateDto)
+        public async Task<ActionResult<Todo>> PostTodo([FromBody] TodoDto itemUpdateDto)
         {
             var currentUser = await userService.GetCurrentUser();
 
@@ -76,14 +75,10 @@ namespace Web.Controllers
         [HttpPut("{id}")]
         [Authorize]
         [ServiceFilter(typeof(ModelValidationFilter))]
-        public async Task<IActionResult> UpdateToDoItem(int id, [FromBody] TodoDto itemUpdateDto)
+        [ServiceFilter(typeof(EntityExistsValidationFilter<Todo>))]
+        public async Task<IActionResult> UpdateTodo(int id, [FromBody] TodoDto itemUpdateDto)
         {
-            var todoToUpdate = await todoRepository.GetByIdAsync(id);
-
-            if (todoToUpdate == null)
-            {
-                return NotFound($"Item with id {id} was not found in the database");
-            }
+            var todoToUpdate = HttpContext.Items["entity"] as Todo;
 
             todoToUpdate.Date = itemUpdateDto.Date.ToLocalTime();
             todoToUpdate.Description = itemUpdateDto.Description;
@@ -98,16 +93,14 @@ namespace Web.Controllers
         //PUT: api/toggle-done/5
         [HttpPut("toggle-done/{id}")]
         [Authorize]
+        [ServiceFilter(typeof(EntityExistsValidationFilter<Todo>))]
         public async Task<IActionResult> ToggleDone(int id)
         {
-            var todo = await todoRepository.GetByIdAsync(id);
-            if (todo == null)
-            {
-                return NotFound($"Item with id {id} was not found in the database");
-            }
+            var todoToUpdate = HttpContext.Items["entity"] as Todo;
 
-            todo.IsDone = !todo.IsDone;
-            await todoRepository.UpdateAsync(todo);
+            todoToUpdate.IsDone = !todoToUpdate.IsDone;
+
+            await todoRepository.UpdateAsync(todoToUpdate);
 
             return NoContent();
         }
@@ -115,18 +108,14 @@ namespace Web.Controllers
         // DELETE: api/Todo/5
         [HttpDelete("{id}")]
         [Authorize]
-        public async Task<ActionResult<Todo>> DeleteToDoItem(int id)
+        [ServiceFilter(typeof(EntityExistsValidationFilter<Todo>))]
+        public async Task<ActionResult<Todo>> DeleteTodo(int id)
         {
-            var toDoItem = await todoRepository.GetByIdAsync(id);
-                
-            if (toDoItem == null)
-            {
-                return NotFound();
-            }
+            var todoToDelete = HttpContext.Items["entity"] as Todo;
 
-            await todoRepository.DeleteAsync(id);
+            await todoRepository.DeleteAsync(todoToDelete);
 
-            return toDoItem;
+            return todoToDelete;
         }
     }
 }
