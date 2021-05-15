@@ -1,0 +1,31 @@
+{
+	"folders": [
+		{
+			"path": "Calendar",
+			"name": "Backend"
+		},
+		{
+			"path": "ClientApp",
+			"name": "Frontend"
+		},
+		{
+			"path": "../Learn"
+		}
+	],
+	"settings": {
+		"restoreTerminals.terminals": [
+			{
+				"splitTerminals": [
+					{
+						"name": "Frontend",
+						"commands": ["cd /Users/timur/Desktop/Projects/calendar/ClientApp"]
+					},
+					{
+						"name": "Backend",
+						"commands": ["cd /Users/timur/Desktop/Projects/calendar/Calendar"]
+					}
+				]
+			}
+		]
+	}
+}
