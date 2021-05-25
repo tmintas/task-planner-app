@@ -65,10 +65,10 @@ namespace Web.Controllers
                 HasTime = itemUpdateDto.HasTime,
                 UserId = currentUser.Id
             };
-
+    
             await todoRepository.AddAsync(newItem);
 
-            return CreatedAtAction("PostToDoItem", newItem);
+            return CreatedAtAction("PostTodo", newItem);
         }
 
         //PUT: api/Todo/5
