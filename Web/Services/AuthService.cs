@@ -30,8 +30,6 @@ namespace Web.Services
 
         public async Task<AuthenticateResponse> Login(LoginRequest model)
         {
-            var secret = authSettings.AccessTokenLifeTimeMinutes;
-
             var user = userManager.Users.Include(u => u.RefreshTokens).FirstOrDefault(u => u.UserName == model.UserName);
 
             if (user == null || !await userManager.CheckPasswordAsync(user, model.Password))

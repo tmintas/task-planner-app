@@ -15,6 +15,7 @@ using Web.Services.Contracts;
 using Web.Settings;
 using Web.Models.Entities;
 using Web.Migrations;
+using Microsoft.Extensions.Hosting;
 
 namespace Calendar
 {
@@ -120,6 +121,10 @@ namespace Calendar
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<ApplicationUser> userManager)
         {
+            // if (env.IsDevelopment())
+            // {
+            //     app.UseDeveloperExceptionPage();
+            // }
             //app.UseHttpsRedirection();
 
             //app.UseExceptionHandler(a => a.Run(async context =>

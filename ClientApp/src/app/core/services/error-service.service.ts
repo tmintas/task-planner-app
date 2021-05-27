@@ -6,37 +6,37 @@ import { HandledError } from 'app/shared/models/handled-error.model';
 
 @Injectable({ providedIn: 'root' })
 export class ErrorService implements ErrorHandler {
-    constructor(private notificationService : NotificationService) {}
+    constructor(private notificationService: NotificationService) { }
 
-    HandleError(error : HandledError) : void {
+    HandleError(error: HandledError): void {
         this.handleError(error);
     }
 
-	// ErrorHandler implementation
+    // ErrorHandler implementation
     handleError(error: HandledError): void {
-		if (environment.production) {
-			this.notificationService.AddError(
-				error.ErrorTitle, 
-				'Please report about the error to developers');
-			return;
-		}
+        if (environment.production) {
+            this.notificationService.AddError(
+                error.ErrorTitle,
+                'Please report about the error to developers');
+            return;
+        }
 
-		if (error.Error instanceof HttpErrorResponse) {
-			const serverError = error.Error as HttpErrorResponse;
-			let content = `Error occured at <strong>${serverError.url}</strong>, status <strong>${serverError.status}</strong>`;
+        if (error.Error instanceof HttpErrorResponse) {
+            const serverError = error.Error as HttpErrorResponse;
+            let content = `Error occured at <strong>${serverError.url}</strong>, status <strong>${serverError.status}</strong>`;
 
-			if (serverError.error && serverError.error.errMessage) {
-				content += `, custom message <strong>${serverError.error.errMessage}</strong>`;
-			} else if (typeof serverError.error == 'string') {
-				content += `, custom message <strong>${serverError.error}</strong>`;
-			} else if (serverError.error instanceof ProgressEvent) {
-				content += ', error while connecting to the server';
-			}
-			
-			this.notificationService.AddError(error.ErrorTitle, content);
-		} else {
-			const clientError = error.Error as ErrorEvent;
-			this.notificationService.AddError(error.ErrorTitle, 'Client Eror: ' + clientError.message);
-		}
-	}
+            if (serverError.error && serverError.error.errMessage) {
+                content += `, custom message <strong>${serverError.error.errMessage}</strong>`;
+            } else if (typeof serverError.error == 'string') {
+                content += `, custom message <strong>${serverError.error}</strong>`;
+            } else if (serverError.error instanceof ProgressEvent) {
+                content += ', error while connecting to the server';
+            }
+
+            this.notificationService.AddError(error.ErrorTitle, content);
+        } else {
+            const clientError = error.Error as ErrorEvent;
+            this.notificationService.AddError(error.ErrorTitle, 'Client Eror: ' + clientError.message);
+        }
+    }
 }

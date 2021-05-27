@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Web.Services.Contracts;
 using Web.Middleware;
 using Web.Models.Entities;
+using System;
 
 namespace Web.Controllers
 {
@@ -41,6 +42,8 @@ namespace Web.Controllers
         [HttpGet("ping")]
         public ActionResult<Todo> Ping(int id)
         {
+            throw new Exception("are false");
+
             return Ok(new { test = 4 });
         }
 
