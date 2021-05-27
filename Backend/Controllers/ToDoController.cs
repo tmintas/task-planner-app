@@ -38,6 +38,13 @@ namespace Web.Controllers
         }
 
         // GET: api/Todo/5
+        [HttpGet("ping")]
+        public ActionResult<Todo> Ping(int id)
+        {
+            return Ok(new { test = 4 });
+        }
+
+        // GET: api/Todo/5
         [HttpGet("{id}")]
         [Authorize]
         [ServiceFilter(typeof(EntityExistsValidationFilter<Todo>))]

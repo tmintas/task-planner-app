@@ -21,12 +21,68 @@
 						"commands": ["cd ../ClientApp"]
 					},
 					{
-						"name": "Backend",
-						"commands": ["cd ../Backend"]
+						"name": "Backend"
 					}
 				]
 			}
 		],
 		"angular.enable-strict-mode-prompt": false
+	},
+	"launch": {
+		"configurations": [
+			{
+				"name": "client",
+				"type": "node-terminal",
+				"request": "launch",
+				"command": "npm run dev",
+				"cwd": "${workspaceFolder:Frontend}",
+				"serverReadyAction":{
+					"action": "debugWithChrome",
+					"pattern": "\\*\\* Angular Live Development Server is listening on .+, open your browser on ([^\\s]+) \\*\\*",
+					"uriFormat": "%s",
+					"webRoot": "${workspaceFolder:Frontend}"
+				},
+			},
+			{
+				"name": "server",
+				"type": "coreclr",
+				"request": "launch",
+				"preLaunchTask": "build",
+				"launchBrowser": {
+					"enabled": false
+				},
+				"program": "${workspaceFolder:Backend}/bin/Debug/netcoreapp3.1/Web.dll",
+				"args": [],
+				"cwd": "${workspaceFolder:Backend}",
+				"stopAtEntry": false,
+				"env": {
+					"ASPNETCORE_ENVIRONMENT": "Development"
+				},
+				"sourceFileMap": {
+					"/Views": "${workspaceFolder:Backend}/Views"
+				}
+			},
+		],
+		"compounds": [
+			{
+				"name": "client-server",
+				"configurations": ["server", "client"]
+			},  
+		]
+	},
+	"tasks": {
+		"version": "2.0.0",
+		"tasks": [
+			{
+				"label": "build",
+				"command": "dotnet build",
+				"type": "shell",
+				"group": "build",
+				"presentation": {
+					"reveal": "silent"
+				},
+				"problemMatcher": "$msCompile"
+			}
+		]
 	}
 }
