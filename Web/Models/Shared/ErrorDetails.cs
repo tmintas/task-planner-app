@@ -8,6 +8,11 @@ namespace Web.Models.Shared
 
         public string Message { get; set; }
 
+        public string StackTrace { get; set; }
+
+        public string Error { get; set; }
+
+
         public override string ToString()
         {
             return JsonSerializer.Serialize(this);

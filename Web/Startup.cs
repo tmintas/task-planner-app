@@ -15,7 +15,7 @@ using Web.Services.Contracts;
 using Web.Settings;
 using Web.Models.Entities;
 using Web.Migrations;
-using Microsoft.Extensions.Hosting;
+using Web.Extensions;
 
 namespace Calendar
 {
@@ -137,6 +137,9 @@ namespace Calendar
 
             //    await context.Response.WriteAsync(result);
             //}));
+
+            // configure global exception handling
+            app.ConfigureExceptionHandler(env);
 
             app.UseRouting();
             app.UseCors("AllowAllPolicy");

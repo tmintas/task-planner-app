@@ -38,14 +38,6 @@ namespace Web.Controllers
             return Ok(userItems);
         }
 
-        // GET: api/Todo/5
-        [HttpGet("ping")]
-        public ActionResult<Todo> Ping(int id)
-        {
-            throw new Exception("are false");
-
-            return Ok(new { test = 4 });
-        }
 
         // GET: api/Todo/5
         [HttpGet("{id}")]

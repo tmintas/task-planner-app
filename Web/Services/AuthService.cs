@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -49,20 +50,22 @@ namespace Web.Services
 
         public async Task<RegisterResponse> Register(RegistrationRequest model)
         {
+            var user = await userManager.Users.FirstOrDefaultAsync(u => u.UserName == model.UserName);
             var result = new RegisterResponse();
-            var appUser = new ApplicationUser
+
+            if (user != null)
+            {
+                result.Succeeded = false;
+
+                return result;
+            }
+            
+            user = new ApplicationUser
             {
                 UserName = model.UserName
             };
 
-            try
-            {
-                var userCreationResult = await userManager.CreateAsync(appUser, model.Password);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            await userManager.CreateAsync(user, model.Password);
 
             result.Succeeded = true;
 

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using Web.Middleware;
 using Web.Services.Contracts;
 using Web.Settings;
 
@@ -24,12 +25,13 @@ namespace Web.Controllers
         
         [HttpPost]
         [Route("login")]
+        [ServiceFilter(typeof(ModelValidationFilter))]
         public async Task<IActionResult> Login([FromBody] LoginRequest model)
         {
             var loginResult = await authServce.Login(model);
 
-            // TODO probably it is not OK
-            if (loginResult == null) return BadRequest(new { error = "Username or password is incorrect" });
+            if (loginResult == null) 
+                return BadRequest(new { error = "Username or password is incorrect" });
 
             setTokenCookie(loginResult.RefreshToken);
 
@@ -38,9 +40,13 @@ namespace Web.Controllers
 
         [HttpPost]
         [Route("register")]
+        [ServiceFilter(typeof(ModelValidationFilter))]
         public async Task<IActionResult> Register([FromBody] RegistrationRequest model)
         {
             var result = await authServce.Register(model);
+
+            if (!result.Succeeded)
+                return BadRequest(new { error = $"User with username {model.UserName} already exists!"} );
 
             return Ok(result);
         }
