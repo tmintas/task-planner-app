@@ -14,6 +14,7 @@ namespace Web.Middleware
         {
             this.dbContext = dbContext;
         }
+
         public void OnActionExecuting(ActionExecutingContext context)
         {
             if (!context.ActionArguments.ContainsKey("id"))

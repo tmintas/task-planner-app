@@ -8,21 +8,19 @@ using Microsoft.AspNetCore.Authorization;
 using Web.Services.Contracts;
 using Web.Middleware;
 using Web.Models.Entities;
-using System;
+using System.Security.Claims;
 
 namespace Web.Controllers
 {
-    [Route("api/Todo")]
+    [Route("api/[controller]")]
     [ApiController]
-    public class ToDoController : ControllerBase
+    public class TodoController : ControllerBase
     {
         private readonly IDatabaseRepository<Todo> todoRepository;
-        private readonly IUserService userService;
 
-        public ToDoController(IDatabaseRepository<Todo> todoRepository, IUserService userService)
+        public TodoController(IDatabaseRepository<Todo> todoRepository, IUserService userService)
         {
             this.todoRepository = todoRepository;
-            this.userService = userService;
         }
 
         // GET: api/user-todos
@@ -32,8 +30,9 @@ namespace Web.Controllers
         public async Task<ActionResult<IEnumerable<Todo>>> GetUserTodos()
         {
             var items = await todoRepository.GetAllAsync();
-            var user = await userService.GetCurrentUser();
-            var userItems = items.Where(i => i.UserId == user.Id);
+            var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            var userItems = items.Where(i => i.UserId == userId);
 
             return Ok(userItems);
         }
@@ -56,21 +55,21 @@ namespace Web.Controllers
         [ServiceFilter(typeof(ModelValidationFilter))]
         public async Task<ActionResult<Todo>> PostTodo([FromBody] TodoDto itemUpdateDto)
         {
-            var currentUser = await userService.GetCurrentUser();
+            var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            var newItem = new Todo()
+            var newTodo = new Todo()
             {
                 Date = itemUpdateDto.Date.ToLocalTime(),
                 Description = itemUpdateDto.Description,
                 ImportanceTypeId = itemUpdateDto.ImportanceTypeId,
                 Name = itemUpdateDto.Name,
                 HasTime = itemUpdateDto.HasTime,
-                UserId = currentUser.Id
+                UserId = userId
             };
     
-            await todoRepository.AddAsync(newItem);
+            await todoRepository.AddAsync(newTodo);
 
-            return CreatedAtAction("PostTodo", newItem);
+            return CreatedAtAction(nameof (PostTodo), newTodo);
         }
 
         //PUT: api/Todo/5
