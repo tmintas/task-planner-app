@@ -6,7 +6,6 @@ namespace Web.Models.Entities
     public class EntityBase
     {
         [Key]
-        [JsonPropertyName("id")]
         public virtual int Id { get; set; }
     }
 }

@@ -94,6 +94,7 @@ namespace Calendar
             // add services
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<ITodoService, TodoService>();
             services.AddScoped(typeof(IDatabaseRepository<>), typeof(SqlRepository<>));
 
             // connection string configuration
@@ -116,6 +117,8 @@ namespace Calendar
 
             // TODO research
             services.AddHttpContextAccessor();
+
+            services.AddAutoMapper(typeof (Startup));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -3,11 +3,15 @@ using Web.Enums;
 using System;
 using System.ComponentModel.DataAnnotations;
 using Web.Middleware;
+using System.Text.Json.Serialization;
 
 namespace Domain.Requests
 {
     public class TodoDto : IValidatableDto
     {
+        [JsonPropertyName("id")]
+        public int Id { get; set; }
+
         [DataType(DataType.Date)]
         [Range(typeof(DateTime), "01/01/1900", "01/01/2100", ErrorMessage = "Date is out of range. Should be between 01.01.1900 and 01.01.2100")]
         public DateTime Date { get; set; }

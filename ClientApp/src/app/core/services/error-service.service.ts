@@ -25,8 +25,8 @@ export class ErrorService implements ErrorHandler {
             const serverError = error.Error as HttpErrorResponse;
             let content = `Error occured at <strong>${serverError.url}</strong>, status <strong>${serverError.status}</strong>`;
 
-            if (serverError.error && serverError.error.errMessage) {
-                content += `, custom message <strong>${serverError.error.errMessage}</strong>`;
+            if (serverError.error && serverError.error.Message) {
+                content += `, custom message <strong>${serverError.error.Message}</strong>`;
             } else if (typeof serverError.error == 'string') {
                 content += `, custom message <strong>${serverError.error}</strong>`;
             } else if (serverError.error instanceof ProgressEvent) {
