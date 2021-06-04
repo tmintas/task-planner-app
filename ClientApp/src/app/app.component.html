@@ -4,5 +4,8 @@
         <app-notificator></app-notificator>
     </div>
 
-    <app-loading-spinner *ngIf="IsLoading$ | async"  [LoadingMessage]="LoadingMessage$ | async"></app-loading-spinner>
+    <app-loading-spinner
+        *ngIf="IsLoading$ | async"
+        [LoadingMessage]="LoadingMessage$ | async"
+    ></app-loading-spinner>
 </div>

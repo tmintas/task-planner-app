@@ -12,37 +12,37 @@ import { InitUser } from '@actions/auth';
 import { NotificationService } from './shared/services/notification.service';
 
 @Component({
-	selector: 'app-root',
-	templateUrl: './app.component.html',
-	styleUrls: ['./app.component.scss'],
-	encapsulation: ViewEncapsulation.None
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class AppComponent {
-	public IsLoading$: Observable<boolean>;
-	public LoadingMessage$: Observable<string>;
+    public IsLoading$: Observable<boolean>;
+    public LoadingMessage$: Observable<string>;
 
-	constructor(private notificationService : NotificationService, private store : Store<AppState>) {
-		this.IsLoading$ = combineLatest([
-			this.store.pipe(select(fromAuthSelectors.isLoading)), 
-			this.store.pipe(select(fromCalendarSelectors.isLoading)),
-			this.store.pipe(select(fromTodoSelectors.isLoading)),
-		]).pipe(
-			map(([authLoading, calendarLoading, itemsLoading]) => authLoading || calendarLoading || itemsLoading),
-		);
+    constructor(private notificationService: NotificationService, private store: Store<AppState>) {
+        this.IsLoading$ = combineLatest([
+            this.store.pipe(select(fromAuthSelectors.isLoading)),
+            this.store.pipe(select(fromCalendarSelectors.isLoading)),
+            this.store.pipe(select(fromTodoSelectors.isLoading)),
+        ]).pipe(
+            map(([authLoading, calendarLoading, itemsLoading]) => authLoading || calendarLoading || itemsLoading),
+        );
 
-		this.LoadingMessage$ = combineLatest([
-			this.store.pipe(select(fromAuthSelectors.loadingMessage)), 
-			this.store.pipe(select(fromTodoSelectors.loadingMessage)),
-		]).pipe(
-			map(([authLoadingMessage, totoLoadingMessage]) => authLoadingMessage || totoLoadingMessage),
-		);
+        this.LoadingMessage$ = combineLatest([
+            this.store.pipe(select(fromAuthSelectors.loadingMessage)),
+            this.store.pipe(select(fromTodoSelectors.loadingMessage)),
+        ]).pipe(
+            map(([authLoadingMessage, totoLoadingMessage]) => authLoadingMessage || totoLoadingMessage),
+        );
 
-		// TODO remove, replace with router effects
-		this.store.pipe(
-			select(fromRouterSelectors.selectFeature),
-			map(() => this.notificationService.RemoveAllNotifications())
-		).subscribe();
+        // TODO remove, replace with router effects
+        this.store.pipe(
+            select(fromRouterSelectors.selectFeature),
+            map(() => this.notificationService.RemoveAllNotifications())
+        ).subscribe();
 
-		this.store.dispatch(InitUser());
-	}
+        this.store.dispatch(InitUser());
+    }
 }

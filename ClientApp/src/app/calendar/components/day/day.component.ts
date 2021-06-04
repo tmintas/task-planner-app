@@ -34,7 +34,6 @@ export class DayComponent {
 	public get InvisibleItems() : Todo[] {
 		return this.Items.filter(i => !i.Visible);
 	}
-
 	constructor(private store : Store<TodosState>) {
 	}
 

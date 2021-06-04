@@ -19,17 +19,17 @@ import { SubmitTodo } from '@actions/todo';
 	styleUrls: ['./edit-todo-item.component.scss']
 })
 export class EditTodoItemComponent implements OnInit, OnDestroy {
-	private dftImportance : Importance = Importance.Low;
-	private destroy$ : Subject<boolean> = new Subject<boolean>();
+	private dftImportance: Importance = Importance.Low;
+	private destroy$: Subject<boolean> = new Subject<boolean>();
 
-	public ToDoForm : FormGroup;
-	public get Controls() : { [ key : string ] : AbstractControl } { return this.ToDoForm.controls }
+	public ToDoForm: FormGroup;
+	public get Controls(): { [key: string]: AbstractControl } { return this.ToDoForm.controls }
 
-	public ImportanceOptions$ : Observable<DropdownOption[]> = this.store.select(fromTodoSelectors.selectImportanceOptions);
+	public ImportanceOptions$: Observable<DropdownOption[]> = this.store.select(fromTodoSelectors.selectImportanceOptions);
 
-	constructor(private fb : FormBuilder, private store : Store<AppState>) {
+	constructor(private fb: FormBuilder, private store: Store<AppState>) {
 		this.ToDoForm = this.fb.group({
-			Date : [null, Validators.required],
+			Date: [null, Validators.required],
 			Time: [null],
 			Name: [null, [Validators.required, Validators.maxLength(40)]],
 			Description: [Validators.maxLength(100)],
@@ -37,11 +37,11 @@ export class EditTodoItemComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	public ngOnInit() : void {
+	public ngOnInit(): void {
 		combineLatest(
 			this.store.select(selectedTodo),
 			this.store.select(selectedDate),
-			(item : Todo, date : Date) => {
+			(item: Todo, date: Date) => {
 				if (item) {
 					this.patchFromItem(item);
 				} else if (date) {
@@ -51,22 +51,26 @@ export class EditTodoItemComponent implements OnInit, OnDestroy {
 		).subscribe();
 	}
 
-	private patchDate(date : Date) : void {
+	private patchDate(date: Date): void {
 		const ngDate = new NgbDate(date.getFullYear(), date.getMonth() + 1, date.getDate());
 
 		this.ToDoForm.reset();
 		this.ToDoForm.patchValue({
-			Importance : this.dftImportance,
-			Date : ngDate
+			Importance: this.dftImportance,
+			Date: ngDate
 		});
 	}
 
-	private patchFromItem(item : Todo) : void {
+	private patchFromItem(item: Todo): void {
 		const date = new NgbDate(item.Date.getFullYear(), item.Date.getMonth() + 1, item.Date.getDate());
-		const time = { hour : item.Date.getHours(), minute : item.Date.getMinutes() };
+		const hasTime = item.HasTime;
+		const time = {
+			hour: hasTime ? item.Date.getHours() : null,
+			minute: hasTime ? item.Date.getMinutes() : null,
+		};
 
 		this.ToDoForm.patchValue({
-			Date : date,
+			Date: date,
 			Time: time,
 			Name: item.Name,
 			Description: item.Description,
@@ -74,19 +78,19 @@ export class EditTodoItemComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	public OnSave() : void {
+	public OnSave(): void {
 		this.ToDoForm.markAllAsTouched();
-		
+
 		if (this.ToDoForm.invalid) { return; }
-		
-		const ngbDate : NgbDateStruct = this.ToDoForm.get('Date').value;
-		const ngbTime : NgbTimeStruct = this.ToDoForm.get('Time').value;
+
+		const ngbDate: NgbDateStruct = this.ToDoForm.get('Date').value;
+		const ngbTime: NgbTimeStruct = this.ToDoForm.get('Time').value;
 		const hour = ngbTime == null ? 0 : ngbTime.hour;
 		const minute = ngbTime == null ? 0 : ngbTime.minute;
 
-		const date : Date = new Date(ngbDate.year, ngbDate.month - 1, ngbDate.day, hour, minute);
-		
-		const item : Todo = new Todo(
+		const date: Date = new Date(ngbDate.year, ngbDate.month - 1, ngbDate.day, hour, minute);
+
+		const item: Todo = new Todo(
 			date,
 			this.ToDoForm.get('Name').value,
 			ngbTime != null,
@@ -97,12 +101,15 @@ export class EditTodoItemComponent implements OnInit, OnDestroy {
 		this.store.dispatch(SubmitTodo({ item }));
 	}
 
-	public HasError(controlName : string) : boolean {
+	public HasError(controlName: string): boolean {
 		return this.ToDoForm.get(controlName).touched && this.ToDoForm.get(controlName).errors !== null;
 	}
 
-	public ErrorName(controlName : string) : string {
+	public ErrorName(controlName: string): string {
+
 		if (!this.HasError(controlName)) { return; }
+		const test =  3;
+		console.log(test);
 
 		const errObj = this.ToDoForm.get(controlName).errors;
 
@@ -118,7 +125,7 @@ export class EditTodoItemComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	public ngOnDestroy() : void {
+	public ngOnDestroy(): void {
 		this.destroy$.next(true);
 		this.destroy$.unsubscribe();
 	}

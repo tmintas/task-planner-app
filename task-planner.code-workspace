@@ -26,7 +26,14 @@
 				]
 			}
 		],
-		"angular.enable-strict-mode-prompt": false
+		"angular.enable-strict-mode-prompt": true,
+		"files.insertFinalNewline": true,
+		"files.trimTrailingWhitespace": true,
+        "editor.detectIndentation": false,
+		"editor.defaultFormatter": "stringham.angular-template-formatter",
+		"editor.formatOnSave": true,
+        "editor.wordWrap": "wordWrapColumn",
+        "editor.wordWrapColumn": 160,
 	},
 	"launch": {
 		"configurations": [
@@ -67,7 +74,7 @@
 			{
 				"name": "client-server",
 				"configurations": ["server", "client"]
-			},  
+			},
 		]
 	},
 	"tasks": {

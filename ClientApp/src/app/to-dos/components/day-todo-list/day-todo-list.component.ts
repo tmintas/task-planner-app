@@ -14,15 +14,15 @@ import { CalendarModes } from '@states/calendar';
 
 @Component({
 	selector: 'app-day-todo-list',
-	templateUrl: './day-todo-list.component.html',
-	styleUrls: ['./day-todo-list.component.scss']
+  	templateUrl: './day-todo-list.component.html',
+  	styleUrls: ['./day-todo-list.component.scss']
 })
 export class DayTodoListComponent implements OnInit {
 
 	public Todos$ : Observable<Todo[]>;
-	public SelectedDay$ : Observable<number> = this.store.pipe(select(selectedDayNumber));
+  	public SelectedDay$ : Observable<number> = this.store.pipe(select(selectedDayNumber));
 
-	constructor(private store : Store<AppState>) { }
+  	constructor(private store : Store<AppState>) { }
 
 	public ngOnInit() : void {
 		this.Todos$ = this.store.pipe(
@@ -31,14 +31,14 @@ export class DayTodoListComponent implements OnInit {
 			switchMap((date : Date) => {
 				return this.store.select(fromTodoSelectors.selectTodosByDate, { date })
 			})
-		);
-	}
+      	);
+   }
 
-	public OnEditClick(item : Todo) : void {
+	public OnEditClick(item: Todo): void {
 		this.store.dispatch(fromCalendarActions.SelectItemForEdit({ item }));
 	}
 
-	public OnDeleteClick(id : number) : void {
-		this.store.dispatch(fromTodoActions.DeleteTodoStart({ id }));
-	}
+    public OnDeleteClick(id : number) : void {
+        this.store.dispatch(fromTodoActions.DeleteTodoStart({ id }));
+    }
 }

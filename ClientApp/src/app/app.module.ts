@@ -20,31 +20,32 @@ import { CustomSerializer } from './shared/utils/custom-router-serializer';
 import { appReducers } from '@reducers/app';
 
 @NgModule({
-	declarations: [
-		AppComponent,
-		NotificatorComponent,
-	],
-	imports: [
-		StoreModule.forRoot(appReducers),
-		EffectsModule.forRoot([]),
-		StoreDevtoolsModule.instrument({}),
-		SharedModule,
-		BrowserModule,
-		BrowserAnimationsModule,
-		AppRoutingModule,
-		CalendarModule,
-		NgbModule,
-		FormsModule,
-		HttpClientModule,
-	],
-	providers: [
-		// { 
-		// 	provide: RouterStateSerializer, 
-		// 	useClass : CustomSerializer
-		// },
-		DatePipe, 
-		NotificationService,
-	],
-	bootstrap: [AppComponent]
+    declarations: [
+        AppComponent,
+        NotificatorComponent,
+    ],
+    imports: [
+        StoreModule.forRoot(appReducers),
+        EffectsModule.forRoot([]),
+        StoreDevtoolsModule.instrument({}),
+        SharedModule,
+        BrowserModule,
+        BrowserAnimationsModule,
+        AppRoutingModule,
+        CalendarModule,
+        NgbModule,
+        FormsModule,
+        HttpClientModule,
+    ],
+    providers: [
+        // {
+        // 	provide: RouterStateSerializer,
+        // 	useClass : CustomSerializer
+        // },
+        DatePipe,
+        NotificationService,
+    ],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }
+

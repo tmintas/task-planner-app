@@ -4,9 +4,9 @@
             <fa-icon [icon]="['fas', 'exclamation-triangle']"></fa-icon>
             <span>
                 {{ ntf.Title }}
-                <fa-icon 
-                    [icon]="['fas', 'chevron-down']"  
-                    [ngClass]="{'collapsed' : ntf.Collapsed, 'expanded' : !ntf.Collapsed }"
+                <fa-icon
+                    [icon]="['fas', 'chevron-down']"
+                    [ngClass]="{'collapsed' : ntf.Collapsecd, 'expanded' : !ntf.Collapsed }"
                     (click)="ntf.Collapsed = !ntf.Collapsed">
                 </fa-icon>
             </span>
