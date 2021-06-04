@@ -72,7 +72,7 @@ namespace Calendar
             // add model validation middleware filter
             services.AddScoped<ModelValidationFilter>();
 
-            // add generic entity exists validation filter 
+            // add generic entity exists validation filter
             services.AddScoped<EntityExistsValidationFilter<Todo>>();
 
             // configure identity
@@ -94,7 +94,6 @@ namespace Calendar
             // add services
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthService, AuthService>();
-            services.AddScoped<ITodoService, TodoService>();
             services.AddScoped(typeof(IDatabaseRepository<>), typeof(SqlRepository<>));
 
             // connection string configuration

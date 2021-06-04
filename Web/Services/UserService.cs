@@ -9,6 +9,7 @@ namespace Web.Services
     public class UserService : IUserService
     {
         private readonly IHttpContextAccessor accessor;
+
         private readonly UserManager<ApplicationUser> userManager;
 
         public UserService(IHttpContextAccessor accessor, UserManager<ApplicationUser> userManager)

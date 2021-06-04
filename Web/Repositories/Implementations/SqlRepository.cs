@@ -12,6 +12,7 @@ namespace Web.Repositories
     public class SqlRepository<TEntity> : IDatabaseRepository<TEntity> where TEntity : EntityBase
     {
         private readonly AppDbContext context;
+
         private readonly DbSet<TEntity> dbSet;
 
         public SqlRepository(AppDbContext appDbContext)

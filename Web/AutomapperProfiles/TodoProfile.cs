@@ -8,7 +8,8 @@ namespace Web.AutomapperProfiles
     {
         public TodoProfile()
         {
-            CreateMap<Todo, TodoDto>().ReverseMap();
+            CreateMap<Todo, TodoDto>();
+            CreateMap<TodoDto, Todo>().ForMember(dest => dest.Id, opt => opt.Ignore());
         }
     }
 }

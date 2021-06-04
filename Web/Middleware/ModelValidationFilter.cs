@@ -14,16 +14,16 @@ namespace Web.Middleware
         {
             var dto = context.ActionArguments.FirstOrDefault(arg => arg.Value is IValidatableDto);
 
-            if (dto.Value == null)
+            if (!context.ModelState.IsValid)
             {
-                context.Result = new BadRequestObjectResult("Provided action object should not be null");
+                context.Result = new BadRequestObjectResult(context.ModelState);
 
                 return;
             }
 
-            if (!context.ModelState.IsValid)
+            if (dto.Value == null)
             {
-                context.Result = new BadRequestObjectResult(context.ModelState);
+                context.Result = new BadRequestObjectResult("Provided action object should not be null");
 
                 return;
             }

@@ -9,7 +9,6 @@ using Web.Middleware;
 using Web.Models.Entities;
 using System.Security.Claims;
 using AutoMapper;
-using Web.Services.Contracts;
 
 namespace Web.Controllers
 {
@@ -19,14 +18,11 @@ namespace Web.Controllers
     {
         private readonly IDatabaseRepository<Todo> todoRepository;
 
-        private readonly ITodoService todoService;
-
         private readonly IMapper mapper;
 
-        public TodoController(IDatabaseRepository<Todo> todoRepository, IMapper mapper, ITodoService todoService)
+        public TodoController(IDatabaseRepository<Todo> todoRepository, IMapper mapper)
         {
             this.todoRepository = todoRepository;
-            this.todoService = todoService;
             this.mapper = mapper;
         }
 
@@ -36,24 +32,26 @@ namespace Web.Controllers
         [Route("user-todos")]
         public async Task<ActionResult<IEnumerable<TodoDto>>> GetUserTodos()
         {
-            var todos = await todoRepository.GetAllAsync();
-            var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var userTodos = todos.Where(i => i.UserId == userId);
-            var todoDtos = userTodos.Select(todo => mapper.Map<TodoDto>(todo));
+            var userId = this.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            return Ok(todoDtos);
+            var todos = (await todoRepository.GetAllAsync())
+                .Where(i => i.UserId == userId)
+                .Select(todo => mapper.Map<TodoDto>(todo))
+                .ToList();
+
+            return Ok(todos);
         }
-
 
         // GET: api/Todo/5
         [HttpGet("{id}")]
         [Authorize]
         [ServiceFilter(typeof(EntityExistsValidationFilter<Todo>))]
-        public ActionResult<Todo> GetTodo(int id)
+        public ActionResult<TodoDto> GetTodo(int id)
         {
             var todo = HttpContext.Items["entity"] as Todo;
+            var dto = mapper.Map<TodoDto>(todo);
 
-            return Ok(todo);
+            return Ok(dto);
         }
 
         // POST: api/Todo
@@ -62,9 +60,13 @@ namespace Web.Controllers
         [ServiceFilter(typeof(ModelValidationFilter))]
         public async Task<ActionResult<TodoDto>> PostTodo([FromBody] TodoDto todoCreateDto)
         {
-            var newTodoDto = await this.todoService.AddAsync(todoCreateDto);
+            var todo = this.mapper.Map<Todo>(todoCreateDto);
 
-            return CreatedAtAction(nameof (PostTodo), newTodoDto);
+            await this.todoRepository.AddAsync(todo);
+
+            todoCreateDto = this.mapper.Map<TodoDto>(todo);
+
+            return CreatedAtAction(nameof (PostTodo), todoCreateDto);
         }
 
         //PUT: api/Todo/5
@@ -72,16 +74,12 @@ namespace Web.Controllers
         [Authorize]
         [ServiceFilter(typeof(ModelValidationFilter))]
         [ServiceFilter(typeof(EntityExistsValidationFilter<Todo>))]
-        public async Task<IActionResult> UpdateTodo(int id, [FromBody] TodoDto itemUpdateDto)
+        public async Task<IActionResult> UpdateTodo(int id, [FromBody] TodoDto todoUpdateDto)
         {
-            var todoToUpdate = HttpContext.Items["entity"] as Todo;
+            var oldTodo = HttpContext.Items["entity"] as Todo;
+            var updatedTodo = mapper.Map(todoUpdateDto, oldTodo);
 
-            todoToUpdate.Date = itemUpdateDto.Date.ToLocalTime();
-            todoToUpdate.Description = itemUpdateDto.Description;
-            todoToUpdate.ImportanceTypeId = itemUpdateDto.ImportanceTypeId;
-            todoToUpdate.Name = itemUpdateDto.Name;
-
-            await todoRepository.UpdateAsync(todoToUpdate);
+            await todoRepository.UpdateAsync(updatedTodo);
 
             return NoContent();
         }

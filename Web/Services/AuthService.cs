@@ -21,6 +21,7 @@ namespace Web.Services
     public class AuthService : IAuthService
     {
         private readonly UserManager<ApplicationUser> userManager;
+
         private readonly AuthSettings authSettings;
 
         public AuthService(UserManager<ApplicationUser> userManager, AuthSettings authSettings)
@@ -51,14 +52,14 @@ namespace Web.Services
         public async Task<RegisterResponse> Register(RegistrationRequest model)
         {
             var user = await userManager.Users.FirstOrDefaultAsync(u => u.UserName == model.UserName);
-            var result = new RegisterResponse 
+            var result = new RegisterResponse
             {
                 Succeeded = false
             };
 
             if (user != null)
                 return result;
-            
+
             user = new ApplicationUser
             {
                 UserName = model.UserName
