@@ -19,7 +19,7 @@ namespace Web.Middleware
         {
             if (!context.ActionArguments.ContainsKey("id"))
             {
-                context.Result = new BadRequestObjectResult("id parameter should be specified");
+                context.Result = new BadRequestObjectResult("id argument of controller action should be specified");
 
                 return;
             }
@@ -28,7 +28,7 @@ namespace Web.Middleware
 
             if (id < 1)
             {
-                context.Result = new BadRequestObjectResult($"Bad id parameter value: {id}");
+                context.Result = new BadRequestObjectResult($"Bad id argument value: {id}");
 
                 return;
             }

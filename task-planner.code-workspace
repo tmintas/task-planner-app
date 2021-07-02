@@ -5,6 +5,10 @@
 			"name": "Backend"
 		},
 		{
+			"path": "WebApp.UnitTests",
+			"name": "BackendTests"
+		},
+		{
 			"path": "ClientApp",
 			"name": "Frontend"
 		},
@@ -13,6 +17,16 @@
 		}
 	],
 	"settings": {
+        // exclude specific files from explorer
+        "files.exclude": {
+            "**/.git": true,
+            "**/.svn": true,
+            "**/.hg": true,
+            "**/CVS": true,
+            "**/.DS_Store": true,
+            "**/bin": true,
+            "**/obj": true,
+        },
 		"restoreTerminals.terminals": [
 			{
 				"splitTerminals": [
