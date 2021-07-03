@@ -35,7 +35,8 @@
 						"commands": ["cd ../ClientApp"]
 					},
 					{
-						"name": "Backend"
+						"name": "Backend",
+                        "commands": ["cd ../Web"]
 					}
 				]
 			}
@@ -44,10 +45,14 @@
 		"files.insertFinalNewline": true,
 		"files.trimTrailingWhitespace": true,
         "editor.detectIndentation": false,
+        "editor.insertSpaces": false,
+    	"editor.tabCompletion": "on",
 		"editor.defaultFormatter": "stringham.angular-template-formatter",
 		"editor.formatOnSave": true,
         "editor.wordWrap": "wordWrapColumn",
-        "editor.wordWrapColumn": 160,
+		"editor.wordWrapColumn": 160,
+		"dotnet-test-explorer.testArguments": "/p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=./lcov.info",
+		"dotnet-test-explorer.testProjectPath": "WebApp.UnitTests.csproj",
 	},
 	"launch": {
 		"configurations": [

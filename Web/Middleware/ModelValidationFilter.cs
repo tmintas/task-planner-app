@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Web.Middleware
 {
     /// <summary>
-    /// validates input DTO object for all controller actions with applied ModelValidationFilter attribute
+    /// validates controller action argument which inherits IValidatableDto
     /// </summary>
     public class ModelValidationFilter : IActionFilter
     {
@@ -17,13 +17,6 @@ namespace Web.Middleware
             if (!context.ModelState.IsValid)
             {
                 context.Result = new BadRequestObjectResult(context.ModelState);
-
-                return;
-            }
-
-            if (dto.Value == null)
-            {
-                context.Result = new BadRequestObjectResult("Provided action object should not be null");
 
                 return;
             }
