@@ -64,19 +64,19 @@ namespace WebApp.UnitTests
             Assert.Equal(result.Value, $"Entity of type { typeof(Todo).FullName } with id {nonExistingId} was not found in database");
         }
 
-        [Fact]
-        public void EntityExistsValidationAttribute_ShouldReturnNotFoundObjectResult_IfIdArgumentWasNotPassedToActionMethod()
-        {
-            // arrange
-            var actionArguments = new Dictionary<string, object>();
-            var actionExecutingContext = GetActionExecutingContext(actionArguments);
+        // [Fact]
+        // public void EntityExistsValidationAttribute_ShouldReturnNotFoundObjectResult_IfIdArgumentWasNotPassedToActionMethod()
+        // {
+        //     // arrange
+        //     var actionArguments = new Dictionary<string, object>();
+        //     var actionExecutingContext = GetActionExecutingContext(actionArguments);
 
-            // act
-            SUT.OnActionExecuting(actionExecutingContext);
+        //     // act
+        //     SUT.OnActionExecuting(actionExecutingContext);
 
-            // assert
-            Assert.IsType<BadRequestObjectResult>(actionExecutingContext.Result);
-        }
+        //     // assert
+        //     Assert.IsType<BadRequestObjectResult>(actionExecutingContext.Result);
+        // }
 
         [Fact]
         public async void EntityExistsValidationAttribute_ShouldSetItemToHttpContext_IfItemExistsInDatabase()

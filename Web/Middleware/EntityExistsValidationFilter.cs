@@ -17,13 +17,12 @@ namespace Web.Middleware
 
         public void OnActionExecuting(ActionExecutingContext context)
         {
-            if (!context.ActionArguments.ContainsKey("id"))
-            {
-                context.Result = new BadRequestObjectResult("id argument of controller action should be specified");
+			// if (!context.ActionArguments.ContainsKey("id"))
+            // {
+            //     context.Result = new BadRequestObjectResult("id argument of controller action should be specified");
 
-                return;
-            }
-
+            //     return;
+            // }
             var id = (int)context.ActionArguments["id"];
 
             if (id < 1)

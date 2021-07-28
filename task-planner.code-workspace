@@ -53,6 +53,7 @@
 		"editor.wordWrapColumn": 160,
 		"dotnet-test-explorer.testArguments": "/p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=./lcov.info",
 		"dotnet-test-explorer.testProjectPath": "WebApp.UnitTests.csproj",
+		"breadcrumbs.enabled": false,
 	},
 	"launch": {
 		"configurations": [

@@ -15,6 +15,7 @@ namespace Web.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService authServce;
+
         private readonly AuthSettings authSettings;
 
         public AuthController(IAuthService authServce, AuthSettings authSettings)
@@ -22,7 +23,7 @@ namespace Web.Controllers
             this.authServce = authServce;
             this.authSettings = authSettings;
         }
-        
+
         [HttpPost]
         [Route("login")]
         [ServiceFilter(typeof(ModelValidationFilter))]
@@ -30,7 +31,7 @@ namespace Web.Controllers
         {
             var loginResult = await authServce.Login(model);
 
-            if (loginResult == null) 
+            if (loginResult == null)
                 return BadRequest(new { error = "Username or password is incorrect" });
 
             setTokenCookie(loginResult.RefreshToken);

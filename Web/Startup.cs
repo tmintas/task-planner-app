@@ -97,9 +97,7 @@ namespace Calendar
             services.AddScoped(typeof(IDatabaseRepository<>), typeof(SqlRepository<>));
 
             // connection string configuration
-            services.AddDbContextPool<AppDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DevConnection")));
-
+			services.AddDbContext<AppDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DevConnection")));
             // auth configuration
             services
                 .AddAuthentication(x =>
