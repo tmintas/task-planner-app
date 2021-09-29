@@ -16,7 +16,7 @@ using Web.Enums;
 using Web.Models.Entities;
 using Xunit;
 
-namespace WebApp.UnitTests.IntegrationTests
+namespace WebApp.Tests.IntegrationTests
 {
 	public class TodoControllerIntegrationTests
     {
@@ -55,8 +55,6 @@ namespace WebApp.UnitTests.IntegrationTests
             var httpResponse = await UnauthorizedClient.GetAsync("/api/Todo/1");
 
             // assert
-            var stringResponse = await httpResponse.Content.ReadAsStringAsync();
-
 			Assert.Equal(httpResponse.StatusCode, HttpStatusCode.Unauthorized);
         }
 

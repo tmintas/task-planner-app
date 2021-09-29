@@ -109,7 +109,6 @@ const toDoReducer = createReducer(
 	)
 );
 
-// tslint:disable-next-line: typedef
 export function todoReducer(
 	state : any,
 	action : Action) {

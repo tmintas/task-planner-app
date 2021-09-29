@@ -17,5 +17,5 @@ namespace Web.Repositories.Contracts
         Task<TEntity> UpdateAsync(TEntity item);
 
         Task<TEntity> DeleteAsync(TEntity item);
-    }
+	}
 }

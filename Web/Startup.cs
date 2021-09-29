@@ -31,7 +31,7 @@ namespace Calendar
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // bind settings configs to stronglt typed objects
+            // bind settings configs to strongly typed objects
             services.Configure<AuthSettings>(Configuration.GetSection("AuthSettings"));
             services.Configure<ConnectionStringSettings>(Configuration.GetSection("ConnectionStrings"));
 

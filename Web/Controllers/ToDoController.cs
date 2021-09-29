@@ -26,15 +26,16 @@ namespace Web.Controllers
             this.mapper = mapper;
         }
 
-        // GET: api/user-todos
+        // GET: api/Todo/user-todos
         [HttpGet]
         [Authorize]
         [Route("user-todos")]
         public async Task<ActionResult<IEnumerable<TodoDto>>> GetUserTodos()
         {
             var userId = this.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+			var res = (await todoRepository.GetAllAsync());
 
-            var todos = (await todoRepository.GetAllAsync())
+            var todos = res
                 .Where(i => i.UserId == userId)
                 .Select(todo => mapper.Map<TodoDto>(todo))
                 .ToList();
@@ -43,7 +44,7 @@ namespace Web.Controllers
         }
 
         // GET: api/Todo/5
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         [Authorize]
         [ServiceFilter(typeof(EntityExistsValidationFilter<Todo>))]
         public ActionResult<TodoDto> GetTodo(int id)

@@ -12,7 +12,7 @@ using Web.Models.Entities;
 using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 
-namespace WebApp.UnitTests.IntegrationTests
+namespace WebApp.Tests.IntegrationTests
 {
 	public class CustomWebApplicationFactory<TEntryPoint> : WebApplicationFactory<TEntryPoint> where TEntryPoint : class
     {

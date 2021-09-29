@@ -35,7 +35,7 @@ export class AppComponent {
             this.store.pipe(select(fromTodoSelectors.loadingMessage)),
         ]).pipe(
             map(([authLoadingMessage, totoLoadingMessage]) => authLoadingMessage || totoLoadingMessage),
-        );
+        );	
 
         // TODO remove, replace with router effects
         this.store.pipe(
