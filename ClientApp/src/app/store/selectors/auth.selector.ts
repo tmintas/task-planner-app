@@ -42,3 +42,8 @@ export const loadingMessage = createSelector(
     featureSelector,
     state => state.loadingMessage
 )
+
+export const accessToken = createSelector(
+    featureSelector,
+    state => state.currentUser ? state.currentUser.AccessToken : null
+)

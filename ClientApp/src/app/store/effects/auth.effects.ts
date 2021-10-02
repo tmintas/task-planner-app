@@ -56,7 +56,7 @@ export class AuthEffects {
 
             const user = JSON.parse(userStr) as User;
 
-            if (!user || !user.AccessToken || !user.AccessToken) {
+            if (!user || !user.AccessToken) {
                 return InitUserFail();
             }
 

@@ -105,4 +105,4 @@ msbuild.wrn
 
 # Idea
 .idea/
-WebApp.UnitTests/lcov.info
+WebApp.Tests/lcov.info
