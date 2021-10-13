@@ -55,7 +55,7 @@ const toDoReducer = createReducer(
 		};
 	}),
 	// delete
-	on(fromTodoActions.DeleteTodoStart, (state : TodosState) => {
+	on(fromTodoActions.DeleteTodo, (state : TodosState) => {
 		return { ...state,
 			isLoading: true,
 			loadingMessage : 'Deleting your item...'
@@ -93,7 +93,7 @@ const toDoReducer = createReducer(
 			isLoading: false,
 		};	
 	}),
-	on(fromTodoActions.ToggleDone, (state : TodosState, payload : { id : string }) => {
+	on(fromTodoActions.ToggleDone, (state : TodosState, payload : { id : number }) => {
 		const update : Update<Todo> = {
 			id : payload.id,
 			changes : { IsDone : !state.entities[payload.id].IsDone }
@@ -101,9 +101,6 @@ const toDoReducer = createReducer(
 
 		return adapter.updateOne(update, state);
 	}),
-	on(fromTodoActions.UpdateVisibility, 
-		(state : TodosState, payload : { items : Update<Todo>[] }) => adapter.updateMany(payload.items, state)
-	),
 	on(fromTodoActions.ClearTodos,
 		(state : TodosState) => adapter.removeAll(state)
 	)

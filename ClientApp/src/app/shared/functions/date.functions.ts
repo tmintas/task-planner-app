@@ -34,19 +34,6 @@ export function GetCurrentMonthDays(year : number, month : number) : number[] {
 	return arr;
 }
 
-export function GetPreviousMonthLastDays(year : number, month : number) : number[] {
-	const arr = [];
-	const firstDayPosition = GetDayOfWeek( new Date(year, month, 1) );
-
-	let lastMonthMaxDay = GetNumberOfDaysInMonth(year, month - 1);
-
-	for (let i = 1; i < firstDayPosition; i++) {
-		arr.push(lastMonthMaxDay--);
-	}
-
-	return arr.reverse();
-}
-
 export function GetPreviousMonthLastDates(year : number, month : number) : Date[] {
 	const arr = [];
 	const firstDayPosition = GetDayOfWeek( new Date(year, month, 1) );
@@ -75,20 +62,6 @@ export function GetNextMonthFirstDates(year : number, month : number) : Date[] {
 	return arr;
 }
 
-export function GetNextMonthFirstDays(year : number, month : number) : number[] {
-	const arr = [];
-	const nextMonthFirstDayPosition = GetDayOfWeek( new Date(year, month + 1, 1) );
-
-	// we don't want to get the whole week of next month if it starts from Monday
-	if (nextMonthFirstDayPosition === 1) { return arr; }
-
-	for (let i = 1; i <= 8 - nextMonthFirstDayPosition; i++) {
-		arr.push(i);
-	}
-
-	return arr;
-}
-
 export function GetMonthDates(year : number, month : number) : Date[] {
 	const numberOfDays = (new Date(year, month , 0)).getDate()
 
@@ -99,4 +72,23 @@ export function GetMonthDates(year : number, month : number) : Date[] {
 	}
 
 	return arr;
+}
+
+export function areDatesEqual(date1: Date, date2: Date): boolean {
+	return date1.getFullYear() === date2.getFullYear() && date1.getMonth() === date2.getMonth() && date1.getDate() === date2.getDate();
+}
+
+export function isDateInArray(date: Date, array: Date[]): boolean {
+	return array.some(d => d.getTime() ===  date.getTime());
+}
+
+export function getUniqueDates(dates: Date[]): Date[] {
+	const result = [];
+
+	for (let date of dates) {
+		if (!this.isDateInArray(date, result))
+			result.push(date);
+	}
+
+	return result;
 }

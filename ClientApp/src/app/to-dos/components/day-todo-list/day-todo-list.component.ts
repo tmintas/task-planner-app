@@ -39,6 +39,6 @@ export class DayTodoListComponent implements OnInit {
 	}
 
     public OnDeleteClick(id : number) : void {
-        this.store.dispatch(fromTodoActions.DeleteTodoStart({ id }));
+        this.store.dispatch(fromTodoActions.DeleteTodo({ id }));
     }
 }

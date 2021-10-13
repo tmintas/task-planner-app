@@ -32,7 +32,7 @@ namespace Web.Controllers
         [Route("user-todos")]
         public async Task<ActionResult<IEnumerable<TodoDto>>> GetUserTodos()
         {
-            var userId = this.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
 			var res = (await todoRepository.GetAllAsync());
 
             var todos = res
@@ -61,17 +61,18 @@ namespace Web.Controllers
         [ServiceFilter(typeof(ModelValidationFilter))]
         public async Task<ActionResult<TodoDto>> PostTodo([FromBody] TodoDto todoCreateDto)
         {
-            var todo = this.mapper.Map<Todo>(todoCreateDto);
+            var todo = mapper.Map<Todo>(todoCreateDto);
+            todo.UserId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            await this.todoRepository.AddAsync(todo);
+            await todoRepository.AddAsync(todo);
 
-            todoCreateDto = this.mapper.Map<TodoDto>(todo);
+            todoCreateDto = mapper.Map<TodoDto>(todo);
 
             return CreatedAtAction(nameof (PostTodo), todoCreateDto);
         }
 
         //PUT: api/Todo/5
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         [Authorize]
         [ServiceFilter(typeof(ModelValidationFilter))]
         [ServiceFilter(typeof(EntityExistsValidationFilter<Todo>))]
@@ -86,7 +87,7 @@ namespace Web.Controllers
         }
 
         //PUT: api/toggle-done/5
-        [HttpPut("toggle-done/{id}")]
+        [HttpPut("toggle-done/{id:int}")]
         [Authorize]
         [ServiceFilter(typeof(EntityExistsValidationFilter<Todo>))]
         public async Task<IActionResult> ToggleDone(int id)
@@ -101,7 +102,7 @@ namespace Web.Controllers
         }
 
         // DELETE: api/Todo/5
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         [Authorize]
         [ServiceFilter(typeof(EntityExistsValidationFilter<Todo>))]
         public async Task<ActionResult<Todo>> DeleteTodo(int id)

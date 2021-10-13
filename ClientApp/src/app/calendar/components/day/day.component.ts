@@ -38,7 +38,7 @@ export class DayComponent {
 	}
 
 	public ngOnInit() : void {
-		this.IsCurrentMonth$ = this.store.pipe(select(fromCalendarSelectors.isMonthSelected, { month : this.Date.getMonth() }));
+		this.IsCurrentMonth$ = this.store.select(fromCalendarSelectors.isMonthSelected, { month : this.Date.getMonth() });
 		this.IsDayInViewMode$ = this.store.select(fromCalendarSelectors.isDayInMode, { mode: CalendarModes.ViewingDayItems, date: this.Date });
 		this.IsDayInAddMode$ = this.store.select(fromCalendarSelectors.isDayInMode, { mode: CalendarModes.AddTodo, date: this.Date });
 	}
@@ -49,7 +49,7 @@ export class DayComponent {
 	}
 
 	// TODO can be replaced with directive
-	public ToggleIcon(isDone : boolean) : string[] {
+	public ToggleIconName(isDone : boolean) : string[] {
 		return isDone ? ['fas', 'check-circle'] : ['far', 'circle'];
 	}
 
@@ -57,7 +57,7 @@ export class DayComponent {
 		this.store.dispatch(fromCalendarActions.SelectItemForEdit({ item }));
 	}
 
-	public ToggleDone(id : string) {
+	public ToggleDone(id : number) {
 		this.store.dispatch(fromTodoActions.ToggleDone({ id }))
 	}
 
@@ -70,6 +70,6 @@ export class DayComponent {
 	}
 
 	public OnDeleteClick(id : number) : void {
-		this.store.dispatch(fromTodoActions.DeleteTodoStart({ id }));
+		this.store.dispatch(fromTodoActions.DeleteTodo({ id }));
 	}
 }

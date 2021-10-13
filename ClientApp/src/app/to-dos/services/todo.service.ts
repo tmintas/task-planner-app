@@ -1,14 +1,17 @@
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map, take } from 'rxjs/operators';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Todo } from '@todo-models';
-import { DropdownOption } from 'app/shared/models/dropdown-option.model';
-import { Importance } from '../enums/importance.enum';
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
+import {map, take} from 'rxjs/operators';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {Todo} from '@todo-models';
+import {DropdownOption} from 'app/shared/models/dropdown-option.model';
+import {Importance} from '../enums/importance.enum';
+import * as dateHelper from '@shared-functions/date';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type':  'application/json' })
 };
+
+export const MAX_VISIBLE_ITEMS_PER_DAY = 4;
 
 @Injectable({
 	providedIn: 'root'
@@ -23,8 +26,12 @@ export class TodoService {
 		return this.http.get<Todo[]>(this.apiEndpoint + '/user-todos').pipe(
 			map(todos => {
 				todos.map(d => {
-					d.Date = new Date(d.Date);
 					d.Visible = true;
+
+					// dates are store in UTC format in backend, so transform to current locale
+					d.Date = new Date(d.Date);
+					const offsetMs = d.Date.getTimezoneOffset() * 60 * 1000;
+					d.Date.setTime(d.Date.getTime() - offsetMs);
 				});
 				return todos;
 			}),
@@ -33,7 +40,6 @@ export class TodoService {
 	}
 
 	public CreateTodo(item : Todo) : Observable<Todo> {
-
 		return this.http.post<Todo>(this.apiEndpoint, item, httpOptions).pipe(
 			map((item : Todo) => {
 				//for some reason item.Date is string, so map to date is needed
@@ -50,10 +56,10 @@ export class TodoService {
 		return this.http.delete(url);
 	}
 
-	public Update(id : number, changes : any) : Observable<{}> {
+	public Update(id : number, changes : any) : Observable<Todo> {
 		const url = `${this.apiEndpoint}/${id}`;
 
-		return this.http.put(url, changes, httpOptions);
+		return this.http.put<Todo>(url, changes, httpOptions);
 	}
 
 	public GetImportanceOptions() : DropdownOption[] {
@@ -64,7 +70,7 @@ export class TodoService {
 		]
 	}
 
-	public ToggleDone(id : string) : Observable<void> {
+	public ToggleDone(id : number) : Observable<void> {
 		return this.http.put<void>(`${this.apiEndpoint}/toggle-done/${id}`, {}, httpOptions);
 	}
 
@@ -78,4 +84,25 @@ export class TodoService {
 		);
 	}
 
+	setInvisibleForOverflowingItems(items: Todo[]) {
+		const datesWithoutTime = items.map(i => {
+			let date = i.Date;
+			
+			return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
+		});
+
+		const uniqueDates = dateHelper.getUniqueDates(datesWithoutTime);
+		const todosGroupedByDay = uniqueDates.map(date => {
+			let dayItems = items.filter(i => dateHelper.areDatesEqual(i.Date, date));
+
+			return dayItems
+				.map((i,index) => {
+					i.Visible = index < MAX_VISIBLE_ITEMS_PER_DAY;
+					
+					return i;
+				});
+		});
+		
+		return todosGroupedByDay.flat();
+	}
 }

@@ -1,8 +1,9 @@
-import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { TODO_FEATURE_KEY, TodosState, adapter, todoSortFunc, todoSortDone, TODO_MAX_ITEMS_DOR_DAY } from '@states/todo';
+import {createFeatureSelector, createSelector} from '@ngrx/store';
+import {adapter, TODO_FEATURE_KEY, TodosState} from '@states/todo';
 import * as fromRouterState from '@states/router';
-import { Todo } from '@todo-models';
-import { CustomRouterReducerState } from '@states/router';
+import {CustomRouterReducerState} from '@states/router';
+import {Todo} from '@todo-models';
+import * as dateHelper from "@shared-functions/date";
 
 export const selectFeature = createFeatureSelector<TodosState>(TODO_FEATURE_KEY);
 export const selectRouteFeature = createFeatureSelector<CustomRouterReducerState>(fromRouterState.ROUTER_FEATURE_KEY);
@@ -16,28 +17,12 @@ export const selectAllTodos = createSelector(
 	selectAll
   );
 
-export const selectTodoTotal = selectTotal;
-
 export const selectTodosByDate = createSelector(
 	selectAllTodos,
-	(state : Todo[], props : { date : Date }) => {
-		if (!state.length) return [];
-		return state
-			.filter(i => {
-				return i.Date && 
-					i.Date.getFullYear() === props.date.getFullYear() && 
-					i.Date.getMonth() === props.date.getMonth() && 
-					i.Date.getDate() === props.date.getDate();
-			})
-			.sort((next, prev) => todoSortFunc(next, prev))
-			.sort((next, prev) => todoSortDone(next, prev))
-			.map((el, i) => {
-				if (i > TODO_MAX_ITEMS_DOR_DAY) {
-					return { ...el, Visible : false }
-				}
+	(todos : Todo[], props : { date : Date }) => {
+		if (!todos.length) return [];
 
-				return el;
-			});
+		return todos.filter(todo => dateHelper.areDatesEqual(todo.Date, props.date))
 	}
 );
 

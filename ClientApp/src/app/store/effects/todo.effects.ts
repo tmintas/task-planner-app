@@ -1,20 +1,22 @@
-import { Injectable } from '@angular/core';
-import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { mergeMap, map, catchError, withLatestFrom, tap, switchMap } from 'rxjs/operators';
-import { of } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
+import {catchError, map, mergeMap, mergeMapTo, switchMap, tap, withLatestFrom} from 'rxjs/operators';
+import {combineLatest, of} from 'rxjs';
 
 import * as fromRouterActions from '@actions/router';
-import * as fromTodoActions from '@actions/todo';
 import * as fromCalendarSelectors from '@selectors/calendar';
+import * as fromTodoSelectors from '@selectors/todo';
+import * as fromTodoActions from '@actions/todo';
+
 import AppState from '@states/app';
-import { Update } from '@ngrx/entity';
-import { Store } from '@ngrx/store';
+import {Update} from '@ngrx/entity';
+import {Store} from '@ngrx/store';
 
-import { TodoService } from 'app/to-dos/services/todo.service';
-import { ErrorService } from 'app/core/services/error-service.service';
+import {TodoService} from 'app/to-dos/services/todo.service';
+import {ErrorService} from 'app/core/services/error-service.service';
 
-import { Todo } from '@todo-models';
-import { HandledError } from 'app/shared/models/handled-error.model';
+import {Todo} from '@todo-models';
+import {HandledError} from 'app/shared/models/handled-error.model';
 
 @Injectable()
 export class TodoEffect {
@@ -24,55 +26,54 @@ export class TodoEffect {
 		private errorService : ErrorService,
 		private store : Store<AppState>
 	) { }
-
-	public LoadTodosAll$ = createEffect(() => this.actions$.pipe(
+	
+	onLoadTodosAll = createEffect(() => this.actions$.pipe(
 		ofType(fromTodoActions.LoadTodosAll),
-		mergeMap(() => {			
-			return this.todoService.GetUserTodos().pipe(
-				map((items : Todo[]) => fromTodoActions.LoadTodosAllSuccess({items})),
-				catchError(err => {
-					return of(fromTodoActions.LoadTodosAllFail({ err }));
-				})
-			);
-		})
+		mergeMapTo(this.todoService.GetUserTodos()),
+		mergeMap((items) => {
+			return [
+				fromTodoActions.LoadTodosAllSuccess({ items }),
+				fromTodoActions.UpdateTodosVisibility(),
+			];
+		}),
+		catchError(err => of(fromTodoActions.LoadTodosAllFail({ err })))
 	));
 
-	public CreateTodo$ = createEffect(() => this.actions$.pipe(
+	onCreateTodoStart = createEffect(() => this.actions$.pipe(
 		ofType(fromTodoActions.CreateTodo),
-		mergeMap((action) => {
-			return this.todoService.CreateTodo(action.item).pipe(
-				map(newItem => fromTodoActions.CreateTodoSuccess({ item : newItem })),
-				catchError(err => of(fromTodoActions.CreateTodoFail({ err })))
-			);
-		})
+		mergeMap((action) => this.todoService.CreateTodo(action.item)),
+		switchMap(newItem => [
+			fromTodoActions.CreateTodoSuccess({ item : newItem }),
+			fromTodoActions.UpdateTodosVisibility(),
+		]),
+		catchError(err => of(fromTodoActions.CreateTodoFail({ err })))
 	));
 
-	public UpdateTodo$ = createEffect(() => this.actions$.pipe(
+	onUpdateTodo = createEffect(() => this.actions$.pipe(
 		ofType(fromTodoActions.UpdateTodo),
-		mergeMap((action) => {
+		mergeMap((action) => combineLatest([
+			this.todoService.Update(+action.item.id, action.item.changes),
+			of(action.item)
+		])),
+		map(([_, todoUpdate]) => {
+			// const todoUpdate : Update<Todo> = {
+			// 	id : +todoUpdate.id,
+			// 	changes : todoUpdate.changes
+			// };
 			
-			return this.todoService.Update(+action.item.id, action.item.changes).pipe(
-				map(() => {
-					const todoUpdate : Update<Todo> = {
-						id : +action.item.id,
-						changes : action.item.changes
-					};
-					
-					return fromTodoActions.UpdateTodoSuccess({ item : todoUpdate });
-				}),
-				catchError(err => of(fromTodoActions.UpdateTodoFail({ err })))
-			);
-		})
-	));
+			return fromTodoActions.UpdateTodoSuccess({ item : todoUpdate });
+		}),
+		catchError(err => of(fromTodoActions.UpdateTodoFail({ err })))
+		));
 
-	public NavigateOnCreateSuccess$ = createEffect(() => this.actions$.pipe(
+	onCreateTodoSuccess = createEffect(() => this.actions$.pipe(
 		ofType(fromTodoActions.CreateTodoSuccess),
 		switchMap((payload) => { 
 			return of(fromRouterActions.Go({ path : [ 'calendar', payload.item.Date.getFullYear(), payload.item.Date.getMonth() + 1, payload.item.Date.getDate() ]}))
 		})
 	));
 
-	public NavigateOnUpdateSuccess$ = createEffect(() => this.actions$.pipe(
+	onUpdateTodoSuccess = createEffect(() => this.actions$.pipe(
 		ofType(fromTodoActions.UpdateTodoSuccess),
 		switchMap((payload : { item : Update<Todo> }) => { 
 			const itemDate = payload.item.changes.Date;
@@ -80,7 +81,7 @@ export class TodoEffect {
 		})
 	));
 
-	public LoadOptions$ = createEffect(() => this.actions$.pipe(
+	onLoadImportanceOptions = createEffect(() => this.actions$.pipe(
 		ofType(fromTodoActions.LoadImportanceOptions),
 		mergeMap(() => {
 			return of(this.todoService.GetImportanceOptions()).pipe(
@@ -89,17 +90,20 @@ export class TodoEffect {
 		})
 	));
 
-	public DeleteTodo$ = createEffect(() => this.actions$.pipe(
-		ofType(fromTodoActions.DeleteTodoStart),
+	onDeleteTodoStart = createEffect(() => this.actions$.pipe(
+		ofType(fromTodoActions.DeleteTodo),
 		mergeMap((action) => {
 			return this.todoService.DeleteTodo(action.id).pipe(
-				map(() => fromTodoActions.DeleteTodoSuccess({ id: action.id })),
+				switchMap(() => [
+					fromTodoActions.DeleteTodoSuccess({ id: action.id }),
+					fromTodoActions.UpdateTodosVisibility(),
+				]),
 				catchError(err => of(fromTodoActions.DeleteTodoFail({ err })))
 			);
 		})
 	));
 
-	public SubmitTodo$ = createEffect(() => this.actions$.pipe(
+	onSubmitTodo = createEffect(() => this.actions$.pipe(
 		ofType(fromTodoActions.SubmitTodo),
 		withLatestFrom(this.store.select(fromCalendarSelectors.selectedTodo)),
 		map(([action, item]) => {
@@ -116,7 +120,7 @@ export class TodoEffect {
 		})
 	));
 
-	public ToggleDone = createEffect(() => this.actions$.pipe(
+	onToggleDone = createEffect(() => this.actions$.pipe(
 		ofType(fromTodoActions.ToggleDone),
 		mergeMap((payload) => this.todoService.ToggleDone(payload.id).pipe(
 			map(() => fromTodoActions.ToggleDoneSuccess()),
@@ -124,7 +128,7 @@ export class TodoEffect {
 		)))
 	));
 
-	public ShowAlertAfterFail$ = createEffect(() => this.actions$.pipe(
+	onTodoActionFail = createEffect(() => this.actions$.pipe(
 		ofType(
 			fromTodoActions.LoadTodosAllFail, 
 			fromTodoActions.DeleteTodoFail,
@@ -132,4 +136,14 @@ export class TodoEffect {
 			fromTodoActions.CreateTodoFail),
 		tap((action) => this.errorService.handleError(new HandledError(action.err, action.type)))
 	), { dispatch : false });
+	
+	onUpdateTodosVisibility = createEffect(() => this.actions$.pipe(
+		ofType(fromTodoActions.UpdateTodosVisibility),
+		withLatestFrom(this.store.select(fromTodoSelectors.selectAllTodos)),
+		map(([_, items]) => {
+			const modifiedItems = this.todoService.setInvisibleForOverflowingItems([...items]);
+
+			return fromTodoActions.LoadTodosAllSuccess({ items: modifiedItems });
+		})
+	))
 }

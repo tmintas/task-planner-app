@@ -7,7 +7,7 @@ import { Todo } from '@todo-models';
 import { SignOut } from '@actions/auth';
 import { selectTodosByDate } from '@selectors/todo';
 import { selectedMonth, selectedYear, selectedMonthName, selectedMonthDaysWithNeighbors } from '@selectors/calendar';
-import { distinctUntilChanged, tap } from 'rxjs/operators';
+import {distinctUntilChanged, map, tap} from 'rxjs/operators';
 import { GoPreviousMonth, GoNextMonth } from '@actions/calendar';
 import { isAuthenticated, currentUserName } from '@selectors/auth';
 

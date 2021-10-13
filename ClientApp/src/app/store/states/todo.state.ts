@@ -4,7 +4,6 @@ import { DropdownOption } from '@shared-models';
 import { HandledError } from 'app/shared/models/handled-error.model';
 
 export const TODO_FEATURE_KEY = 'todo';
-export const TODO_MAX_ITEMS_DOR_DAY = 3;
 
 export const todoSortFunc = (next : Todo, prev : Todo) => {
 	if (!prev.HasTime || !next.HasTime) return 1;

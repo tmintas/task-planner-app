@@ -26,7 +26,7 @@
 					class="done-toggler"
 					(click)="ToggleDone(item.id)"
 				>
-					<fa-icon [icon]="ToggleIcon(item.IsDone)"></fa-icon>
+					<fa-icon [icon]="ToggleIconName(item.IsDone)"></fa-icon>
 				</button>
 				<span class="todo-text">{{ item.Name }}</span>
 			</div>
@@ -48,6 +48,7 @@
 	</div>
 	<div class="more-container" *ngIf="InvisibleItems.length > 0">
 		<button
-			class="more-btn" (click)="OnDaySelectedToView()"> {{ InvisibleItems.length }} more ... </button>
+			class="more-btn" (click)="OnDaySelectedToView()"> {{ InvisibleItems.length }} more ...
+		</button>
 	</div>
 </div>
