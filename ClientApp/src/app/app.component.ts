@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import { Store, select } from '@ngrx/store';
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -17,32 +17,35 @@ import { NotificationService } from './shared/services/notification.service';
     styleUrls: ['./app.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
     public IsLoading$: Observable<boolean>;
     public LoadingMessage$: Observable<string>;
 
     constructor(private notificationService: NotificationService, private store: Store<AppState>) {
-        this.IsLoading$ = combineLatest([
-            this.store.pipe(select(fromAuthSelectors.isLoading)),
-            this.store.pipe(select(fromCalendarSelectors.isLoading)),
-            this.store.pipe(select(fromTodoSelectors.isLoading)),
-        ]).pipe(
-            map(([authLoading, calendarLoading, itemsLoading]) => authLoading || calendarLoading || itemsLoading),
-        );
-
-        this.LoadingMessage$ = combineLatest([
-            this.store.pipe(select(fromAuthSelectors.loadingMessage)),
-            this.store.pipe(select(fromTodoSelectors.loadingMessage)),
-        ]).pipe(
-            map(([authLoadingMessage, totoLoadingMessage]) => authLoadingMessage || totoLoadingMessage),
-        );	
-
-        // TODO remove, replace with router effects
-        this.store.pipe(
-            select(fromRouterSelectors.selectFeature),
-            map(() => this.notificationService.RemoveAllNotifications())
-        ).subscribe();
-
-        this.store.dispatch(InitUser());
     }
+
+	ngOnInit(): void {
+		this.IsLoading$ = combineLatest([
+			this.store.pipe(select(fromAuthSelectors.isLoading)),
+			this.store.pipe(select(fromCalendarSelectors.isLoading)),
+			this.store.pipe(select(fromTodoSelectors.isLoading)),
+		]).pipe(
+			map(([authLoading, calendarLoading, itemsLoading]) => authLoading || calendarLoading || itemsLoading),
+		);
+
+		this.LoadingMessage$ = combineLatest([
+			this.store.pipe(select(fromAuthSelectors.loadingMessage)),
+			this.store.pipe(select(fromTodoSelectors.loadingMessage)),
+		]).pipe(
+			map(([authLoadingMessage, totoLoadingMessage]) => authLoadingMessage || totoLoadingMessage),
+		);
+
+		// TODO remove, replace with router effects
+		this.store.pipe(
+			select(fromRouterSelectors.selectFeature),
+			map(() => this.notificationService.RemoveAllNotifications())
+		).subscribe();
+
+		this.store.dispatch(InitUser());
+	}
 }

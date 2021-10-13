@@ -1,18 +1,23 @@
 {
-  "extends": "../tsconfig.base.json",
-  "compilerOptions": {
-    "outDir": "../out-tsc/spec",
-    "types": [
-      "jasmine",
-      "node"
-    ]
-  },
-  "files": [
-    "test.ts",
-    "polyfills.ts"
-  ],
-  "include": [
-    "**/*.spec.ts",
-    "**/*.d.ts"
-  ]
+	"extends": "../tsconfig.base.json",
+	"compilerOptions": {
+		"outDir": "../out-tsc/spec",
+		"types": [
+			"jasmine",
+			"node"
+		],
+		"target": "es5",
+		"lib": [
+			"es2019",
+			"dom"
+		]
+	},
+	"files": [
+		"test.ts",
+		"polyfills.ts"
+	],
+	"include": [
+		"**/*.spec.ts",
+		"**/*.d.ts"
+	]
 }

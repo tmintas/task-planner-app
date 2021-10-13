@@ -9,7 +9,6 @@ export const selectFeature = createFeatureSelector<TodosState>(TODO_FEATURE_KEY)
 export const selectRouteFeature = createFeatureSelector<CustomRouterReducerState>(fromRouterState.ROUTER_FEATURE_KEY);
 const {
 	selectAll,
-	selectTotal,
 } = adapter.getSelectors();
   
 export const selectAllTodos = createSelector(

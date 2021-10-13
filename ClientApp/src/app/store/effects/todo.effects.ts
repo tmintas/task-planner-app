@@ -56,11 +56,6 @@ export class TodoEffect {
 			of(action.item)
 		])),
 		map(([_, todoUpdate]) => {
-			// const todoUpdate : Update<Todo> = {
-			// 	id : +todoUpdate.id,
-			// 	changes : todoUpdate.changes
-			// };
-			
 			return fromTodoActions.UpdateTodoSuccess({ item : todoUpdate });
 		}),
 		catchError(err => of(fromTodoActions.UpdateTodoFail({ err })))

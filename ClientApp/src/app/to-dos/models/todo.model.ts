@@ -11,8 +11,9 @@ export class Todo extends EntityBase {
 
 	public Visible = true;
 
-	constructor(date : Date, name : string, hasTime : boolean, description : string, importance: Importance) {
+	constructor(id: number, date : Date, name : string, hasTime : boolean, description : string, importance: Importance) {
 		super();
+		this.id = id;
 		this.Date = date;
 		this.Name = name;
 		this.Description = description;
