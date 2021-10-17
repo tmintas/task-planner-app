@@ -45,7 +45,6 @@ export const todoReducer = createReducer(
 	on(fromTodoActions.LoadTodosAllFail, (state : TodosState, payload : { err : any }) => {
 		return { ...state,
 			items : [],
-			error : payload.err
 		};
 	}),
 	on(fromTodoActions.CreateTodo, (state : TodosState) => {
@@ -55,11 +54,6 @@ export const todoReducer = createReducer(
 	}),
 	on(fromTodoActions.CreateTodoSuccess, (state : TodosState, payload : { item : Todo }) => {
 		return adapter.addOne(payload.item, state);
-	}),
-	on(fromTodoActions.CreateTodoFail, (state : TodosState, payload : { err : any }) => {
-		return { ...state,
-			error : payload.err
-		};
 	}),
 	on(fromTodoActions.LoadImportanceOptionsSuccess, (state : TodosState, payload : { options : DropdownOption[]}) => {
 		return { ...state,
@@ -74,11 +68,6 @@ export const todoReducer = createReducer(
 	on(fromTodoActions.DeleteTodoSuccess, (state : TodosState, payload : { id : number })  => {
 		return adapter.removeOne(payload.id, state)
 	}),
-	on(fromTodoActions.DeleteTodoFail, (state : TodosState, payload : { err : any })  => {
-		return { ...state,
-			error : payload.err
-		};
-	}),
 	on(fromTodoActions.UpdateTodo, (state : TodosState) => {
 		return { ...state,
 			loadingMessage: 'Updating your item...'
@@ -86,11 +75,6 @@ export const todoReducer = createReducer(
 	}),
 	on(fromTodoActions.UpdateTodoSuccess, (state : TodosState, payload : { item : Update<Todo> }) => {
 		return adapter.updateOne(payload.item, state)
-	}),
-	on(fromTodoActions.UpdateTodoFail, (state : TodosState, payload : { err : any }) => {
-		return { ...state,
-			error : payload.err,
-		};	
 	}),
 	on(fromTodoActions.ToggleDone, (state : TodosState, payload : { id : number }) => {
 		const update : Update<Todo> = {

@@ -8,10 +8,6 @@ import { HandledError } from 'app/shared/models/handled-error.model';
 export class ErrorService implements ErrorHandler {
     constructor(private notificationService: NotificationService) { }
 
-    HandleError(error: HandledError): void {
-        this.handleError(error);
-    }
-
     // ErrorHandler implementation
     handleError(error: HandledError): void {
         if (environment.production) {

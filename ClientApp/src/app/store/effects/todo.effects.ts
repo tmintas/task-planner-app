@@ -59,7 +59,8 @@ export class TodoEffect {
 			return fromTodoActions.UpdateTodoSuccess({ item : todoUpdate });
 		}),
 		catchError(err => of(fromTodoActions.UpdateTodoFail({ err })))
-		));
+		)
+	);
 
 	onCreateTodoSuccess = createEffect(() => this.actions$.pipe(
 		ofType(fromTodoActions.CreateTodoSuccess),

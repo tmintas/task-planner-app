@@ -1,7 +1,6 @@
 import { Todo } from '@todo-models';
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import { DropdownOption } from '@shared-models';
-import { HandledError } from 'app/shared/models/handled-error.model';
 
 export const TODO_FEATURE_KEY = 'todo';
 
@@ -23,7 +22,7 @@ export interface TodosState extends EntityState<Todo> {
 	isLoading : boolean;
 	loadingMessage : string,
 	itemsLoaded : boolean;
-	error : HandledError;
+	// error : HandledError;
 }
 
 export const initialTodosState : TodosState = adapter.getInitialState({
@@ -31,7 +30,7 @@ export const initialTodosState : TodosState = adapter.getInitialState({
 	loadingMessage : null,
 	isLoading : false,
 	itemsLoaded : false,
-	error : null
+	// error : null
 });
 
 
