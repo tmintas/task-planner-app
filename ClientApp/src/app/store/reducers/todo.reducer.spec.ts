@@ -2,13 +2,15 @@ import { todoReducer } from '@reducers/todo';
 import * as fromTodoState from '@states/todo';
 import { TodosState } from '@states/todo';
 import {
-	ClearTodos,
 	CreateTodo,
 	CreateTodoFail,
-	CreateTodoSuccess, DeleteTodo,
+	CreateTodoSuccess,
 	LoadTodosAll,
 	LoadTodosAllFail,
-	LoadTodosAllSuccess, UpdateTodo, UpdateTodoSuccess
+	LoadTodosAllSuccess,
+	ToggleDone,
+	UpdateTodo,
+	UpdateTodoSuccess
 } from "@actions/todo";
 import { Todo } from '@todo-models';
 import { Importance } from "@todo-enums";
@@ -220,7 +222,7 @@ describe('TodoReducer', () => {
 			let state;
 			
 			// act
-			state = todoReducer(initialState, loadAllSuccessAction); []
+			state = todoReducer(initialState, loadAllSuccessAction);
 			
 			let updatedTodo = { ...item, Name: 'new name' } as Todo;
 
@@ -241,18 +243,21 @@ describe('TodoReducer', () => {
 		})
 	})
 	
-	describe('ClearTodos', () => {
-		it('should reset the todos collection', () => {
+	describe('ToggleDone', () => {
+		it('should toggle done flag on selected item', () => {
 			// arrange
-			const loadTodosAction = LoadTodosAllSuccess({ items: [item] });
-			let state = todoReducer(initialState, loadTodosAction);
-			const clearTodosAction = ClearTodos();
+			const initialIsDone = true;
+			item.IsDone = initialIsDone;
+			const loadAllSuccessAction = LoadTodosAllSuccess({items: [item]});
+			let state: TodosState = todoReducer(initialState, loadAllSuccessAction);
+			
+			const toggleDoneAction = ToggleDone({ id: itemId });
 			
 			// act
-			state = todoReducer(state, clearTodosAction);
-			
+			state = todoReducer(state, toggleDoneAction);
+
 			// assert
-			expect(state.entities).toEqual({});
+			expect(state.entities[itemId].IsDone).toEqual(!initialIsDone);
 		})
 	})
 })
