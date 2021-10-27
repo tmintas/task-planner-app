@@ -27,9 +27,9 @@ export class TodoEffect {
 		private store : Store<AppState>
 	) { }
 	
-	onLoadTodosAll = createEffect(() => this.actions$.pipe(
+	onLoadTodosAll$ = createEffect(() => this.actions$.pipe(
 		ofType(fromTodoActions.LoadTodosAll),
-		mergeMapTo(this.todoService.GetUserTodos()),
+		mergeMap(() => this.todoService.GetUserTodos()),
 		mergeMap((items) => {
 			return [
 				fromTodoActions.LoadTodosAllSuccess({ items }),
@@ -39,7 +39,7 @@ export class TodoEffect {
 		catchError(err => of(fromTodoActions.LoadTodosAllFail({ err })))
 	));
 
-	onCreateTodoStart = createEffect(() => this.actions$.pipe(
+	onCreateTodo$ = createEffect(() => this.actions$.pipe(
 		ofType(fromTodoActions.CreateTodo),
 		mergeMap((action) => this.todoService.CreateTodo(action.item)),
 		switchMap(newItem => [

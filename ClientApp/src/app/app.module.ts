@@ -15,8 +15,6 @@ import { CalendarModule } from './calendar/calendar.module';
 import { SharedModule } from './shared/shared.module';
 import { NotificationService } from './shared/services/notification.service';
 import { NotificatorComponent } from './shared/components/notificator/notificator.component';
-import { RouterStateSerializer } from '@ngrx/router-store';
-import { CustomSerializer } from './shared/utils/custom-router-serializer';
 import { appReducers } from '@reducers/app';
 
 @NgModule({

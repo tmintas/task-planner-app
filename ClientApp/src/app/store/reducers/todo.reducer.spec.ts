@@ -16,7 +16,7 @@ import { Todo } from '@todo-models';
 import { Importance } from "@todo-enums";
 import { Update } from "@ngrx/entity";
 
-describe('TodoReducer', () => {
+describe('### TodoReducer ###', () => {
 	let initialState: TodosState;
 	const item = new Todo (new Date(2021, 5, 5), 'test', false, 'desc', Importance.High);
 	const itemId = 1;

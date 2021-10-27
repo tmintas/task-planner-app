@@ -1,19 +1,18 @@
-import {TestBed} from '@angular/core/testing';
-import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
-import {TodoService} from 'app/to-dos/services/todo.service';
-import {HTTP_INTERCEPTORS} from '@angular/common/http';
-import {AuthInterceptor} from './auth.interceptor';
-import {provideMockStore} from '@ngrx/store/testing';
-import {Store} from '@ngrx/store';
-import {User} from '../models/user.model';
-import {AUTH_INITIAL_STATE} from "@states/auth";
+import { TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { TodoService } from 'app/to-dos/services/todo.service';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './auth.interceptor';
+import { provideMockStore } from '@ngrx/store/testing';
+import { Store } from '@ngrx/store';
+import { User } from '../models/user.model';
+import { AUTH_INITIAL_STATE } from "@states/auth";
 
-describe('AuthInterceptor', () => {
+describe('### AuthInterceptor ###', () => {
     const apiUrl = '/api/Todo/user-todos';
     let todoService: TodoService;
     let httpMock: HttpTestingController;
     let storeMock: any;
-    const initialState = AUTH_INITIAL_STATE;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -35,7 +34,7 @@ describe('AuthInterceptor', () => {
         httpMock = TestBed.inject(HttpTestingController);
     });
 
-    it('user is logged in - should set a Authorization header to request to contain the access token of current user', () => {
+    it('user is logged in - should set an Authorization header to request to contain the access token of current user', () => {
     	// arrange
 		const accessToken = '12345';
 		storeMock.setState({ 
