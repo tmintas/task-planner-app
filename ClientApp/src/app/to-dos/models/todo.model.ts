@@ -8,8 +8,7 @@ export class Todo extends EntityBase {
 	public Description : string = null;
 	public ImportanceTypeId : Importance = null;
 	public IsDone : boolean = false;
-
-	public Visible = true;
+	public Visible: boolean;
 
 	constructor(date : Date, name : string, hasTime : boolean, description : string, importance: Importance) {
 		super();

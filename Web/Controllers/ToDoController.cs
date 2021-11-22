@@ -12,8 +12,9 @@ using AutoMapper;
 
 namespace Web.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
+    [Authorize]
     public class TodoController : ControllerBase
     {
         private readonly IDatabaseRepository<Todo> todoRepository;
@@ -43,8 +44,8 @@ namespace Web.Controllers
             return Ok(todos);
         }
 
-        // GET: api/Todo/5
-        [HttpGet("{id:int}")]
+        // GET: api/Todo/get-todo/5
+        [HttpGet("get-todo/{id:int}")]
         [Authorize]
         [ServiceFilter(typeof(EntityExistsValidationFilter<Todo>))]
         public ActionResult<TodoDto> GetTodo(int id)
@@ -73,17 +74,17 @@ namespace Web.Controllers
 
         //PUT: api/Todo/5
         [HttpPut("{id:int}")]
-        [Authorize]
         [ServiceFilter(typeof(ModelValidationFilter))]
         [ServiceFilter(typeof(EntityExistsValidationFilter<Todo>))]
-        public async Task<IActionResult> UpdateTodo(int id, [FromBody] TodoDto todoUpdateDto)
+        public async Task<ActionResult<TodoDto>> UpdateTodo(int id, [FromBody] TodoDto todoUpdateDto)
         {
             var oldTodo = HttpContext.Items["entity"] as Todo;
             var updatedTodo = mapper.Map(todoUpdateDto, oldTodo);
 
-            await todoRepository.UpdateAsync(updatedTodo);
+            updatedTodo = await todoRepository.UpdateAsync(updatedTodo);
+            var updateTodoDto = mapper.Map<TodoDto>(updatedTodo);
 
-            return NoContent();
+            return Ok(updateTodoDto);
         }
 
         //PUT: api/toggle-done/5

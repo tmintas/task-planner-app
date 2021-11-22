@@ -92,3 +92,7 @@ export function getUniqueDates(dates: Date[]): Date[] {
 
 	return result;
 }
+
+export function dismissTime(date: Date): Date {
+	return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
+}

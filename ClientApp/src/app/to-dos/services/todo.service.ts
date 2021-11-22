@@ -1,10 +1,10 @@
-import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
-import {map, take} from 'rxjs/operators';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Todo} from '@todo-models';
-import {DropdownOption} from 'app/shared/models/dropdown-option.model';
-import {Importance} from '../enums/importance.enum';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { map, take } from 'rxjs/operators';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Todo } from '@todo-models';
+import { DropdownOption } from 'app/shared/models/dropdown-option.model';
+import { Importance } from '../enums/importance.enum';
 import * as dateHelper from '@shared-functions/date';
 
 const httpOptions = {
@@ -56,9 +56,8 @@ export class TodoService {
 		return this.http.delete(url);
 	}
 
-	public Update(id : number, changes : any) : Observable<Todo> {
+	public UpdateTodo(id : number, changes : any) : Observable<Todo> {
 		const url = `${this.apiEndpoint}/${id}`;
-
 		return this.http.put<Todo>(url, changes, httpOptions);
 	}
 
@@ -84,22 +83,19 @@ export class TodoService {
 		);
 	}
 
-	setInvisibleForOverflowingItems(items: Todo[]) {
-		const datesWithoutTime = items.map(i => {
-			let date = i.Date;
-			
-			return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
-		});
-
+	setInvisibleForOverflowingItems(items: Todo[]): Todo[] {
+		const datesWithoutTime = items.map(i => dateHelper.dismissTime(i.Date));
 		const uniqueDates = dateHelper.getUniqueDates(datesWithoutTime);
+
 		const todosGroupedByDay = uniqueDates.map(date => {
 			let dayItems = items.filter(i => dateHelper.areDatesEqual(i.Date, date));
 
 			return dayItems
 				.map((i,index) => {
-					i.Visible = index < MAX_VISIBLE_ITEMS_PER_DAY;
+					const itemCopy = { ...i } as Todo;
+					itemCopy.Visible = index < MAX_VISIBLE_ITEMS_PER_DAY;
 					
-					return i;
+					return itemCopy;
 				});
 		});
 		

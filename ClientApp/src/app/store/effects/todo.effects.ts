@@ -1,7 +1,7 @@
-import {Injectable} from '@angular/core';
-import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {catchError, map, mergeMap, mergeMapTo, switchMap, tap, withLatestFrom} from 'rxjs/operators';
-import {combineLatest, of} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { catchError, map, mergeMap, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { combineLatest, of } from 'rxjs';
 
 import * as fromRouterActions from '@actions/router';
 import * as fromCalendarSelectors from '@selectors/calendar';
@@ -9,14 +9,14 @@ import * as fromTodoSelectors from '@selectors/todo';
 import * as fromTodoActions from '@actions/todo';
 
 import AppState from '@states/app';
-import {Update} from '@ngrx/entity';
-import {Store} from '@ngrx/store';
+import { Update } from '@ngrx/entity';
+import { Store } from '@ngrx/store';
 
-import {TodoService} from 'app/to-dos/services/todo.service';
-import {ErrorService} from 'app/core/services/error-service.service';
+import { TodoService } from 'app/to-dos/services/todo.service';
+import { ErrorService } from 'app/core/services/error-service.service';
 
-import {Todo} from '@todo-models';
-import {HandledError} from 'app/shared/models/handled-error.model';
+import { Todo } from '@todo-models';
+import { HandledError } from 'app/shared/models/handled-error.model';
 
 @Injectable()
 export class TodoEffect {
@@ -29,7 +29,7 @@ export class TodoEffect {
 	
 	onLoadTodosAll$ = createEffect(() => this.actions$.pipe(
 		ofType(fromTodoActions.LoadTodosAll),
-		mergeMap(() => this.todoService.GetUserTodos()),
+		switchMap(() => this.todoService.GetUserTodos()),
 		mergeMap((items) => {
 			return [
 				fromTodoActions.LoadTodosAllSuccess({ items }),
@@ -51,8 +51,8 @@ export class TodoEffect {
 
 	onUpdateTodo = createEffect(() => this.actions$.pipe(
 		ofType(fromTodoActions.UpdateTodo),
-		mergeMap((action) => combineLatest([
-			this.todoService.Update(+action.item.id, action.item.changes),
+		switchMap((action) => combineLatest([
+			this.todoService.UpdateTodo(+action.item.id, action.item.changes),
 			of(action.item)
 		])),
 		map(([_, todoUpdate]) => {

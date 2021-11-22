@@ -13,23 +13,24 @@ import {
 	CreateTodoSuccess,
 	LoadTodosAll,
 	LoadTodosAllSuccess,
+	UpdateTodo, UpdateTodoSuccess,
 	UpdateTodosVisibility
 } from "@actions/todo";
 import { Todo } from "@todo-models";
 import { Importance } from "@todo-enums";
 import { marbles } from "rxjs-marbles/jasmine";
-import { Action } from "rxjs/internal/scheduler/Action";
-import { UPDATE } from "@ngrx/store";
+import { Update } from "@ngrx/entity";
 
 describe('### TodoEffects ###', () => {
 	const initialState = initialTodosState;
 	let actions$: Observable<any>;
 	let store: MockStore<TodosState>;
 	let effects: TodoEffect;
-
-	let todoServiceSpy = jasmine.createSpyObj<TodoService>('TodoService', ['CreateTodo', 'GetUserTodos']);
+	let todoServiceSpy: jasmine.SpyObj<TodoService>;
 
 	beforeEach(() => {
+		todoServiceSpy = jasmine.createSpyObj<TodoService>('TodoService', ['CreateTodo', 'GetUserTodos', 'UpdateTodo']);
+
 		TestBed.configureTestingModule({
 			providers: [
 				TodoEffect,
@@ -46,7 +47,26 @@ describe('### TodoEffects ###', () => {
 	})
 	
 	describe('onLoadTodosAll$', () => {
-		it('should dispatch LoadTodosAllSuccess and UpdateTodosVisibility after successful getting items from service', marbles(m => {
+		it('should call GetUserTodos from api service', marbles(async m => {
+			// arrange
+			const items = [
+				new Todo(new Date(), 'test', false, 'dd', Importance.High),
+				new Todo(new Date(), 'test2', false, 'dd', Importance.High)
+			];
+			const getUserTodosAction$ = m.cold('-a', { a : LoadTodosAll() });
+			const serviceResponse$ = of(items);
+
+			todoServiceSpy.GetUserTodos.and.returnValue(serviceResponse$);
+
+			// act 
+			actions$ = getUserTodosAction$;
+
+			// assert
+			await effects.onLoadTodosAll$.subscribe();
+			expect(todoServiceSpy.GetUserTodos).toHaveBeenCalledTimes(1);
+		}))
+
+		it('should dispatch LoadTodosAllSuccess and UpdateTodosVisibility after successful getting items from api service', marbles(m => {
 			// arrange
 			const items = [
 				new Todo(new Date(), 'test', false, 'dd', Importance.High),
@@ -54,8 +74,8 @@ describe('### TodoEffects ###', () => {
 			];
 
 			const getUserTodosAction$ = m.hot('a', { a : LoadTodosAll() });
-			const serviceResponse$ = m.cold(   '-b', { b : items });
-			const expectedEffects$ = m.cold(   '-(cd)', { c: LoadTodosAllSuccess({ items }), d: UpdateTodosVisibility() });
+			const serviceResponse$ = m.cold(  '-b', { b : items });
+			const expectedEffects$ = m.cold(  '-(cd)', { c: LoadTodosAllSuccess({ items }), d: UpdateTodosVisibility() });
 			
 			todoServiceSpy.GetUserTodos.and.returnValue(serviceResponse$);
 
@@ -64,28 +84,10 @@ describe('### TodoEffects ###', () => {
 			
 			// assert
 			m.expect(effects.onLoadTodosAll$).toBeObservable(expectedEffects$);
-		}))	
-		
-		it('should call GetUserTodos', marbles(m => {
-			// arrange
-			const items = [
-				new Todo(new Date(), 'test', false, 'dd', Importance.High),
-				new Todo(new Date(), 'test2', false, 'dd', Importance.High)
-			];
-			const getUserTodosAction$ = m.cold('-a', { a : LoadTodosAll() });
-			const serviceResponse$ = m.cold(   '-b', { b : items });
-
-			todoServiceSpy.GetUserTodos.and.returnValue(serviceResponse$);
-
-			// act 
-			actions$ = getUserTodosAction$;
-			
-			// assert
-			expect(todoServiceSpy.GetUserTodos).toHaveBeenCalledTimes(1);
 		}))
 	})
 	
-	describe('onCreateTodo', () => {
+	describe('onCreateTodo$', () => {
 		it('should dispatch CreateTodoSuccess and UpdateTodosVisibility after service called CreateTodo and succeeded', marbles(m => {
 			// arrange
 			const item = new Todo(new Date(), 'test', false, 'dd', Importance.High);
@@ -123,6 +125,50 @@ describe('### TodoEffects ###', () => {
 
 			// assert
 			m.expect(effects.onCreateTodo$).toBeObservable(expectedEffect$);
+		}))
+	})
+	
+	describe('onUpdateTodo$', () => {
+		it('should call Update method from service', marbles(async m => {
+			// arrange
+			const item = new Todo(new Date(), 'current name', false, 'dd', Importance.High);
+			item.id = 1;
+
+			const todoUpdate: Update<Todo> = {
+				id: item.id,
+				changes: item
+			};
+
+			todoServiceSpy.UpdateTodo.and.returnValue(of(item));
+
+			// act
+			actions$ = m.hot('b', { b: UpdateTodo({ item: todoUpdate }) });
+			
+			// assert
+			await effects.onUpdateTodo.subscribe();
+			expect(todoServiceSpy.UpdateTodo).toHaveBeenCalledTimes(1);
+		}))
+		
+		it('should dispatch UpdateTodoSuccess after successful updating the item from service', marbles(m => {
+			// arrange
+			const item = new Todo(new Date(), 'current name', false, 'dd', Importance.High);
+			item.id = 1;
+
+			const todoUpdate: Update<Todo> = {
+				id: item.id,
+				changes: item
+			};
+
+			const serviceResponse$ = m.cold('-v', { v: item });
+			const updateTodoAction$ = m.hot('a', { a : UpdateTodo({ item: todoUpdate }) });
+			const expectedEffects$ = m.cold('-a', { a: UpdateTodoSuccess({ item: todoUpdate }) });
+			todoServiceSpy.UpdateTodo.and.returnValue(serviceResponse$);
+			
+			// act
+			actions$ = updateTodoAction$;
+			
+			// assert
+			m.expect(effects.onUpdateTodo).toBeObservable(expectedEffects$);
 		}))
 	})
 })

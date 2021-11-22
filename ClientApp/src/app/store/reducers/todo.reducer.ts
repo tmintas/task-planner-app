@@ -12,7 +12,7 @@ export const todoReducer = createReducer(
 		fromTodoActions.CreateTodo,
 		fromTodoActions.UpdateTodo,
 		fromTodoActions.DeleteTodo,
-		(state: TodosState) => { 
+		(state: TodosState) => {
 			return { 
 				...state, 
 				isLoading: true 
