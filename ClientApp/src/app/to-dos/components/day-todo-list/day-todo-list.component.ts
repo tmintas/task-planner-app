@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import * as fromTodoSelectors from '@selectors/todo';
-import * as fromRouterSelectos from '@selectors/router';
 import * as fromCalendarActions from '@actions/calendar';
 import * as fromTodoActions from '@actions/todo';
 
@@ -8,8 +7,8 @@ import { Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 import AppState from '@states/app';
 import { Todo } from '@todo-models';
-import { switchMap, filter, tap, take } from 'rxjs/operators';
-import { selectedDate, selectedMode, selectedDayNumber } from '@selectors/calendar';
+import { filter, switchMap } from 'rxjs/operators';
+import { selectedDate, selectedDayNumber } from '@selectors/calendar';
 import { CalendarModes } from '@states/calendar';
 
 @Component({
@@ -35,7 +34,8 @@ export class DayTodoListComponent implements OnInit {
    }
 
 	public OnEditClick(item: Todo): void {
-		this.store.dispatch(fromCalendarActions.SelectItemForEdit({ item }));
+		this.store.dispatch(fromCalendarActions.EnterEditMode());
+		this.store.dispatch(fromTodoActions.SelectItemForEdit({ item }));
 	}
 
     public OnDeleteClick(id : number) : void {

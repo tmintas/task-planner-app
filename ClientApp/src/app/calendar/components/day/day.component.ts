@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
-import { Store, select } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import * as fromCalendarActions from '@actions/calendar';
 import * as fromCalendarSelectors from '@selectors/calendar';
+import * as fromTodoSelectors from '@selectors/todo';
 import * as fromTodoActions from '@actions/todo';
 
 import { Todo } from '@todo-models';
 import { TodosState } from '@states/todo';
-import { Subject, Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { CalendarModes } from '@states/calendar';
 
 @Component({
@@ -45,7 +45,7 @@ export class DayComponent {
 
 	// TODO can be replaced with directive
 	public IsItemEditing$(id : number) : Observable<boolean> {
-		return this.store.select(fromCalendarSelectors.isItemEditing, { id });
+		return this.store.select(fromTodoSelectors.isItemEditing, { id });
 	}
 
 	// TODO can be replaced with directive
@@ -53,8 +53,9 @@ export class DayComponent {
 		return isDone ? ['fas', 'check-circle'] : ['far', 'circle'];
 	}
 
-	public OnEditClick(item : Todo) : void {
-		this.store.dispatch(fromCalendarActions.SelectItemForEdit({ item }));
+	public OnEditClick(item: Todo) : void {
+		this.store.dispatch(fromCalendarActions.EnterEditMode());
+		this.store.dispatch(fromTodoActions.SelectItemForEdit({ item }));
 	}
 
 	public ToggleDone(id : number) {
@@ -66,7 +67,7 @@ export class DayComponent {
 	}
 
 	public OnDaySelectedToView() : void {
-		this.store.dispatch(fromCalendarActions.SelectDayToView({ date : this.Date }));
+		this.store.dispatch(fromCalendarActions.SelectDayToView({ date: this.Date }));
 	}
 
 	public OnDeleteClick(id : number) : void {
