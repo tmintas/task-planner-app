@@ -30,7 +30,7 @@ describe('### TodoService ###', () => {
 	it('setInvisibleForOverflowingItems should set Visible flag to false ' +
 		'if item has greater or equal index than {MAX_VISIBLE_ITEMS_PER_DAY} for a specific date', () => {
 		// act
-		const result = sut.setInvisibleForOverflowingItems(items);
+		const result = sut.SetInvisibleForOverflowingItems(items);
 		
 		// assert
 		expect(result[MAX_VISIBLE_ITEMS_PER_DAY].Visible).toBeFalse();
@@ -41,7 +41,7 @@ describe('### TodoService ###', () => {
 	it('setInvisibleForOverflowingItems should set Visible flag to true ' +
 		'if item has lower index than {MAX_VISIBLE_ITEMS_PER_DAY} for a specific date', () => {
 		// act
-		const result = sut.setInvisibleForOverflowingItems(items);
+		const result = sut.SetInvisibleForOverflowingItems(items);
 		
 		// assert
 		const itemsThatShouldBeVisible = result.filter((_, i) => i < MAX_VISIBLE_ITEMS_PER_DAY)
@@ -50,7 +50,7 @@ describe('### TodoService ###', () => {
 
 	it('setInvisibleForOverflowingItems should not mutate items', () => {
 		// act
-		sut.setInvisibleForOverflowingItems(items);
+		sut.SetInvisibleForOverflowingItems(items);
 		
 		// assert
 		expect(items.every(i => i.Visible === undefined)).toBe(true, 'some item\'s Visible flag was mutated');

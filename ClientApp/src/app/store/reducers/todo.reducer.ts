@@ -19,7 +19,7 @@ export const todoReducer = createReducer(
 			}
 		}),	
 	on(
-		fromTodoActions.LoadTodosAllSuccess,
+		fromTodoActions.SetItems,
 		fromTodoActions.LoadTodosAllFail,
 		fromTodoActions.CreateTodoSuccess,
 		fromTodoActions.CreateTodoFail,
@@ -39,10 +39,10 @@ export const todoReducer = createReducer(
 			loadingMessage : 'Loading your items...',
 		};
 	}),
-	on(fromTodoActions.LoadTodosAllSuccess, (state : TodosState, payload : { items : Todo[] }) => {
+	on(fromTodoActions.SetItems, (state : TodosState, payload : { items : Todo[] }) => {
 		return adapter.setAll(payload.items, state)
 	}),
-	on(fromTodoActions.LoadTodosAllFail, (state : TodosState, payload : { err : any }) => {
+	on(fromTodoActions.LoadTodosAllFail, (state : TodosState) => {
 		return { ...state,
 			items : [],
 		};
@@ -76,7 +76,12 @@ export const todoReducer = createReducer(
 	on(fromTodoActions.UpdateTodoSuccess, (state : TodosState, payload : { item : Update<Todo> }) => {
 		return adapter.updateOne(payload.item, state)
 	}),
-	on(fromTodoActions.ToggleDone, (state : TodosState, payload : { id : number }) => {
+	on(fromTodoActions.ToggleDone, (state : TodosState) => {
+		return { ...state,
+			loadingMessage: 'Updating your item...'
+		}
+	}),	
+	on(fromTodoActions.ToggleDoneSuccess, (state : TodosState, payload : { id : number }) => {
 		const update : Update<Todo> = {
 			id : payload.id,
 			changes : { IsDone : !state.entities[payload.id].IsDone }
@@ -86,5 +91,17 @@ export const todoReducer = createReducer(
 	}),
 	on(fromTodoActions.ClearTodos,
 		(state : TodosState) => adapter.removeAll(state)
-	)
+	),
+	on(fromTodoActions.SelectItemForEdit, (state: TodosState, payload: { item: Todo }) => {
+		return {
+			...state,
+			selectedItem: payload.item
+		};
+	}),
+	on(fromTodoActions.ResetSelectedTodo, (state) => {
+		return {
+			...state,
+			selectedItem: null
+		};
+	})
 );

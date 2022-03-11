@@ -28,21 +28,6 @@ export class CalendarEffects {
         )
     ));
 
-    public NavigateAfterItemSelectedForEdit$ = createEffect(() => this.actions$.pipe(
-        ofType(fromCalendarActions.SelectItemForEdit),
-        withLatestFrom(this.store$.select(fromCalendarSelectors.featureSelector)),
-        map(([payload]) => { 
-            return fromRouterActions.Go({ path : [
-                'calendar', 
-                payload.item.Date.getFullYear(), 
-                payload.item.Date.getMonth() + 1, 
-                payload.item.Date.getDate(),
-                'edit',
-                payload.item.id
-            ]})               
-        })
-    ));
-
     public NavigateAfterDayForViewChanged$ = createEffect(() => this.actions$.pipe(
         ofType(fromCalendarActions.SelectDayToView),
         withLatestFrom(this.store$.select(fromCalendarSelectors.featureSelector)),

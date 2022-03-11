@@ -180,7 +180,7 @@ export class AuthEffects {
             const timeBeforeRefreshMs = tokenExpirationTimeMs - new Date().getTime() - 10 * 1000;
             console.log('refresh in ' + timeBeforeRefreshMs);
 
-            const timerId = setTimeout(() => { this.store$.dispatch(fromAuthActions.RefreshToken()); }, timeBeforeRefreshMs);
+            const timerId = window.setTimeout(() => { this.store$.dispatch(fromAuthActions.RefreshToken()); }, timeBeforeRefreshMs);
 
             return fromAuthActions.InitRefreshTimerSuccess({ refreshTokenTimerId : timerId });
         })

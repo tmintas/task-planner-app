@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Store, select } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 import AppState from '@states/app';

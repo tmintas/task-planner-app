@@ -10,7 +10,8 @@ import { Todo } from '@todo-models';
 import { DropdownOption } from 'app/shared/models/dropdown-option.model';
 import { Observable, Subject, combineLatest } from 'rxjs';
 import AppState from '@states/app';
-import { selectedDate, selectedTodo } from '@selectors/calendar';
+import { selectedDate } from '@selectors/calendar';
+import { selectedTodo } from '@selectors/todo';
 import { SubmitTodo } from '@actions/todo';
 
 @Component({

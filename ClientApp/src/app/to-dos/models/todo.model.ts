@@ -12,7 +12,7 @@ export class Todo extends EntityBase {
 
 	constructor(date : Date, name : string, hasTime : boolean, description : string, importance: Importance) {
 		super();
-		// this.id = id;
+
 		this.Date = date;
 		this.Name = name;
 		this.Description = description;

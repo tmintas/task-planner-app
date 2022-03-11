@@ -9,6 +9,7 @@ import { Todo } from '@todo-models';
 import { TodosState } from '@states/todo';
 import { Observable } from 'rxjs';
 import { CalendarModes } from '@states/calendar';
+import { ResetSelectedTodo } from "@actions/todo";
 
 @Component({
 	selector: 'app-day',
@@ -59,18 +60,23 @@ export class DayComponent {
 	}
 
 	public ToggleDone(id : number) {
-		this.store.dispatch(fromTodoActions.ToggleDone({ id }))
+		this.store.dispatch(fromTodoActions.ToggleDone({ id }));
 	}
 
 	public OnDaySelectedToAdd() : void {
 		this.store.dispatch(fromCalendarActions.SelectDayToAdd({ date : this.Date }));
+		this.store.dispatch(ResetSelectedTodo());
 	}
 
 	public OnDaySelectedToView() : void {
 		this.store.dispatch(fromCalendarActions.SelectDayToView({ date: this.Date }));
+		this.store.dispatch(ResetSelectedTodo());
 	}
 
-	public OnDeleteClick(id : number) : void {
-		this.store.dispatch(fromTodoActions.DeleteTodo({ id }));
+	public OnDeleteClick(item: Todo) : void {
+		console.log(item)
+		this.store.dispatch(fromTodoActions.DeleteTodo({ id: item.id }));
+		// this.store.dispatch(ResetSelectedTodo());
+		// this.store.dispatch(fromCalendarActions.SelectDayToView({ date: item.Date }));
 	}
 }

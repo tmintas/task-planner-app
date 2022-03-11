@@ -22,7 +22,7 @@ export interface TodosState extends EntityState<Todo> {
 	isLoading : boolean;
 	loadingMessage : string,
 	itemsLoaded : boolean;
-	// error : HandledError;
+	selectedItem: Todo;
 }
 
 export const initialTodosState : TodosState = adapter.getInitialState({
@@ -30,7 +30,7 @@ export const initialTodosState : TodosState = adapter.getInitialState({
 	loadingMessage : null,
 	isLoading : false,
 	itemsLoaded : false,
-	// error : null
+	selectedItem: null,
 });
 
 

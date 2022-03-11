@@ -1,3 +1,11 @@
+export function transformToCurrentTimezone(date: Date): Date {
+	date = new Date(date);
+	const offsetMs = date.getTimezoneOffset() * 60 * 1000;
+	date.setTime(date.getTime() - offsetMs);
+	
+	return date;
+}
+
 const weekDays = [
 	7, 1, 2, 3, 4, 5, 6
 ];

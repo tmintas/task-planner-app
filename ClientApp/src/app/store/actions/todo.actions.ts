@@ -5,7 +5,7 @@ import { Update } from '@ngrx/entity';
 
 export const enum TodoActionTypes {
 	LOAD_TODOS_ALL = '[Todo Effect Action] Load All Todos Start',
-	LOAD_TODOS_ALL_SUCCESS = '[Todo Effect Action] Load All Todos Success',
+	SET_ITEMS = '[Todo Effect Action] Set Items',
 	LOAD_TODOS_ALL_FAIL = '[Todo Effect Action] LoadAllFail',
 	SET_VISIBILITY_TO_OVERFLOWING_TODOS = '[Todo Effect Action] SetVisibilityToOverflowingTodos',
 	DELETE_TODO = '[Todo Effect Action] Delete Todo',
@@ -23,14 +23,16 @@ export const enum TodoActionTypes {
 	TOGGLE_DONE = '[Calendar User Action] Toggle done',
 	TOGGLE_DONE_SUCCESS = '[Todo Effect Action] Toggle done success',
 	TOGGLE_DONE_FAIL = '[Todo Effect Action] Toggle done fail',
-	CLEAR_TODOS = '[Auth Effect Action] Clear Todos'
+	CLEAR_TODOS = '[Auth Effect Action] Clear Todos',
+	SELECT_ITEM_FOR_EDIT = '[Todo Effect Action] Select Item for Edit',
+	RESET_SELECTED_TODO = '[Todo] Reset Selected Todo'
 }
 
 export const LoadImportanceOptions = createAction(TodoActionTypes.LOAD_IMPORTANCE_START);
 export const LoadImportanceOptionsSuccess = createAction(TodoActionTypes.LOAD_IMPORTANCE_SUCCESS, props<{ options : DropdownOption[] }>());
 
 export const LoadTodosAll = createAction(TodoActionTypes.LOAD_TODOS_ALL);
-export const LoadTodosAllSuccess = createAction(TodoActionTypes.LOAD_TODOS_ALL_SUCCESS, props<{items : Todo[]}>());
+export const SetItems = createAction(TodoActionTypes.SET_ITEMS, props<{ items : Todo[] }>());
 export const LoadTodosAllFail = createAction(TodoActionTypes.LOAD_TODOS_ALL_FAIL, props<{ err : any }>());
 export const UpdateTodosVisibility = createAction(TodoActionTypes.SET_VISIBILITY_TO_OVERFLOWING_TODOS);
 
@@ -49,7 +51,9 @@ export const DeleteTodoFail = createAction(TodoActionTypes.DELETE_TODO_FAIL , pr
 export const ClearTodos = createAction(TodoActionTypes.CLEAR_TODOS);
 
 export const ToggleDone = createAction(TodoActionTypes.TOGGLE_DONE, props<{ id : number }>());
-export const ToggleDoneSuccess = createAction(TodoActionTypes.TOGGLE_DONE_SUCCESS);
+export const ToggleDoneSuccess = createAction(TodoActionTypes.TOGGLE_DONE_SUCCESS, props<{ id : number}>());
 export const ToggleDoneFail = createAction(TodoActionTypes.TOGGLE_DONE_FAIL, props<{ err : any }>());
 
 export const SubmitTodo = createAction(TodoActionTypes.SUBMIT_TODO , props<{ item : Todo }>());
+export const SelectItemForEdit = createAction(TodoActionTypes.SELECT_ITEM_FOR_EDIT , props<{ item : Todo }>());
+export const ResetSelectedTodo = createAction(TodoActionTypes.RESET_SELECTED_TODO);

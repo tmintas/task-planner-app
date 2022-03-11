@@ -7,39 +7,37 @@ import { Todo } from '@todo-models';
 import { CalendarModes } from '@states/calendar';
 import { CreateTodoSuccess, UpdateTodoFail, UpdateTodoSuccess } from '@actions/todo';
 import { CreateTodoFail } from '@actions/todo';
+import { InitCalendarFromUrlStart } from "@actions/calendar";
 
 const reducer = createReducer(
 	fromCalendarState.CALENDAR_INITIAL_STATE,
-	on(fromCalendarActions.InitMonth, (state : CalendarState, payload : { month : number, year : number, day? : number, item? : Todo, mode? : CalendarModes }) => {
+	on(fromCalendarActions.InitMonth, (state : CalendarState, payload : { month : number, year : number, day? : number, mode? : CalendarModes }) => {
 		return { ...state,
 			selectedMonth : payload.month,
 			selectedYear : payload.year,
 			selectedDate : payload.day === 0 ? null : new Date(payload.year, payload.month - 1, payload.day),
-			selectedItem : payload.item,
 			mode : payload.mode != null ? payload.mode : CalendarModes.Start,
 			currentDates : fromDateFunctions.GetMonthDates(payload.year, payload.month),
 			previousDates : fromDateFunctions.GetPreviousMonthLastDates(payload.year, payload.month),
 			nextDates : fromDateFunctions.GetNextMonthFirstDates(payload.year, payload.month),
 			loading : false
-		};
+		} as CalendarState;
 	}),
 	on(fromCalendarActions.SelectDayToAdd, (state : CalendarState, payload : { date : Date }) => {
 		return {
 			...state,
 			mode : fromCalendarState.CalendarModes.AddTodo,
 			selectedDate : payload.date,
-			selectedItem : null,
 			selectedDayToView : null
 		}
 	}),
 	on(fromCalendarActions.GoNextMonth, (state : CalendarState) => {
 		const changeYear = state.selectedMonth === 12;
-		const newMonth = changeYear ? 1 : ++state.selectedMonth;
-		const newYear = changeYear ? ++state.selectedYear : state.selectedYear;
+		const newMonth = changeYear ? 1 : state.selectedMonth + 1;
+		const newYear = changeYear ? state.selectedYear + 1 : state.selectedYear;
 
 		return {
 			...state,
-			selectedItem : null,
 			selectedDate : null,
 			selectedMonth : newMonth,
 			selectedYear: newYear,
@@ -50,12 +48,11 @@ const reducer = createReducer(
 	}),
 	on(fromCalendarActions.GoPreviousMonth, (state : CalendarState) => {
 		const changeYear = state.selectedMonth === 1;
-		const newMonth = changeYear ? 12 : --state.selectedMonth;
-		const newYear = changeYear ? --state.selectedYear : state.selectedYear;
+		const newMonth = changeYear ? 12 : state.selectedMonth - 1;
+		const newYear = changeYear ? state.selectedYear - 1 : state.selectedYear;
 
 		return {
 			...state,
-			selectedItem : null,
 			selectedDate : null,
 			selectedMonth : newMonth,
 			selectedYear: newYear,
@@ -70,7 +67,6 @@ const reducer = createReducer(
 
 		return {
 			...state,
-			selectedItem : null,
 			selectedDate : null,
 			selectedMonth : month,
 			selectedYear: year,
@@ -82,16 +78,14 @@ const reducer = createReducer(
 	on(fromCalendarActions.SelectDayToView, (state : CalendarState, payload : { date : Date }) => {
 		return {
 			...state,
-			selectedItem : null,
 			mode : fromCalendarState.CalendarModes.ViewingDayItems,
 			selectedDate : payload.date,
 		}
 	}),
-	on(fromCalendarActions.SelectItemForEdit, (state : CalendarState, payload : { item : Todo }) => {
+	on(fromCalendarActions.EnterEditMode, (state: CalendarState) => {
 		return {
 			...state,
 			selectedDate : null,
-			selectedItem : payload.item,
 			mode : fromCalendarState.CalendarModes.EditTodo
 		}
 	}),
@@ -106,8 +100,13 @@ const reducer = createReducer(
 		return { 
 			...state,
 			loading : false,
-			selectedItem : null
 		}
+	}),
+	on(InitCalendarFromUrlStart, (state) => {
+		return {
+			...state,
+			loading: true
+		};
 	})
 );
 

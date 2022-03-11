@@ -7,8 +7,8 @@ import {
 	CreateTodoSuccess,
 	LoadTodosAll,
 	LoadTodosAllFail,
-	LoadTodosAllSuccess,
-	ToggleDone,
+	SetItems,
+	ToggleDoneSuccess,
 	UpdateTodo,
 	UpdateTodoSuccess
 } from "@actions/todo";
@@ -43,7 +43,7 @@ describe('### TodoReducer ###', () => {
 	describe('LoadTodosAllSuccess', () => {
 		it('should add passed items to state', () => {
 			// arrange
-			const action = LoadTodosAllSuccess({items: [item]})
+			const action = SetItems({items: [item]})
 			const expectedState = {
 				...initialState,
 				entities: {
@@ -60,7 +60,7 @@ describe('### TodoReducer ###', () => {
 		})
 		it('should reset isLoading flag and loading message', () => {
 			// arrange
-			const action = LoadTodosAllSuccess({items: [item]})
+			const action = SetItems({items: [item]})
 
 			// act
 			const newState = todoReducer(initialState, action);
@@ -218,7 +218,7 @@ describe('### TodoReducer ###', () => {
 
 		it('should update the item', () => {
 			// arrange
-			const loadAllSuccessAction = LoadTodosAllSuccess({items: [item]})
+			const loadAllSuccessAction = SetItems({items: [item]})
 			let state;
 			
 			// act
@@ -243,15 +243,15 @@ describe('### TodoReducer ###', () => {
 		})
 	})
 	
-	describe('ToggleDone', () => {
+	describe('ToggleDoneSuccess', () => {
 		it('should toggle done flag on selected item', () => {
 			// arrange
 			const initialIsDone = true;
 			item.IsDone = initialIsDone;
-			const loadAllSuccessAction = LoadTodosAllSuccess({items: [item]});
+			const loadAllSuccessAction = SetItems({items: [item]});
 			let state: TodosState = todoReducer(initialState, loadAllSuccessAction);
 			
-			const toggleDoneAction = ToggleDone({ id: itemId });
+			const toggleDoneAction = ToggleDoneSuccess({ id: itemId });
 			
 			// act
 			state = todoReducer(state, toggleDoneAction);

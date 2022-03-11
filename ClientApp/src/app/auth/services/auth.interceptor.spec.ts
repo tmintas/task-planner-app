@@ -6,7 +6,7 @@ import { AuthInterceptor } from './auth.interceptor';
 import { provideMockStore } from '@ngrx/store/testing';
 import { Store } from '@ngrx/store';
 import { User } from '../models/user.model';
-import { AUTH_INITIAL_STATE } from "@states/auth";
+import { AUTH_INITIAL_STATE, AUTH_FEATURE_KEY } from "@states/auth";
 
 describe('### AuthInterceptor ###', () => {
     const apiUrl = '/api/Todo/user-todos';
@@ -38,7 +38,7 @@ describe('### AuthInterceptor ###', () => {
     	// arrange
 		const accessToken = '12345';
 		storeMock.setState({ 
-			auth : { 
+			[AUTH_FEATURE_KEY] : { 
 				...AUTH_INITIAL_STATE, 
 				currentUser : new User('testName', accessToken) 
 			}

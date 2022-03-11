@@ -27,5 +27,7 @@ namespace Domain.Requests
         public string Description { get; set; }
 
         public bool HasTime { get; set; }
+        
+        public bool IsDone { get; set;  }
     }
 }

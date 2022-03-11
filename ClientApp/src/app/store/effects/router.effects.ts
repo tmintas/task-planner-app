@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { createEffect, ofType, Actions } from '@ngrx/effects';
-import { tap, withLatestFrom, map, switchMap, catchError, take } from 'rxjs/operators';
+import { tap, withLatestFrom, map, switchMap, catchError, take, mapTo } from 'rxjs/operators';
 import { Go, GoByUrl, GoLanding } from '@actions/router';
 import { Store } from '@ngrx/store';
 import { selectCalendarParamsFromUrl } from '@selectors/router';
@@ -10,9 +10,10 @@ import { ROUTER_NAVIGATION } from '@ngrx/router-store';
 import { CalendarModes, CALENDAR_DEFAULT_YEAR, CALENDAR_DEFAULT_MONTH } from '@states/calendar';
 import { of } from 'rxjs';
 import { TodoService } from 'app/to-dos/services/todo.service';
-import { InitMonth } from '@actions/calendar';
+import { InitMonth, InitCalendarFromUrlStart } from '@actions/calendar';
 import { CalendarRoutedParams } from '@shared-models';
 import { selectedYear, selectedMonth} from '@selectors/calendar';
+import { SelectItemForEdit } from "@actions/todo";
 
 @Injectable()
 export class RouterEffects {
@@ -34,10 +35,15 @@ export class RouterEffects {
         tap((payload) => this.router.navigateByUrl(payload.url))
     ), { dispatch : false });
 
+    onURLInit$ = createEffect(() => this.actions$.pipe(
+    	ofType(ROUTER_NAVIGATION),
+		take(1),
+		mapTo(InitCalendarFromUrlStart())
+	));
+    	
     // init state after page reload, called only once
-    public InitFromUrl$ = createEffect(() => this.actions$.pipe(
-        ofType(ROUTER_NAVIGATION),
-        take(1),
+    public onInitCalendarFromUrlStart$ = createEffect(() => this.actions$.pipe(
+        ofType(InitCalendarFromUrlStart),
         withLatestFrom(
             this.store$.select(selectCalendarParamsFromUrl),
             (_, params : CalendarRoutedParams) => {
@@ -70,7 +76,7 @@ export class RouterEffects {
             }
         }),
         // conditional routing to default values, if not specified in url
-        map((params) => {
+        switchMap((params) => {
             // TODO add tests
             const mode = params.itemId > 0
                 ? CalendarModes.EditTodo
@@ -82,20 +88,29 @@ export class RouterEffects {
 
             if (!params.year && !params.month) {
                 this.router.navigateByUrl(`calendar/${CALENDAR_DEFAULT_YEAR}/${CALENDAR_DEFAULT_MONTH}`);
-                return InitMonth({ year : CALENDAR_DEFAULT_YEAR, month: CALENDAR_DEFAULT_MONTH })
+                return [ InitMonth({ year : CALENDAR_DEFAULT_YEAR, month: CALENDAR_DEFAULT_MONTH }) ];
             }
 
             if (params.year && !params.month) {
                 this.router.navigateByUrl(`calendar/${params.year}/${CALENDAR_DEFAULT_MONTH}`);
-                return InitMonth({ year : params.year, month: CALENDAR_DEFAULT_MONTH });
+                return [ InitMonth({ year : params.year, month: CALENDAR_DEFAULT_MONTH }) ];
             }
 
             if (!params.year && params.month) {
                 this.router.navigateByUrl(`calendar/${CALENDAR_DEFAULT_YEAR}/${params.month}`);
-                return InitMonth({ year : CALENDAR_DEFAULT_YEAR, month: params.month });
+                return [ InitMonth({ year : CALENDAR_DEFAULT_YEAR, month: params.month }) ];
             }
 
-            return InitMonth({ year : params.year, month: params.month, day: params.day, mode, item : params.item });
+            if (!params.item) {
+            	return [
+					InitMonth({ year : params.year, month: params.month, day: params.day, mode }),
+				]
+			} else {
+				return [
+					InitMonth({ year : params.year, month: params.month, day: params.day, mode }),
+					SelectItemForEdit({ item: params.item })
+				]
+			}
         })
     ), { dispatch : true });
 
